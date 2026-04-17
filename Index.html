@@ -1,160 +1,792 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>JWZ TEAM | Gestão Empresarial & Academia</title>
+    <!-- Font Awesome (ícones) & SweetAlert2 (alertas bonitos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        @page {
-            size: A4;
-            margin: 15mm;
-            background-color: #f4f7f6;
-        }
-        body {
-            font-family: 'Helvetica', sans-serif;
-            color: #333;
-            line-height: 1.6;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-        .header {
-            background-color: #1a2a6c;
+
+        body {
+            background: #f5f7fb;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ---------- SIDEBAR ---------- */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: #e2e8f0;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            margin-bottom: 36px;
+        }
+
+        .logo-icon {
+            background: #3b82f6;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 22px;
             color: white;
-            padding: 30px;
-            text-align: center;
-            border-bottom: 5px solid #f2a341;
+            box-shadow: 0 6px 12px rgba(59,130,246,0.3);
         }
-        .header h1 { margin: 0; font-size: 24pt; }
-        .header p { margin: 5px 0 0; font-size: 12pt; opacity: 0.8; }
-        
-        .section {
-            background: white;
-            margin-bottom: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+            color: white;
         }
-        h2 {
-            color: #1a2a6c;
-            border-left: 5px solid #f2a341;
-            padding-left: 10px;
-            font-size: 16pt;
-            margin-top: 0;
+
+        .logo-text span {
+            color: #3b82f6;
+            font-weight: 800;
         }
-        h3 { color: #555; font-size: 13pt; margin-bottom: 10px; }
-        
-        .calendar-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
-        .calendar-table th, .calendar-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            color: #94a3b8;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 15px;
             text-align: left;
         }
-        .calendar-table th { background-color: #eee; }
-        
-        .script-box {
-            background-color: #fff9f0;
-            border: 1px dashed #f2a341;
-            padding: 15px;
-            margin-top: 10px;
+
+        .nav-item i {
+            width: 22px;
+            font-size: 1.2rem;
         }
-        .tag {
-            display: inline-block;
-            background: #1a2a6c;
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: #f1f5f9;
+        }
+
+        .nav-item.active {
+            background: #3b82f6;
             color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 9pt;
-            margin-bottom: 10px;
+            box-shadow: 0 8px 16px -4px rgba(59,130,246,0.3);
         }
-        .footer {
-            text-align: center;
-            font-size: 9pt;
-            color: #777;
+
+        .nav-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 20px 0 12px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
             margin-top: 20px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: #3b82f6;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            color: white;
+        }
+
+        .user-info h4 {
+            color: white;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .user-info p {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        /* ---------- MAIN CONTENT ---------- */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 36px;
+            background: #f5f7fb;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+
+        .page-title p {
+            color: #64748b;
+            font-size: 15px;
+            margin-top: 4px;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px -6px rgba(59,130,246,0.25);
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -8px rgba(59,130,246,0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        /* ---------- METRIC CARDS ---------- */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 22px 20px;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s;
+            border: 1px solid #f1f5f9;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 30px -8px rgba(0,0,0,0.1);
+        }
+
+        .metric-info h3 {
+            font-size: 15px;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .metric-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+
+        .metric-icon {
+            width: 54px;
+            height: 54px;
+            background: #eff6ff;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b82f6;
+            font-size: 26px;
+        }
+
+        /* ---------- SECTIONS (Reuniões, Tarefas, Equipe) ---------- */
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 32px 0 20px;
+        }
+
+        .section-title h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .section-title a {
+            color: #3b82f6;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px 24px;
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.04);
+            border: 1px solid #f1f5f9;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .card-header h3 {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 18px;
+        }
+
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .meeting-item, .task-item, .team-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .meeting-item:last-child, .task-item:last-child, .team-item:last-child {
+            border-bottom: none;
+        }
+
+        .meeting-time {
+            min-width: 70px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .meeting-info {
+            flex: 1;
+        }
+
+        .meeting-title {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .meeting-desc {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .task-check {
+            margin-right: 16px;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .task-deadline {
+            font-size: 12px;
+            color: #ef4444;
+        }
+
+        .team-avatar {
+            width: 42px;
+            height: 42px;
+            background: #dbeafe;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #1e40af;
+            margin-right: 16px;
+        }
+
+        .team-info {
+            flex: 1;
+        }
+
+        .team-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .team-role {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .status-badge {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* ---------- ALUNOS (Academia) ---------- */
+        .alunos-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .alunos-table th {
+            text-align: left;
+            padding: 12px 0;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .alunos-table td {
+            padding: 14px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .aluno-nome {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .plano-ativo {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* ---------- BOTÕES DE AÇÃO ---------- */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 1100px) {
+            .metrics-grid { grid-template-columns: repeat(2,1fr); }
+            .dashboard-row { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 800px) {
+            .sidebar { width: 90px; }
+            .logo-text, .nav-item span:not(.icon-only), .user-info { display: none; }
+            .nav-item { justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Plano de Lançamento Instagram</h1>
-        <p>Estratégia de Conteúdo: Da Ideia ao Primeiro Cliente</p>
-    </div>
 
-    <div class="section">
-        <h2>1. Visão Geral da Estratégia</h2>
-        <p>O objetivo é mostrar que vocês são <strong>jovens determinados</strong> construindo uma solução séria. O público se conecta com a "garra". Vamos usar vídeos curtos (Reels) e Stories constantes.</p>
-    </div>
-
-    <div class="section">
-        <h2>2. Cronograma Sugerido (Semana 1 e 2)</h2>
-        <table class="calendar-table">
-            <tr>
-                <th>Dia</th>
-                <th>Tipo</th>
-                <th>Tema/Título</th>
-            </tr>
-            <tr>
-                <td>Segunda</td>
-                <td>Reels</td>
-                <td>"Por que estamos criando isso?" (A Origem)</td>
-            </tr>
-            <tr>
-                <td>Quarta</td>
-                <td>Reels</td>
-                <td>Bastidores da Programação (O Site ganhando vida)</td>
-            </tr>
-            <tr>
-                <td>Sexta</td>
-                <td>Reels</td>
-                <td>O Problema: "Cansado de golpes de home office?"</td>
-            </tr>
-            <tr>
-                <td>Diário</td>
-                <td>Stories</td>
-                <td>Enquetes, rotina de café e código, perguntas.</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="section" style="page-break-before: always;">
-        <h2>3. Roteiros Detalhados</h2>
-        
-        <div class="script-box">
-            <span class="tag">VÍDEO 1: O PROPÓSITO</span>
-            <h3>Título: Três amigos e um sonho (Literalmente)</h3>
-            <p><strong>Cena:</strong> Você ou o Wellyson falando para a câmera, com cortes rápidos de vocês reunidos.</p>
-            <p><strong>Roteiro:</strong> "Muita gente vê o site pronto e não sabe como começou. A gente é um bando de adolescente que cansou de ouvir que o futuro é só daqui a 10 anos. Decidimos criar a [NOME] pra conectar quem quer trabalhar de casa com empresas de verdade. Sem enrolação. Acompanha a gente que o lançamento tá chegando."</p>
+    <!-- SIDEBAR (navegação) -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">JZ</div>
+            <div class="logo-text">JWZ<span>TEAM</span></div>
         </div>
-
-        <div class="script-box">
-            <span class="tag">VÍDEO 2: BASTIDORES (ESTILO POV)</span>
-            <h3>Título: Como nasce uma plataforma de empregos</h3>
-            <p><strong>Cena:</strong> Celular filmando a tela do computador do Nando (código), vocês discutindo design, apontando para a tela.</p>
-            <p><strong>Roteiro:</strong> (Fundo musical animado) - Legendas na tela: "02:00 da manhã e o Nando ainda tá no código... Ajustando a segurança... Definindo como vocês vão contratar talentos... Tá ficando absurdo! Quem quer ver o link primeiro?"</p>
+        <div class="nav-menu">
+            <button class="nav-item active" onclick="switchSection('dashboard')">
+                <i class="fas fa-th-large"></i> <span>Dashboard</span>
+            </button>
+            <button class="nav-item" onclick="switchSection('reunioes')">
+                <i class="fas fa-calendar-alt"></i> <span>Reuniões</span>
+            </button>
+            <button class="nav-item" onclick="switchSection('tarefas')">
+                <i class="fas fa-tasks"></i> <span>Tarefas</span>
+            </button>
+            <button class="nav-item" onclick="switchSection('equipe')">
+                <i class="fas fa-users"></i> <span>Equipe</span>
+            </button>
+            <button class="nav-item" onclick="switchSection('alunos')">
+                <i class="fas fa-dumbbell"></i> <span>Alunos</span>
+            </button>
+            <div class="nav-divider"></div>
+            <button class="nav-item" onclick="switchSection('config')">
+                <i class="fas fa-cog"></i> <span>Configurações</span>
+            </button>
         </div>
-
-        <div class="script-box">
-            <span class="tag">VÍDEO 3: A DOR DO CLIENTE</span>
-            <h3>Título: Chega de sites de emprego que não funcionam</h3>
-            <p><strong>Cena:</strong> Você mostrando o celular com outros sites confusos e depois mostrando o de vocês (limpo e fácil).</p>
-            <p><strong>Roteiro:</strong> "Você já tentou achar vaga home office e só achou golpe ou site que trava? É por isso que a gente tá focando na experiência. No nosso site, o foco é agilidade. Se você quer contratar ou ser contratado, seu lugar vai ser aqui."</p>
+        <div class="user-profile">
+            <div class="avatar">G</div>
+            <div class="user-info">
+                <h4>Gisele</h4>
+                <p>Admin</p>
+            </div>
         </div>
     </div>
 
-    <div class="section">
-        <h2>4. Dicas de Gravação</h2>
-        <ul>
-            <li><strong>Luz:</strong> Grave sempre de frente para uma janela (luz natural é melhor).</li>
-            <li><strong>Áudio:</strong> O microfone do celular perto da boca é essencial. Se tiver vento, use o fone de ouvido.</li>
-            <li><strong>Edição:</strong> Usem o CapCut. Cortes rápidos e legendas dinâmicas prendem a atenção.</li>
-            <li><strong>Interação:</strong> Nos Stories, usem a caixinha de perguntas: "O que não pode faltar num site de empregos?"</li>
-        </ul>
+    <!-- MAIN CONTENT (tudo organizado aqui) -->
+    <div class="main-content" id="mainContent">
+        <!-- DASHBOARD (visão geral) -->
+        <div id="dashboard-section">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Olá, Gisele 👋</h1>
+                    <p>Aqui está o resumo da sua empresa hoje</p>
+                </div>
+                <div class="top-actions">
+                    <button class="btn-outline" onclick="novaReuniao()"><i class="far fa-calendar-plus"></i> Agendar</button>
+                    <button class="btn-primary" onclick="novaTarefa()"><i class="fas fa-plus-circle"></i> Nova Tarefa</button>
+                </div>
+            </div>
+
+            <!-- Métricas rápidas -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Reuniões hoje</h3>
+                        <div class="metric-number">3</div>
+                    </div>
+                    <div class="metric-icon"><i class="fas fa-video"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Tarefas pendentes</h3>
+                        <div class="metric-number">12</div>
+                    </div>
+                    <div class="metric-icon"><i class="fas fa-list-check"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Membros da equipe</h3>
+                        <div class="metric-number">8</div>
+                    </div>
+                    <div class="metric-icon"><i class="fas fa-user-group"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Alunos ativos</h3>
+                        <div class="metric-number">47</div>
+                    </div>
+                    <div class="metric-icon"><i class="fas fa-dumbbell"></i></div>
+                </div>
+            </div>
+
+            <!-- Próximas reuniões + Tarefas urgentes (coluna dupla) -->
+            <div class="dashboard-row">
+                <!-- Coluna esquerda: reuniões -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="far fa-calendar-check" style="margin-right: 8px;"></i> Próximas reuniões</h3>
+                        <span class="badge">Hoje</span>
+                    </div>
+                    <div class="meeting-list">
+                        <div class="meeting-item">
+                            <div class="meeting-time">09:30</div>
+                            <div class="meeting-info">
+                                <div class="meeting-title">Planejamento semanal</div>
+                                <div class="meeting-desc">Com equipe de marketing</div>
+                            </div>
+                            <i class="fas fa-video" style="color: #3b82f6;"></i>
+                        </div>
+                        <div class="meeting-item">
+                            <div class="meeting-time">11:00</div>
+                            <div class="meeting-info">
+                                <div class="meeting-title">Revisão de contratos</div>
+                                <div class="meeting-desc">Comercial e jurídico</div>
+                            </div>
+                            <i class="fas fa-building" style="color: #64748b;"></i>
+                        </div>
+                        <div class="meeting-item">
+                            <div class="meeting-time">14:30</div>
+                            <div class="meeting-info">
+                                <div class="meeting-title">Feedback de alunos</div>
+                                <div class="meeting-desc">Instrutores e coordenação</div>
+                            </div>
+                            <i class="fas fa-users" style="color: #8b5cf6;"></i>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button class="btn-outline" style="width:100%; justify-content:center;" onclick="switchSection('reunioes')">Ver todas as reuniões →</button>
+                    </div>
+                </div>
+
+                <!-- Coluna direita: tarefas -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="far fa-clock" style="margin-right: 8px;"></i> Tarefas urgentes</h3>
+                        <span class="badge">4 pendentes</span>
+                    </div>
+                    <div class="task-list">
+                        <div class="task-item">
+                            <input type="checkbox" class="task-check" onclick="marcarTarefa(this)">
+                            <div class="task-content">
+                                <div class="task-title">Finalizar relatório financeiro</div>
+                                <div class="task-deadline"><i class="far fa-calendar"></i> Hoje 18:00</div>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-check" onclick="marcarTarefa(this)">
+                            <div class="task-content">
+                                <div class="task-title">Enviar proposta para novo cliente</div>
+                                <div class="task-deadline"><i class="far fa-calendar"></i> Amanhã 10:00</div>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-check" onclick="marcarTarefa(this)">
+                            <div class="task-content">
+                                <div class="task-title">Revisar plano de treinos</div>
+                                <div class="task-deadline"><i class="far fa-calendar"></i> 16/04</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button class="btn-outline" style="width:100%; justify-content:center;" onclick="switchSection('tarefas')">Gerenciar tarefas →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipe resumida + Alunos -->
+            <div class="dashboard-row">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-users" style="margin-right: 8px;"></i> Equipe presente</h3>
+                    </div>
+                    <div class="team-item">
+                        <div class="team-avatar">CM</div>
+                        <div class="team-info">
+                            <div class="team-name">Carlos Mendes</div>
+                            <div class="team-role">Gerente Comercial</div>
+                        </div>
+                        <span class="status-badge">online</span>
+                    </div>
+                    <div class="team-item">
+                        <div class="team-avatar">AF</div>
+                        <div class="team-info">
+                            <div class="team-name">Ana Ferreira</div>
+                            <div class="team-role">Coordenadora</div>
+                        </div>
+                        <span class="status-badge">online</span>
+                    </div>
+                    <div class="team-item">
+                        <div class="team-avatar">RP</div>
+                        <div class="team-info">
+                            <div class="team-name">Ricardo Pereira</div>
+                            <div class="team-role">Instrutor</div>
+                        </div>
+                        <span class="status-badge" style="background:#f1f5f9; color:#475569;">ausente</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-dumbbell" style="margin-right: 8px;"></i> Últimos check-ins</h3>
+                    </div>
+                    <table class="alunos-table">
+                        <tr><th>Aluno</th><th>Plano</th></tr>
+                        <tr><td class="aluno-nome">Mariana Costa</td><td><span class="plano-ativo">Mensal</span></td></tr>
+                        <tr><td class="aluno-nome">Lucas Andrade</td><td><span class="plano-ativo">Semestral</span></td></tr>
+                        <tr><td class="aluno-nome">Patrícia Lima</td><td><span class="plano-ativo">Mensal</span></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outras seções (inicialmente ocultas) -->
+        <div id="reunioes-section" style="display:none;">
+            <h2 style="margin-bottom:24px;">📅 Agenda de reuniões</h2>
+            <p>Aqui você pode gerenciar todas as reuniões da empresa.</p>
+            <!-- Conteúdo completo de reuniões seria inserido aqui -->
+        </div>
+        <div id="tarefas-section" style="display:none;">
+            <h2>✅ Tarefas e projetos</h2>
+            <p>Organize as tarefas da equipe.</p>
+        </div>
+        <div id="equipe-section" style="display:none;">
+            <h2>👥 Equipe</h2>
+            <p>Gerencie membros e permissões.</p>
+        </div>
+        <div id="alunos-section" style="display:none;">
+            <h2>🏋️ Gestão de Alunos</h2>
+            <p>Cadastro, planos e frequência.</p>
+        </div>
+        <div id="config-section" style="display:none;">
+            <h2>⚙️ Configurações</h2>
+            <p>Ajustes da conta e preferências.</p>
+        </div>
     </div>
 
-    <div class="footer">
-        Documento gerado para a futura empresa de Home Office (Ex-JWZ). Sucesso na jornada!
-    </div>
+    <script>
+        // Função para trocar de seção (simples)
+        function switchSection(section) {
+            // Esconde todas
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('reunioes-section').style.display = 'none';
+            document.getElementById('tarefas-section').style.display = 'none';
+            document.getElementById('equipe-section').style.display = 'none';
+            document.getElementById('alunos-section').style.display = 'none';
+            document.getElementById('config-section').style.display = 'none';
+            
+            // Mostra a selecionada
+            if (section === 'dashboard') {
+                document.getElementById('dashboard-section').style.display = 'block';
+            } else {
+                document.getElementById(section+'-section').style.display = 'block';
+            }
+
+            // Atualiza classe active no menu (opcional)
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // Funções dos botões rápidos
+        function novaReuniao() {
+            Swal.fire({
+                title: 'Agendar reunião',
+                html: `<input id="swal-input1" class="swal2-input" placeholder="Título">` +
+                      `<input id="swal-input2" class="swal2-input" placeholder="Data/hora">`,
+                confirmButtonText: 'Agendar',
+                showCancelButton: true,
+                preConfirm: () => {
+                    return [
+                        document.getElementById('swal-input1').value,
+                        document.getElementById('swal-input2').value
+                    ];
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('Reunião agendada!', '', 'success');
+                }
+            });
+        }
+
+        function novaTarefa() {
+            Swal.fire({
+                title: 'Nova tarefa',
+                input: 'text',
+                inputLabel: 'Descrição',
+                inputPlaceholder: 'Digite a tarefa...',
+                showCancelButton: true,
+                confirmButtonText: 'Criar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('Tarefa adicionada!', '', 'success');
+                }
+            });
+        }
+
+        function marcarTarefa(checkbox) {
+            if (checkbox.checked) {
+                Swal.fire({
+                    title: 'Tarefa concluída!',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                // Aqui você poderia remover o item ou riscar
+            }
+        }
+
+        // Inicialização: garantir que dashboard fique visível
+        window.onload = function() {
+            // Força o dashboard ativo
+            document.querySelectorAll('.nav-item')[0].classList.add('active');
+        };
+    </script>
+    <!-- Pequeno ajuste para o evento de clique nos menus -->
+    <script>
+        // Corrige a referência ao evento nos menus
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const section = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                switchSection(section);
+                // Atualiza classe active
+                document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        // Remove os atributos onclick inline para evitar conflito
+        document.querySelectorAll('.nav-item').forEach(item => item.removeAttribute('onclick'));
+    </script>
 </body>
 </html>
