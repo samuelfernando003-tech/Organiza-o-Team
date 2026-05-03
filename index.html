@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JWZ Slide Editor - Estilo Canva</title>
+    <title>JWZ Team & Vision - Hub de Apresentações</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -16,13 +16,138 @@
             font-family: 'Inter', sans-serif;
             background: #0B1121;
             color: #E2E8F0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        /* ========== HUB ========== */
+        .hub {
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .hub h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hub .subtitle {
+            font-size: 1.2rem;
+            color: #94A3B8;
+            margin-bottom: 3rem;
+        }
+
+        .cards {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: #131B2F;
+            border: 1px solid #1E293B;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 280px;
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+            border-color: #3B82F6;
+        }
+
+        .card-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #F8FAFC;
+        }
+
+        .card p {
+            color: #94A3B8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .card-btn {
+            background: #1E293B;
+            border: 1px solid #334155;
+            color: #CBD5E1;
+            padding: 0.5rem 1rem;
+            border-radius: 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .card-btn:hover {
+            background: #273450;
+            border-color: #3B82F6;
+        }
+
+        .card-btn.primary {
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            border: none;
+            color: white;
+            font-weight: 600;
+        }
+
+        .card-btn.primary:hover {
+            opacity: 0.9;
+        }
+
+        .arrow-hint {
+            margin-top: 2rem;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+
+        /* ========== EDITOR (herda estilos base, mas ocupa tela cheia) ========== */
+        .editor-container {
+            display: none;
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
         }
 
-        /* ========== SIDEBAR ESQUERDA ========== */
-        .sidebar {
+        /* Copiei os estilos do editor para dentro deste escopo, renomeando classes para evitar conflito */
+        .editor-sidebar {
             width: 280px;
             background: #131B2F;
             border-right: 1px solid #1E293B;
@@ -32,12 +157,12 @@
             overflow-y: auto;
         }
 
-        .sidebar-header {
+        .editor-sidebar .sidebar-header {
             padding: 1.5rem;
             border-bottom: 1px solid #1E293B;
         }
 
-        .sidebar-header h2 {
+        .editor-sidebar .sidebar-header h2 {
             font-size: 1.3rem;
             font-weight: 700;
             background: linear-gradient(135deg, #3B82F6, #8B5CF6);
@@ -46,12 +171,12 @@
             margin-bottom: 0.3rem;
         }
 
-        .sidebar-header p {
+        .editor-sidebar .sidebar-header p {
             font-size: 0.8rem;
             color: #64748B;
         }
 
-        .slide-thumbnails {
+        .editor-slide-thumbnails {
             flex: 1;
             padding: 0.8rem;
             display: flex;
@@ -60,7 +185,7 @@
             overflow-y: auto;
         }
 
-        .slide-thumb {
+        .editor-slide-thumb {
             background: #1E293B;
             border: 2px solid transparent;
             border-radius: 0.8rem;
@@ -75,24 +200,24 @@
             position: relative;
         }
 
-        .slide-thumb.active {
+        .editor-slide-thumb.active {
             border-color: #3B82F6;
             background: #1E293B;
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
         }
 
-        .slide-thumb:hover {
+        .editor-slide-thumb:hover {
             background: #273450;
             border-color: #334155;
         }
 
-        .slide-thumb .drag-handle {
+        .editor-slide-thumb .drag-handle {
             color: #64748B;
             font-size: 1rem;
             cursor: grab;
         }
 
-        .slide-thumb .slide-index {
+        .editor-slide-thumb .slide-index {
             background: #3B82F6;
             color: white;
             width: 24px;
@@ -106,14 +231,14 @@
             flex-shrink: 0;
         }
 
-        .slide-thumb .slide-title {
+        .editor-slide-thumb .slide-title {
             flex: 1;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .slide-thumb .delete-slide {
+        .editor-slide-thumb .delete-slide {
             display: none;
             background: none;
             border: none;
@@ -124,7 +249,7 @@
             padding: 0 0.2rem;
         }
 
-        .slide-thumb:hover .delete-slide {
+        .editor-slide-thumb:hover .delete-slide {
             display: block;
         }
 
@@ -145,7 +270,7 @@
             opacity: 0.9;
         }
 
-        .sidebar-footer {
+        .editor-sidebar-footer {
             padding: 1rem;
             border-top: 1px solid #1E293B;
             display: flex;
@@ -153,7 +278,7 @@
             gap: 0.5rem;
         }
 
-        .sidebar-footer button {
+        .editor-sidebar-footer button {
             background: #1E293B;
             border: 1px solid #334155;
             color: #CBD5E1;
@@ -165,20 +290,19 @@
             transition: all 0.2s;
         }
 
-        .sidebar-footer button:hover {
+        .editor-sidebar-footer button:hover {
             background: #273450;
             border-color: #3B82F6;
         }
 
-        .sidebar-footer .export-btn {
+        .editor-sidebar-footer .export-btn {
             background: linear-gradient(135deg, #3B82F6, #8B5CF6);
             border: none;
             color: white;
             font-weight: 600;
         }
 
-        /* ========== ÁREA PRINCIPAL (EDITOR + PREVIEW) ========== */
-        .main-area {
+        .editor-main {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -186,7 +310,7 @@
             overflow: hidden;
         }
 
-        .toolbar {
+        .editor-toolbar {
             background: #131B2F;
             border-bottom: 1px solid #1E293B;
             padding: 0.8rem 1.5rem;
@@ -196,7 +320,7 @@
             flex-wrap: wrap;
         }
 
-        .toolbar .pres-title-input {
+        .editor-toolbar .pres-title-input {
             background: #1E293B;
             border: 1px solid #334155;
             color: #F8FAFC;
@@ -208,11 +332,11 @@
             outline: none;
         }
 
-        .toolbar .pres-title-input:focus {
+        .editor-toolbar .pres-title-input:focus {
             border-color: #3B82F6;
         }
 
-        .toolbar label {
+        .editor-toolbar label {
             font-size: 0.8rem;
             color: #94A3B8;
             display: flex;
@@ -220,7 +344,7 @@
             gap: 0.4rem;
         }
 
-        .toolbar input[type="color"] {
+        .editor-toolbar input[type="color"] {
             width: 32px;
             height: 32px;
             border: none;
@@ -229,14 +353,12 @@
             background: transparent;
         }
 
-        .editor-preview {
+        .editor-body {
             flex: 1;
             display: flex;
-            gap: 0;
             overflow: hidden;
         }
 
-        /* Preview do slide */
         .preview-panel {
             flex: 1;
             display: flex;
@@ -339,7 +461,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Painel de propriedades à direita */
         .properties-panel {
             width: 320px;
             background: #131B2F;
@@ -448,95 +569,136 @@
             font-style: italic;
         }
 
+        /* Botão voltar no editor */
+        .back-to-hub {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 100;
+            background: rgba(19, 27, 47, 0.9);
+            border: 1px solid #334155;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .back-to-hub:hover {
+            background: #273450;
+        }
+
         /* Responsivo básico */
         @media (max-width: 900px) {
-            body {
+            .editor-container {
                 flex-direction: column;
             }
-            .sidebar {
+            .editor-sidebar {
                 width: 100%;
                 height: auto;
                 flex-direction: row;
                 flex-wrap: wrap;
             }
+            .editor-body {
+                flex-direction: column;
+            }
             .properties-panel {
                 width: 100%;
-            }
-            .editor-preview {
-                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR: lista de slides -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2>JWZ Editor</h2>
-            <p>Arraste para reordenar</p>
+    <!-- ==================== HUB ==================== -->
+    <div id="hub" class="hub">
+        <h1>JWZ TEAM & VISION</h1>
+        <p class="subtitle">Centro de Apresentações Profissionais</p>
+        <div class="cards">
+            <!-- Card CEO -->
+            <div class="card">
+                <span class="card-tag">ESTRATÉGIA</span>
+                <h2>CEO</h2>
+                <p>Lançamento da Plataforma JWZ no Instagram e Estratégia de Crescimento.</p>
+                <div class="card-actions">
+                    <button class="card-btn primary view-ceo">▶ Visualizar</button>
+                    <button class="card-btn edit-ceo">✏️ Editar</button>
+                </div>
+            </div>
+            <!-- Card Interna -->
+            <div class="card">
+                <span class="card-tag">INTERNA</span>
+                <h2>Cultura & Disciplina</h2>
+                <p>Código de Conduta, Funil de Consequências, Regras de Saída e Cultura da Empresa.</p>
+                <div class="card-actions">
+                    <button class="card-btn primary view-interna">▶ Visualizar</button>
+                    <button class="card-btn edit-interna">✏️ Editar</button>
+                </div>
+            </div>
+            <!-- Card Nova Apresentação -->
+            <div class="card">
+                <span class="card-tag" style="background: #475569;">NOVO</span>
+                <h2>Criar Apresentação</h2>
+                <p>Comece do zero e monte uma apresentação personalizada.</p>
+                <div class="card-actions">
+                    <button class="card-btn primary create-new">➕ Nova Apresentação</button>
+                </div>
+            </div>
         </div>
-        <div class="slide-thumbnails" id="slideThumbnails"></div>
-        <button class="add-slide-btn" id="addSlideBtn">+ Adicionar Slide</button>
-        <div class="sidebar-footer">
-            <button id="loadCeoBtn">📥 Carregar CEO</button>
-            <button id="loadInternaBtn">📥 Carregar Interna</button>
-            <button id="exportJsonBtn">📤 Exportar JSON</button>
-            <button class="export-btn" id="previewBtn">▶ Visualizar Apresentação</button>
-        </div>
+        <p class="arrow-hint">Use as setas do teclado nas apresentações • Pressione ESC para sair</p>
     </div>
 
-    <!-- ÁREA PRINCIPAL -->
-    <div class="main-area">
-        <div class="toolbar">
-            <input type="text" class="pres-title-input" id="presentationTitle" value="Nova Apresentação" placeholder="Título da apresentação">
-            <label>Fundo: <input type="color" id="bgColor" value="#0F172A"></label>
-            <label>Primária: <input type="color" id="primaryColor" value="#3B82F6"></label>
-            <label>Secundária: <input type="color" id="secondaryColor" value="#8B5CF6"></label>
-            <label>Texto: <input type="color" id="textColor" value="#F8FAFC"></label>
-        </div>
-        <div class="editor-preview">
-            <div class="preview-panel">
-                <div class="preview-window" id="previewWindow"></div>
+    <!-- ==================== EDITOR ==================== -->
+    <div id="editor" class="editor-container" style="display: none; width:100vw; height:100vh; overflow:hidden;">
+        <!-- Botão voltar absoluto -->
+        <button class="back-to-hub" id="backToHubBtn">← Voltar ao Hub</button>
+
+        <div style="display: flex; width:100%; height:100%;">
+            <!-- SIDEBAR -->
+            <div class="editor-sidebar">
+                <div class="sidebar-header">
+                    <h2>JWZ Editor</h2>
+                    <p>Arraste para reordenar</p>
+                </div>
+                <div class="editor-slide-thumbnails" id="slideThumbnails"></div>
+                <button class="add-slide-btn" id="addSlideBtn">+ Adicionar Slide</button>
+                <div class="editor-sidebar-footer">
+                    <button id="loadCeoBtn">📥 Carregar CEO</button>
+                    <button id="loadInternaBtn">📥 Carregar Interna</button>
+                    <button id="exportJsonBtn">📤 Exportar JSON</button>
+                    <button class="export-btn" id="previewBtn">▶ Visualizar Apresentação</button>
+                </div>
             </div>
-            <div class="properties-panel" id="propertiesPanel">
-                <h3>Propriedades do Slide</h3>
-                <div id="slideForm"></div>
+
+            <!-- ÁREA PRINCIPAL -->
+            <div class="editor-main">
+                <div class="editor-toolbar">
+                    <input type="text" class="pres-title-input" id="presentationTitle" value="Nova Apresentação" placeholder="Título da apresentação">
+                    <label>Fundo: <input type="color" id="bgColor" value="#0F172A"></label>
+                    <label>Primária: <input type="color" id="primaryColor" value="#3B82F6"></label>
+                    <label>Secundária: <input type="color" id="secondaryColor" value="#8B5CF6"></label>
+                    <label>Texto: <input type="color" id="textColor" value="#F8FAFC"></label>
+                </div>
+                <div class="editor-body">
+                    <div class="preview-panel">
+                        <div class="preview-window" id="previewWindow"></div>
+                    </div>
+                    <div class="properties-panel" id="propertiesPanel">
+                        <h3>Propriedades do Slide</h3>
+                        <div id="slideForm"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         (function() {
-            // ---------- ESTADO GLOBAL ----------
-            const STORAGE_KEY = 'jwz_presentation_data';
-
-            // Estrutura padrão de slides
-            const defaultSlide = {
-                type: 'content',
-                title: 'Novo Slide',
-                text: 'Escreva seu conteúdo aqui...',
-                tag: '',
-                subtitle: '',
-                description: '',
-                items: [],
-                cards: []
-            };
-
-            let presentation = {
-                title: 'Apresentação CEO',
-                theme: {
-                    bgColor: '#0F172A',
-                    primaryColor: '#3B82F6',
-                    secondaryColor: '#8B5CF6',
-                    textColor: '#F8FAFC'
-                },
-                slides: []
-            };
-
-            let currentSlideIndex = 0;
-
-            // Exemplos pré-carregados
+            // ---------- DADOS EMBUTIDOS DAS APRESENTAÇÕES ----------
             const ceoSlides = [
                 { type: 'title', tag: 'LANÇAMENTO OFICIAL', title: 'JWZ Platform', subtitle: 'Do Cadastro à Primeira Conexão',
                     description: 'Facilitando o Home Office para quem oferece e para quem contrata.' },
@@ -552,8 +714,7 @@
                         'Demonstração prática da JWZ', 'Call to Action forte'] },
                 { type: 'cards', title: 'CRONOGRAMA DE EXECUÇÃO', cards: [{ title: '1. Pré-produção',
                         desc: 'Roteiro e planejamento.' }, { title: '2. Produção', desc: 'Gravação e edição.' },
-                    { title: '3. Lançamento', desc: 'Publicação estratégica.' }
-                ] },
+                    { title: '3. Lançamento', desc: 'Publicação estratégica.' }] },
                 { type: 'final', title: 'Vamos transformar a JWZ em referência!',
                     text: 'O futuro do trabalho remoto começa agora.' }
             ];
@@ -564,421 +725,548 @@
                 { type: 'content', title: 'Quem Somos',
                     text: 'A JWZ é uma empresa de tecnologia que desenvolve soluções digitais de alta qualidade.' },
                 { type: 'list', title: 'Código de Conduta Interna', items: ['Transparência Total', 'Comprometimento com Prazos',
-                        'Respeito à Marca', 'Confidencialidade'
-                    ] },
+                        'Respeito à Marca', 'Confidencialidade'] },
                 { type: 'cards', title: 'Funil de Disciplina', cards: [{ title: '01 Advertência',
                         desc: 'Casos leves' }, { title: '02 Suspensão', desc: 'Afastamento temporário' },
-                    { title: '03 Expulsão', desc: 'Quebra de confiança' }
-                ] },
-                { type: 'list', title: 'Regras de Saída', items: ['Aviso prévio', 'Repasse de acessos',
-                        'Não-competição'] },
+                    { title: '03 Expulsão', desc: 'Quebra de confiança' }] },
+                { type: 'list', title: 'Regras de Saída', items: ['Aviso prévio', 'Repasse de acessos', 'Não-competição'] },
                 { type: 'cards', title: 'Nossa Cultura', cards: [{ title: 'Trabalho em Equipe',
                         desc: 'Colaboração e conquistas coletivas.' }, { title: 'Disciplina',
                         desc: 'Prazos e alto padrão.' }, { title: 'Transparência', desc: 'Comunicação aberta.' },
-                    { title: 'Crescimento Contínuo', desc: 'Aprendizado constante.' }
-                ] },
+                    { title: 'Crescimento Contínuo', desc: 'Aprendizado constante.' }] },
                 { type: 'final', title: 'Vamos crescer juntos!', text: 'Obrigado pela atenção!' }
             ];
 
-            // ---------- DOM ELEMENTS ----------
-            const thumbnailsContainer = document.getElementById('slideThumbnails');
-            const previewWindow = document.getElementById('previewWindow');
-            const slideForm = document.getElementById('slideForm');
-            const addSlideBtn = document.getElementById('addSlideBtn');
-            const presentationTitleInput = document.getElementById('presentationTitle');
-            const bgColorInput = document.getElementById('bgColor');
-            const primaryColorInput = document.getElementById('primaryColor');
-            const secondaryColorInput = document.getElementById('secondaryColor');
-            const textColorInput = document.getElementById('textColor');
-            const loadCeoBtn = document.getElementById('loadCeoBtn');
-            const loadInternaBtn = document.getElementById('loadInternaBtn');
-            const exportJsonBtn = document.getElementById('exportJsonBtn');
-            const previewBtn = document.getElementById('previewBtn');
+            const defaultSlide = {
+                type: 'content',
+                title: 'Novo Slide',
+                text: 'Escreva seu conteúdo aqui...',
+                tag: '',
+                subtitle: '',
+                description: '',
+                items: [],
+                cards: []
+            };
 
-            // ---------- FUNÇÕES ----------
+            // ---------- HUB / EDITOR CONTROLE ----------
+            const hubDiv = document.getElementById('hub');
+            const editorDiv = document.getElementById('editor');
+            let presentationData = null; // estrutura completa: { title, theme, slides }
+
+            function showHub() {
+                hubDiv.style.display = 'block';
+                editorDiv.style.display = 'none';
+            }
+
+            function showEditor() {
+                hubDiv.style.display = 'none';
+                editorDiv.style.display = 'block';
+                // Dispara o editor caso não tenha sido inicializado
+                if (presentationData && !editorInitialized) {
+                    initEditorWithData(presentationData);
+                }
+            }
+
+            // ---------- INICIALIZAÇÃO DO EDITOR (apenas uma vez) ----------
+            let editorInitialized = false;
+            let currentSlideIndex = 0;
+            let presentation = null; // objeto ativo no editor
+
+            function initEditorWithData(data) {
+                if (editorInitialized) {
+                    // Atualiza os dados e renderiza
+                    presentation = data;
+                    saveToStorage();
+                    renderAll();
+                    return;
+                }
+                // Configura o editor pela primeira vez
+                presentation = data;
+                bindEditorEvents();
+                renderAll();
+                editorInitialized = true;
+            }
+
+            // ---------- ARMAZENAMENTO LOCAL ----------
+            const STORAGE_KEY = 'jwz_presentation_editor';
+
             function saveToStorage() {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(presentation));
             }
 
-            function loadFromStorage() {
+            function loadFromStorageOrDefault() {
                 const saved = localStorage.getItem(STORAGE_KEY);
                 if (saved) {
                     try {
-                        presentation = JSON.parse(saved);
-                    } catch (e) {
-                        console.warn('Erro ao carregar apresentação salva');
-                    }
-                } else {
-                    // Carrega CEO como padrão
-                    presentation.slides = JSON.parse(JSON.stringify(ceoSlides));
-                    presentation.title = 'Apresentação CEO';
+                        return JSON.parse(saved);
+                    } catch (e) {}
                 }
+                return null;
             }
 
-            function updateThemeInputs() {
-                bgColorInput.value = presentation.theme.bgColor;
-                primaryColorInput.value = presentation.theme.primaryColor;
-                secondaryColorInput.value = presentation.theme.secondaryColor;
-                textColorInput.value = presentation.theme.textColor;
-                presentationTitleInput.value = presentation.title;
+            // ---------- EVENTOS DO HUB ----------
+            function viewPresentation(slides, title) {
+                const html = generatePresentationHTML(slides, presentation?.theme || {
+                    bgColor: '#0F172A',
+                    primaryColor: '#3B82F6',
+                    secondaryColor: '#8B5CF6',
+                    textColor: '#F8FAFC'
+                }, title);
+                const blob = new Blob([html], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                URL.revokeObjectURL(url);
             }
 
-            function applyThemeToCSS() {
-                const root = document.documentElement;
-                root.style.setProperty('--bg-color', presentation.theme.bgColor);
-                root.style.setProperty('--primary-color', presentation.theme.primaryColor);
-                root.style.setProperty('--secondary-color', presentation.theme.secondaryColor);
-                root.style.setProperty('--text-color', presentation.theme.textColor);
+            function generatePresentationHTML(slides, theme, title) {
+                return `<!DOCTYPE html>
+        <html lang="pt-BR">
+        <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+        <style>
+        *{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',sans-serif;background:${theme.bgColor};color:${theme.textColor};height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+        .slide-container{width:100%;height:100%;position:relative;}.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;opacity:0;transition:opacity 0.5s;text-align:center;}.slide.active{opacity:1;z-index:2;}
+        .slide h1{font-size:3.5rem;font-weight:800;margin-bottom:1.5rem;background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor});-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .slide h2{font-size:2.5rem;font-weight:700;margin-bottom:1.5rem;}
+        .slide p,.slide li{font-size:1.2rem;line-height:1.6;max-width:700px;color:#CBD5E1;}
+        .card-grid{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;}.card-item{background:#1E293B;border-radius:1.2rem;padding:2rem;width:260px;text-align:left;border:1px solid #334155;}.card-item h3{font-size:1.4rem;margin-bottom:1rem;}
+        .tag{background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor});padding:0.5rem 1.8rem;border-radius:2rem;font-weight:600;display:inline-block;margin-bottom:1rem;}
+        .final-slide{background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor})!important;}.final-slide h1,.final-slide p{color:white;-webkit-text-fill-color:white;background:none;}
+        ul{list-style:none;text-align:left;max-width:600px;}ul li{margin-bottom:1rem;}ul li::before{content:"🔹";margin-right:0.5rem;color:${theme.primaryColor};}
+        .page-indicator{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1E293B;padding:0.4rem 1.5rem;border-radius:2rem;color:#64748B;z-index:10;}
+        .exit-btn{position:fixed;top:2rem;right:2rem;background:rgba(255,255,255,0.1);border:none;color:#F8FAFC;padding:0.5rem 1.5rem;border-radius:2rem;cursor:pointer;font-size:0.9rem;z-index:10;}
+        </style></head><body>
+        <button class="exit-btn" onclick="window.close()">Fechar</button>
+        <div class="slide-container" id="slideContainer"></div><div class="page-indicator" id="pageIndicator"></div>
+        <script>
+        const slides = ${JSON.stringify(slides)};
+        let current = 0;
+        function render(i){const s=slides[i];let h='';switch(s.type){case'title':h='<div class="slide active">'+(s.tag?'<span class="tag">'+s.tag+'</span>':'')+'<h1>'+s.title+'</h1>'+(s.subtitle?'<p style="font-size:1.4rem;font-weight:600;">'+s.subtitle+'</p>':'')+(s.description?'<p>'+s.description+'</p>':'')+'</div>';break;case'content':h='<div class="slide active"><h2>'+s.title+'</h2><p>'+s.text+'</p></div>';break;case'list':h='<div class="slide active"><h2>'+s.title+'</h2><ul>'+s.items.map(i=>'<li>'+i+'</li>').join('')+'</ul></div>';break;case'cards':h='<div class="slide active"><h2>'+s.title+'</h2><div class="card-grid">'+s.cards.map(c=>'<div class="card-item"><h3>'+c.title+'</h3><p>'+c.desc+'</p></div>').join('')+'</div></div>';break;case'final':h='<div class="slide active final-slide"><h1 style="color:white;">'+s.title+'</h1><p style="font-size:1.6rem;color:white;">'+s.text+'</p></div>';}document.getElementById('slideContainer').innerHTML=h;document.getElementById('pageIndicator').textContent=(i+1)+' / '+slides.length;}
+        document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown'){if(current<slides.length-1){current++;render(current);}}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){if(current>0){current--;render(current);}}else if(e.key==='Escape')window.close();});
+        render(0);
+        <\/script></body></html>`;
             }
 
-            function renderThumbnails() {
-                thumbnailsContainer.innerHTML = '';
-                presentation.slides.forEach((slide, idx) => {
-                    const thumb = document.createElement('div');
-                    thumb.className = 'slide-thumb' + (idx === currentSlideIndex ? ' active' : '');
-                    thumb.draggable = true;
-                    thumb.dataset.index = idx;
-                    thumb.innerHTML = `
-                <span class="drag-handle">⠿</span>
-                <span class="slide-index">${idx + 1}</span>
-                <span class="slide-title">${slide.title || slide.type}</span>
-                <button class="delete-slide" data-index="${idx}">🗑️</button>
-              `;
-                    thumb.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('delete-slide')) return;
-                        selectSlide(idx);
+            function startEdit(presetSlides, presetTitle, presetTheme = null) {
+                const defaultTheme = {
+                    bgColor: '#0F172A',
+                    primaryColor: '#3B82F6',
+                    secondaryColor: '#8B5CF6',
+                    textColor: '#F8FAFC'
+                };
+                const theme = presetTheme || defaultTheme;
+                presentationData = {
+                    title: presetTitle,
+                    theme: theme,
+                    slides: JSON.parse(JSON.stringify(presetSlides))
+                };
+                showEditor();
+            }
+
+            function startNewPresentation() {
+                const emptySlides = [{
+                    type: 'title',
+                    title: 'Título da Apresentação',
+                    subtitle: 'Subtítulo',
+                    description: 'Descrição breve',
+                    tag: 'Novo',
+                    items: [],
+                    cards: []
+                }];
+                startEdit(emptySlides, 'Nova Apresentação');
+            }
+
+            // Botões do hub
+            document.querySelector('.view-ceo').addEventListener('click', () => viewPresentation(ceoSlides,
+                'Apresentação CEO'));
+            document.querySelector('.edit-ceo').addEventListener('click', () => startEdit(ceoSlides, 'Apresentação CEO'));
+            document.querySelector('.view-interna').addEventListener('click', () => viewPresentation(internaSlides,
+                'Apresentação Interna'));
+            document.querySelector('.edit-interna').addEventListener('click', () => startEdit(internaSlides,
+                'Apresentação Interna'));
+            document.querySelector('.create-new').addEventListener('click', startNewPresentation);
+
+            // Voltar ao hub
+            document.getElementById('backToHubBtn').addEventListener('click', () => {
+                // Se o editor foi usado, opcionalmente salvar a edição atual como rascunho
+                if (presentation) {
+                    saveToStorage();
+                }
+                showHub();
+            });
+
+            // ---------- EDITOR (código adaptado) ----------
+            function bindEditorEvents() {
+                // Elementos
+                const thumbnailsContainer = document.getElementById('slideThumbnails');
+                const previewWindow = document.getElementById('previewWindow');
+                const slideForm = document.getElementById('slideForm');
+                const addSlideBtn = document.getElementById('addSlideBtn');
+                const presentationTitleInput = document.getElementById('presentationTitle');
+                const bgColorInput = document.getElementById('bgColor');
+                const primaryColorInput = document.getElementById('primaryColor');
+                const secondaryColorInput = document.getElementById('secondaryColor');
+                const textColorInput = document.getElementById('textColor');
+                const loadCeoBtn = document.getElementById('loadCeoBtn');
+                const loadInternaBtn = document.getElementById('loadInternaBtn');
+                const exportJsonBtn = document.getElementById('exportJsonBtn');
+                const previewBtn = document.getElementById('previewBtn');
+
+                // Funções
+                function renderThumbnails() {
+                    thumbnailsContainer.innerHTML = '';
+                    presentation.slides.forEach((slide, idx) => {
+                        const thumb = document.createElement('div');
+                        thumb.className = 'editor-slide-thumb' + (idx === currentSlideIndex ? ' active' : '');
+                        thumb.draggable = true;
+                        thumb.dataset.index = idx;
+                        thumb.innerHTML = `
+                  <span class="drag-handle">⠿</span>
+                  <span class="slide-index">${idx + 1}</span>
+                  <span class="slide-title">${slide.title || slide.type}</span>
+                  <button class="delete-slide" data-index="${idx}">🗑️</button>
+                `;
+                        thumb.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('delete-slide')) return;
+                            selectSlide(idx);
+                        });
+                        thumb.querySelector('.delete-slide').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            deleteSlide(idx);
+                        });
+                        thumb.addEventListener('dragstart', handleDragStart);
+                        thumb.addEventListener('dragover', handleDragOver);
+                        thumb.addEventListener('drop', handleDrop);
+                        thumb.addEventListener('dragend', handleDragEnd);
+                        thumbnailsContainer.appendChild(thumb);
                     });
-                    thumb.querySelector('.delete-slide').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        deleteSlide(idx);
-                    });
-                    // Drag events
-                    thumb.addEventListener('dragstart', handleDragStart);
-                    thumb.addEventListener('dragover', handleDragOver);
-                    thumb.addEventListener('drop', handleDrop);
-                    thumb.addEventListener('dragend', handleDragEnd);
-                    thumbnailsContainer.appendChild(thumb);
-                });
-            }
+                }
 
-            let dragSrcIndex = null;
+                let dragSrcIndex = null;
 
-            function handleDragStart(e) {
-                dragSrcIndex = parseInt(this.dataset.index);
-                this.style.opacity = '0.4';
-                e.dataTransfer.effectAllowed = 'move';
-            }
+                function handleDragStart(e) {
+                    dragSrcIndex = parseInt(this.dataset.index);
+                    this.style.opacity = '0.4';
+                    e.dataTransfer.effectAllowed = 'move';
+                }
 
-            function handleDragOver(e) {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-                this.style.borderColor = '#3B82F6';
-            }
+                function handleDragOver(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    this.style.borderColor = '#3B82F6';
+                }
 
-            function handleDrop(e) {
-                e.stopPropagation();
-                this.style.borderColor = 'transparent';
-                const targetIndex = parseInt(this.dataset.index);
-                if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) {
-                    const movedSlide = presentation.slides.splice(dragSrcIndex, 1)[0];
-                    presentation.slides.splice(targetIndex, 0, movedSlide);
-                    if (currentSlideIndex === dragSrcIndex) currentSlideIndex = targetIndex;
-                    else if (currentSlideIndex > dragSrcIndex && currentSlideIndex <= targetIndex) currentSlideIndex--;
-                    else if (currentSlideIndex < dragSrcIndex && currentSlideIndex >= targetIndex) currentSlideIndex++;
+                function handleDrop(e) {
+                    e.stopPropagation();
+                    this.style.borderColor = 'transparent';
+                    const targetIndex = parseInt(this.dataset.index);
+                    if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) {
+                        const movedSlide = presentation.slides.splice(dragSrcIndex, 1)[0];
+                        presentation.slides.splice(targetIndex, 0, movedSlide);
+                        if (currentSlideIndex === dragSrcIndex) currentSlideIndex = targetIndex;
+                        else if (currentSlideIndex > dragSrcIndex && currentSlideIndex <= targetIndex) currentSlideIndex--;
+                        else if (currentSlideIndex < dragSrcIndex && currentSlideIndex >= targetIndex) currentSlideIndex++;
+                        saveToStorage();
+                        renderAll();
+                    }
+                }
+
+                function handleDragEnd(e) {
+                    this.style.opacity = '1';
+                    document.querySelectorAll('.editor-slide-thumb').forEach(t => t.style.borderColor =
+                        'transparent');
+                    dragSrcIndex = null;
+                }
+
+                function selectSlide(index) {
+                    currentSlideIndex = index;
+                    renderAll();
+                }
+
+                function deleteSlide(index) {
+                    if (presentation.slides.length <= 1) {
+                        alert('A apresentação precisa ter pelo menos um slide.');
+                        return;
+                    }
+                    presentation.slides.splice(index, 1);
+                    if (currentSlideIndex >= presentation.slides.length) currentSlideIndex = presentation.slides
+                        .length - 1;
                     saveToStorage();
                     renderAll();
                 }
-            }
 
-            function handleDragEnd(e) {
-                this.style.opacity = '1';
-                document.querySelectorAll('.slide-thumb').forEach(t => t.style.borderColor = 'transparent');
-                dragSrcIndex = null;
-            }
-
-            function selectSlide(index) {
-                currentSlideIndex = index;
-                renderAll();
-            }
-
-            function deleteSlide(index) {
-                if (presentation.slides.length <= 1) {
-                    alert('A apresentação precisa ter pelo menos um slide.');
-                    return;
+                function addSlide() {
+                    const newSlide = JSON.parse(JSON.stringify(defaultSlide));
+                    presentation.slides.push(newSlide);
+                    currentSlideIndex = presentation.slides.length - 1;
+                    saveToStorage();
+                    renderAll();
                 }
-                presentation.slides.splice(index, 1);
-                if (currentSlideIndex >= presentation.slides.length) currentSlideIndex = presentation.slides.length - 1;
-                saveToStorage();
-                renderAll();
-            }
 
-            function addSlide() {
-                const newSlide = JSON.parse(JSON.stringify(defaultSlide));
-                presentation.slides.push(newSlide);
-                currentSlideIndex = presentation.slides.length - 1;
-                saveToStorage();
-                renderAll();
-            }
-
-            function renderPreview() {
-                const slide = presentation.slides[currentSlideIndex];
-                if (!slide) {
-                    previewWindow.innerHTML = '<p class="empty-state">Nenhum slide selecionado</p>';
-                    return;
-                }
-                previewWindow.style.backgroundColor = presentation.theme.bgColor;
-                let html = '';
-                switch (slide.type) {
-                    case 'title':
-                        html = `
-                  ${slide.tag ? `<div class="tag-preview">${slide.tag}</div>` : ''}
-                  <h1>${slide.title || 'Título'}</h1>
-                  ${slide.subtitle ? `<p style="font-size:1.2rem;font-weight:600;">${slide.subtitle}</p>` : ''}
-                  ${slide.description ? `<p style="margin-top:0.5rem;">${slide.description}</p>` : ''}
-                `;
-                        break;
-                    case 'content':
-                        html = `<h2>${slide.title || 'Título'}</h2><p>${slide.text || ''}</p>`;
-                        break;
-                    case 'list':
-                        html = `<h2>${slide.title || 'Título'}</h2><ul>`;
-                        if (slide.items && slide.items.length) {
-                            slide.items.forEach(item => html += `<li>${item}</li>`);
-                        } else {
-                            html += '<li>Item de exemplo</li>';
-                        }
-                        html += '</ul>';
-                        break;
-                    case 'cards':
-                        html = `<h2>${slide.title || 'Título'}</h2><div class="card-grid-preview">`;
-                        if (slide.cards && slide.cards.length) {
-                            slide.cards.forEach(card => {
+                function renderPreview() {
+                    const slide = presentation.slides[currentSlideIndex];
+                    if (!slide) {
+                        previewWindow.innerHTML = '<p class="empty-state">Nenhum slide selecionado</p>';
+                        return;
+                    }
+                    previewWindow.style.backgroundColor = presentation.theme.bgColor;
+                    let html = '';
+                    switch (slide.type) {
+                        case 'title':
+                            html = `
+                    ${slide.tag ? `<div class="tag-preview">${slide.tag}</div>` : ''}
+                    <h1>${slide.title || 'Título'}</h1>
+                    ${slide.subtitle ? `<p style="font-size:1.2rem;font-weight:600;">${slide.subtitle}</p>` : ''}
+                    ${slide.description ? `<p style="margin-top:0.5rem;">${slide.description}</p>` : ''}
+                  `;
+                            break;
+                        case 'content':
+                            html = `<h2>${slide.title || 'Título'}</h2><p>${slide.text || ''}</p>`;
+                            break;
+                        case 'list':
+                            html = `<h2>${slide.title || 'Título'}</h2><ul>`;
+                            if (slide.items && slide.items.length) {
+                                slide.items.forEach(item => html += `<li>${item}</li>`);
+                            } else {
+                                html += '<li>Item de exemplo</li>';
+                            }
+                            html += '</ul>';
+                            break;
+                        case 'cards':
+                            html = `<h2>${slide.title || 'Título'}</h2><div class="card-grid-preview">`;
+                            if (slide.cards && slide.cards.length) {
+                                slide.cards.forEach(card => {
+                                    html +=
+                                        `<div class="card-preview"><h3>${card.title || 'Card'}</h3><p>${card.desc || ''}</p></div>`;
+                                });
+                            } else {
                                 html +=
-                                    `<div class="card-preview"><h3>${card.title || 'Card'}</h3><p>${card.desc || ''}</p></div>`;
+                                    '<div class="card-preview"><h3>Card</h3><p>Descrição</p></div>';
+                            }
+                            html += '</div>';
+                            break;
+                        case 'final':
+                            html =
+                                `<h1 style="background:none; -webkit-text-fill-color:white; color:white;">${slide.title || 'Título'}</h1><p style="font-size:1.3rem;color:white;">${slide.text || ''}</p>`;
+                            previewWindow.style.background =
+                                `linear-gradient(135deg, ${presentation.theme.primaryColor}, ${presentation.theme.secondaryColor})`;
+                            break;
+                        default:
+                            html = '<p>Tipo desconhecido</p>';
+                    }
+                    previewWindow.innerHTML = html;
+                }
+
+                function renderForm() {
+                    const slide = presentation.slides[currentSlideIndex];
+                    if (!slide) {
+                        slideForm.innerHTML = '<p class="empty-state">Nenhum slide selecionado</p>';
+                        return;
+                    }
+                    let typeButtons = ['title', 'content', 'list', 'cards', 'final'].map(type => {
+                        return `<button class="${slide.type === type ? 'active-type' : ''}" data-type="${type}">${type.charAt(0).toUpperCase()+type.slice(1)}</button>`;
+                    }).join('');
+
+                    let specificFields = '';
+                    switch (slide.type) {
+                        case 'title':
+                            specificFields = `
+                    <label>Tag: <input type="text" id="fieldTag" value="${slide.tag || ''}"></label>
+                    <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
+                    <label>Subtítulo: <input type="text" id="fieldSubtitle" value="${slide.subtitle || ''}"></label>
+                    <label>Descrição: <textarea id="fieldDescription">${slide.description || ''}</textarea></label>
+                  `;
+                            break;
+                        case 'content':
+                            specificFields = `
+                    <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
+                    <label>Texto: <textarea id="fieldText">${slide.text || ''}</textarea></label>
+                  `;
+                            break;
+                        case 'list':
+                            specificFields = `
+                    <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
+                    <div class="card-props" id="listItemsContainer"></div>
+                    <button class="btn-sm" id="addListItemBtn">+ Adicionar Item</button>
+                  `;
+                            break;
+                        case 'cards':
+                            specificFields = `
+                    <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
+                    <div class="card-props" id="cardsContainer"></div>
+                    <button class="btn-sm" id="addCardBtn">+ Adicionar Card</button>
+                  `;
+                            break;
+                        case 'final':
+                            specificFields = `
+                    <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
+                    <label>Texto: <textarea id="fieldText">${slide.text || ''}</textarea></label>
+                  `;
+                            break;
+                    }
+
+                    slideForm.innerHTML = `
+                <div class="slide-type-selector">${typeButtons}</div>
+                ${specificFields}
+              `;
+
+                    // Type buttons events
+                    slideForm.querySelectorAll('.slide-type-selector button').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const newType = this.dataset.type;
+                            if (slide.type === newType) return;
+                            slide.type = newType;
+                            if (newType === 'list' && !slide.items) slide.items = [];
+                            if (newType === 'cards' && !slide.cards) slide.cards = [];
+                            saveToStorage();
+                            renderAll();
+                        });
+                    });
+
+                    // Preenche itens de lista
+                    if (slide.type === 'list') {
+                        const listContainer = document.getElementById('listItemsContainer');
+                        if (listContainer && slide.items) {
+                            listContainer.innerHTML = '';
+                            slide.items.forEach((item, i) => {
+                                const div = document.createElement('div');
+                                div.className = 'card-prop-item';
+                                div.innerHTML = `
+                      <input type="text" value="${item}" data-index="${i}" class="list-item-input">
+                      <button class="btn-sm danger remove-list-item" data-index="${i}">Remover</button>
+                    `;
+                                listContainer.appendChild(div);
                             });
-                        } else {
-                            html +=
-                                '<div class="card-preview"><h3>Card</h3><p>Descrição</p></div>';
+                            document.querySelectorAll('.list-item-input').forEach(input => {
+                                input.addEventListener('input', function() {
+                                    const idx = parseInt(this.dataset.index);
+                                    slide.items[idx] = this.value;
+                                    saveToStorage();
+                                    renderPreview();
+                                });
+                            });
+                            document.querySelectorAll('.remove-list-item').forEach(btn => {
+                                btn.addEventListener('click', function() {
+                                    const idx = parseInt(this.dataset.index);
+                                    slide.items.splice(idx, 1);
+                                    saveToStorage();
+                                    renderAll();
+                                });
+                            });
                         }
-                        html += '</div>';
-                        break;
-                    case 'final':
-                        html =
-                            `<h1 style="background:none; -webkit-text-fill-color:white; color:white;">${slide.title || 'Título'}</h1><p style="font-size:1.3rem;color:white;">${slide.text || ''}</p>`;
-                        previewWindow.style.background = `linear-gradient(135deg, ${presentation.theme.primaryColor}, ${presentation.theme.secondaryColor})`;
-                        break;
-                    default:
-                        html = '<p>Tipo desconhecido</p>';
-                }
-                previewWindow.innerHTML = html;
-            }
-
-            function renderForm() {
-                const slide = presentation.slides[currentSlideIndex];
-                if (!slide) {
-                    slideForm.innerHTML = '<p class="empty-state">Nenhum slide selecionado</p>';
-                    return;
-                }
-                let typeButtons = ['title', 'content', 'list', 'cards', 'final'].map(type => {
-                    return `<button class="${slide.type === type ? 'active-type' : ''}" data-type="${type}">${type.charAt(0).toUpperCase()+type.slice(1)}</button>`;
-                }).join('');
-
-                let specificFields = '';
-                switch (slide.type) {
-                    case 'title':
-                        specificFields = `
-                  <label>Tag: <input type="text" id="fieldTag" value="${slide.tag || ''}"></label>
-                  <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
-                  <label>Subtítulo: <input type="text" id="fieldSubtitle" value="${slide.subtitle || ''}"></label>
-                  <label>Descrição: <textarea id="fieldDescription">${slide.description || ''}</textarea></label>
-                `;
-                        break;
-                    case 'content':
-                        specificFields = `
-                  <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
-                  <label>Texto: <textarea id="fieldText">${slide.text || ''}</textarea></label>
-                `;
-                        break;
-                    case 'list':
-                        specificFields = `
-                  <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
-                  <div class="card-props" id="listItemsContainer"></div>
-                  <button class="btn-sm" id="addListItemBtn">+ Adicionar Item</button>
-                `;
-                        break;
-                    case 'cards':
-                        specificFields = `
-                  <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
-                  <div class="card-props" id="cardsContainer"></div>
-                  <button class="btn-sm" id="addCardBtn">+ Adicionar Card</button>
-                `;
-                        break;
-                    case 'final':
-                        specificFields = `
-                  <label>Título: <input type="text" id="fieldTitle" value="${slide.title || ''}"></label>
-                  <label>Texto: <textarea id="fieldText">${slide.text || ''}</textarea></label>
-                `;
-                        break;
-                }
-
-                slideForm.innerHTML = `
-              <div class="slide-type-selector">${typeButtons}</div>
-              ${specificFields}
-            `;
-
-                // Type buttons events
-                slideForm.querySelectorAll('.slide-type-selector button').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const newType = this.dataset.type;
-                        if (slide.type === newType) return;
-                        // Resetar campos relevantes
-                        slide.type = newType;
-                        if (newType === 'list' && !slide.items) slide.items = [];
-                        if (newType === 'cards' && !slide.cards) slide.cards = [];
-                        saveToStorage();
-                        renderAll();
-                    });
-                });
-
-                // Preencher listas/cards dinamicamente
-                if (slide.type === 'list') {
-                    const listContainer = document.getElementById('listItemsContainer');
-                    if (listContainer && slide.items) {
-                        slide.items.forEach((item, i) => {
-                            const div = document.createElement('div');
-                            div.className = 'card-prop-item';
-                            div.innerHTML = `
-                    <input type="text" value="${item}" data-index="${i}" class="list-item-input">
-                    <button class="btn-sm danger remove-list-item" data-index="${i}">Remover</button>
-                  `;
-                            listContainer.appendChild(div);
-                        });
-                        document.querySelectorAll('.list-item-input').forEach(input => {
-                            input.addEventListener('input', function() {
-                                const idx = parseInt(this.dataset.index);
-                                slide.items[idx] = this.value;
-                                saveToStorage();
-                                renderPreview();
-                            });
-                        });
-                        document.querySelectorAll('.remove-list-item').forEach(btn => {
-                            btn.addEventListener('click', function() {
-                                const idx = parseInt(this.dataset.index);
-                                slide.items.splice(idx, 1);
-                                saveToStorage();
-                                renderAll();
-                            });
+                        document.getElementById('addListItemBtn').addEventListener('click', () => {
+                            slide.items.push('Novo item');
+                            saveToStorage();
+                            renderAll();
                         });
                     }
-                    document.getElementById('addListItemBtn').addEventListener('click', () => {
-                        slide.items.push('Novo item');
-                        saveToStorage();
-                        renderAll();
-                    });
-                }
 
-                if (slide.type === 'cards') {
-                    const cardsContainer = document.getElementById('cardsContainer');
-                    if (cardsContainer && slide.cards) {
-                        slide.cards.forEach((card, i) => {
-                            const div = document.createElement('div');
-                            div.className = 'card-prop-item';
-                            div.innerHTML = `
-                    <input type="text" value="${card.title}" placeholder="Título" data-index="${i}" class="card-title-input">
-                    <input type="text" value="${card.desc}" placeholder="Descrição" data-index="${i}" class="card-desc-input">
-                    <button class="btn-sm danger remove-card" data-index="${i}">Remover</button>
-                  `;
-                            cardsContainer.appendChild(div);
-                        });
-                        document.querySelectorAll('.card-title-input').forEach(input => {
-                            input.addEventListener('input', function() {
-                                const idx = parseInt(this.dataset.index);
-                                slide.cards[idx].title = this.value;
-                                saveToStorage();
-                                renderPreview();
+                    if (slide.type === 'cards') {
+                        const cardsContainer = document.getElementById('cardsContainer');
+                        if (cardsContainer && slide.cards) {
+                            cardsContainer.innerHTML = '';
+                            slide.cards.forEach((card, i) => {
+                                const div = document.createElement('div');
+                                div.className = 'card-prop-item';
+                                div.innerHTML = `
+                      <input type="text" value="${card.title}" placeholder="Título" data-index="${i}" class="card-title-input">
+                      <input type="text" value="${card.desc}" placeholder="Descrição" data-index="${i}" class="card-desc-input">
+                      <button class="btn-sm danger remove-card" data-index="${i}">Remover</button>
+                    `;
+                                cardsContainer.appendChild(div);
                             });
-                        });
-                        document.querySelectorAll('.card-desc-input').forEach(input => {
-                            input.addEventListener('input', function() {
-                                const idx = parseInt(this.dataset.index);
-                                slide.cards[idx].desc = this.value;
-                                saveToStorage();
-                                renderPreview();
+                            document.querySelectorAll('.card-title-input').forEach(input => {
+                                input.addEventListener('input', function() {
+                                    const idx = parseInt(this.dataset.index);
+                                    slide.cards[idx].title = this.value;
+                                    saveToStorage();
+                                    renderPreview();
+                                });
                             });
-                        });
-                        document.querySelectorAll('.remove-card').forEach(btn => {
-                            btn.addEventListener('click', function() {
-                                const idx = parseInt(this.dataset.index);
-                                slide.cards.splice(idx, 1);
-                                saveToStorage();
-                                renderAll();
+                            document.querySelectorAll('.card-desc-input').forEach(input => {
+                                input.addEventListener('input', function() {
+                                    const idx = parseInt(this.dataset.index);
+                                    slide.cards[idx].desc = this.value;
+                                    saveToStorage();
+                                    renderPreview();
+                                });
                             });
+                            document.querySelectorAll('.remove-card').forEach(btn => {
+                                btn.addEventListener('click', function() {
+                                    const idx = parseInt(this.dataset.index);
+                                    slide.cards.splice(idx, 1);
+                                    saveToStorage();
+                                    renderAll();
+                                });
+                            });
+                        }
+                        document.getElementById('addCardBtn').addEventListener('click', () => {
+                            slide.cards.push({ title: 'Novo Card', desc: 'Descrição' });
+                            saveToStorage();
+                            renderAll();
                         });
                     }
-                    document.getElementById('addCardBtn').addEventListener('click', () => {
-                        slide.cards.push({ title: 'Novo Card', desc: 'Descrição' });
-                        saveToStorage();
-                        renderAll();
-                    });
+
+                    // Campos comuns
+                    const fieldTitle = document.getElementById('fieldTitle');
+                    if (fieldTitle) {
+                        fieldTitle.addEventListener('input', function() {
+                            slide.title = this.value;
+                            saveToStorage();
+                            renderPreview();
+                            renderThumbnails();
+                        });
+                    }
+                    const fieldText = document.getElementById('fieldText');
+                    if (fieldText) {
+                        fieldText.addEventListener('input', function() {
+                            slide.text = this.value;
+                            saveToStorage();
+                            renderPreview();
+                        });
+                    }
+                    const fieldTag = document.getElementById('fieldTag');
+                    if (fieldTag) {
+                        fieldTag.addEventListener('input', function() {
+                            slide.tag = this.value;
+                            saveToStorage();
+                            renderPreview();
+                        });
+                    }
+                    const fieldSubtitle = document.getElementById('fieldSubtitle');
+                    if (fieldSubtitle) {
+                        fieldSubtitle.addEventListener('input', function() {
+                            slide.subtitle = this.value;
+                            saveToStorage();
+                            renderPreview();
+                        });
+                    }
+                    const fieldDescription = document.getElementById('fieldDescription');
+                    if (fieldDescription) {
+                        fieldDescription.addEventListener('input', function() {
+                            slide.description = this.value;
+                            saveToStorage();
+                            renderPreview();
+                        });
+                    }
                 }
 
-                // Eventos comuns de campos
-                const fieldTitle = document.getElementById('fieldTitle');
-                if (fieldTitle) {
-                    fieldTitle.addEventListener('input', function() {
-                        slide.title = this.value;
-                        saveToStorage();
-                        renderPreview();
-                        renderThumbnails();
-                    });
+                function renderAll() {
+                    renderThumbnails();
+                    renderPreview();
+                    renderForm();
+                    // Atualiza campos do toolbar
+                    presentationTitleInput.value = presentation.title;
+                    bgColorInput.value = presentation.theme.bgColor;
+                    primaryColorInput.value = presentation.theme.primaryColor;
+                    secondaryColorInput.value = presentation.theme.secondaryColor;
+                    textColorInput.value = presentation.theme.textColor;
                 }
-                const fieldText = document.getElementById('fieldText');
-                if (fieldText) {
-                    fieldText.addEventListener('input', function() {
-                        slide.text = this.value;
-                        saveToStorage();
-                        renderPreview();
-                    });
-                }
-                const fieldTag = document.getElementById('fieldTag');
-                if (fieldTag) {
-                    fieldTag.addEventListener('input', function() {
-                        slide.tag = this.value;
-                        saveToStorage();
-                        renderPreview();
-                    });
-                }
-                const fieldSubtitle = document.getElementById('fieldSubtitle');
-                if (fieldSubtitle) {
-                    fieldSubtitle.addEventListener('input', function() {
-                        slide.subtitle = this.value;
-                        saveToStorage();
-                        renderPreview();
-                    });
-                }
-                const fieldDescription = document.getElementById('fieldDescription');
-                if (fieldDescription) {
-                    fieldDescription.addEventListener('input', function() {
-                        slide.description = this.value;
-                        saveToStorage();
-                        renderPreview();
-                    });
-                }
-            }
 
-            function renderAll() {
-                renderThumbnails();
-                renderPreview();
-                renderForm();
-                applyThemeToCSS();
-            }
-
-            // Eventos globais de tema
-            function bindThemeEvents() {
+                // Eventos de tema
                 bgColorInput.addEventListener('input', function() {
                     presentation.theme.bgColor = this.value;
                     saveToStorage();
-                    applyThemeToCSS();
                     renderPreview();
                 });
                 primaryColorInput.addEventListener('input', function() {
@@ -1000,121 +1288,42 @@
                     presentation.title = this.value;
                     saveToStorage();
                 });
-            }
-
-            function loadPresentation(slidesArray, title) {
-                presentation.slides = JSON.parse(JSON.stringify(slidesArray));
-                presentation.title = title;
-                currentSlideIndex = 0;
-                saveToStorage();
-                renderAll();
-                updateThemeInputs();
-            }
-
-            function exportJSON() {
-                const dataStr = JSON.stringify(presentation, null, 2);
-                const blob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${presentation.title.replace(/\s+/g, '_')}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
-
-            function openPreview() {
-                // Gera um HTML independente com os slides e abre em nova aba
-                const slides = presentation.slides;
-                const theme = presentation.theme;
-                const title = presentation.title;
-                const htmlContent = generatePresentationHTML(slides, theme, title);
-                const blob = new Blob([htmlContent], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                window.open(url, '_blank');
-                URL.revokeObjectURL(url);
-            }
-
-            function generatePresentationHTML(slides, theme, title) {
-                // Cria uma apresentação autônoma baseada no viewer anterior
-                return `<!DOCTYPE html>
-        <html lang="pt-BR">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>${title}</title>
-          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-          <style>
-            * { margin:0; padding:0; box-sizing:border-box; }
-            body { font-family:'Inter',sans-serif; background:${theme.bgColor}; color:${theme.textColor}; height:100vh; overflow:hidden; display:flex; align-items:center; justify-content:center; }
-            .slide-container { width:100%; height:100%; position:relative; }
-            .slide { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4rem; opacity:0; transition:opacity 0.5s; text-align:center; }
-            .slide.active { opacity:1; z-index:2; }
-            .slide h1 { font-size:3.5rem; font-weight:800; margin-bottom:1.5rem; background:linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor}); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-            .slide h2 { font-size:2.5rem; font-weight:700; margin-bottom:1.5rem; }
-            .slide p, .slide li { font-size:1.2rem; line-height:1.6; max-width:700px; color:#CBD5E1; }
-            .card-grid { display:flex; gap:2rem; flex-wrap:wrap; justify-content:center; margin-top:2rem; }
-            .card-item { background:#1E293B; border-radius:1.2rem; padding:2rem; width:260px; text-align:left; border:1px solid #334155; }
-            .card-item h3 { font-size:1.4rem; margin-bottom:1rem; }
-            .tag { background:linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor}); padding:0.5rem 1.8rem; border-radius:2rem; font-weight:600; display:inline-block; margin-bottom:1rem; }
-            .final-slide { background:linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor}) !important; }
-            .final-slide h1, .final-slide p { color:white; -webkit-text-fill-color:white; background:none; }
-            ul { list-style:none; text-align:left; max-width:600px; }
-            ul li { margin-bottom:1rem; }
-            ul li::before { content:"🔹"; margin-right:0.5rem; color:${theme.primaryColor}; }
-            .page-indicator { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); background:#1E293B; padding:0.4rem 1.5rem; border-radius:2rem; color:#64748B; z-index:10; }
-            .exit-btn { position:fixed; top:2rem; right:2rem; background:rgba(255,255,255,0.1); border:none; color:#F8FAFC; padding:0.5rem 1.5rem; border-radius:2rem; cursor:pointer; font-size:0.9rem; z-index:10; }
-          </style>
-        </head>
-        <body>
-          <button class="exit-btn" onclick="window.close()">Fechar</button>
-          <div class="slide-container" id="slideContainer"></div>
-          <div class="page-indicator" id="pageIndicator"></div>
-          <script>
-            const slides = ${JSON.stringify(slides)};
-            const theme = ${JSON.stringify(theme)};
-            let current = 0;
-            const container = document.getElementById('slideContainer');
-            const indicator = document.getElementById('pageIndicator');
-            function render(index) {
-              const s = slides[index];
-              if (!s) return;
-              let html = '';
-              switch(s.type) {
-                case 'title': html = '<div class="slide active">' + (s.tag ? '<span class="tag">'+s.tag+'</span>' : '') + '<h1>'+s.title+'</h1>' + (s.subtitle ? '<p style="font-size:1.4rem;font-weight:600;">'+s.subtitle+'</p>' : '') + (s.description ? '<p style="margin-top:1rem;">'+s.description+'</p>' : '') + '</div>'; break;
-                case 'content': html = '<div class="slide active"><h2>'+s.title+'</h2><p style="font-size:1.3rem;">'+s.text+'</p></div>'; break;
-                case 'list': html = '<div class="slide active"><h2>'+s.title+'</h2><ul>' + s.items.map(i => '<li>'+i+'</li>').join('') + '</ul></div>'; break;
-                case 'cards': html = '<div class="slide active"><h2>'+s.title+'</h2><div class="card-grid">' + s.cards.map(c => '<div class="card-item"><h3>'+c.title+'</h3><p>'+c.desc+'</p></div>').join('') + '</div></div>'; break;
-                case 'final': html = '<div class="slide active final-slide"><h1 style="color:white;">'+s.title+'</h1><p style="font-size:1.6rem;color:white;">'+s.text+'</p></div>'; break;
-              }
-              container.innerHTML = html;
-              indicator.textContent = (index+1) + ' / ' + slides.length;
-            }
-            document.addEventListener('keydown', e => {
-              if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { if (current < slides.length-1) { current++; render(current); } }
-              else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { if (current > 0) { current--; render(current); } }
-              else if (e.key === 'Escape') window.close();
-            });
-            render(0);
-          <\/script>
-        </body>
-        </html>`;
-            }
-
-            // Inicialização
-            function init() {
-                loadFromStorage();
-                updateThemeInputs();
-                bindThemeEvents();
-                renderAll();
 
                 addSlideBtn.addEventListener('click', addSlide);
-                loadCeoBtn.addEventListener('click', () => loadPresentation(ceoSlides, 'Apresentação CEO'));
-                loadInternaBtn.addEventListener('click', () => loadPresentation(internaSlides,
-                    'Apresentação Interna'));
-                exportJsonBtn.addEventListener('click', exportJSON);
-                previewBtn.addEventListener('click', openPreview);
+                loadCeoBtn.addEventListener('click', () => {
+                    presentation.slides = JSON.parse(JSON.stringify(ceoSlides));
+                    presentation.title = 'Apresentação CEO';
+                    currentSlideIndex = 0;
+                    saveToStorage();
+                    renderAll();
+                });
+                loadInternaBtn.addEventListener('click', () => {
+                    presentation.slides = JSON.parse(JSON.stringify(internaSlides));
+                    presentation.title = 'Apresentação Interna';
+                    currentSlideIndex = 0;
+                    saveToStorage();
+                    renderAll();
+                });
+                exportJsonBtn.addEventListener('click', () => {
+                    const dataStr = JSON.stringify(presentation, null, 2);
+                    const blob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${presentation.title.replace(/\s+/g, '_')}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+                previewBtn.addEventListener('click', () => {
+                    const html = generatePresentationHTML(presentation.slides, presentation.theme, presentation
+                        .title);
+                    const blob = new Blob([html], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+                    URL.revokeObjectURL(url);
+                });
 
-                // Atalhos de teclado: Delete para remover slide selecionado
+                // Tecla Delete para remover slide
                 document.addEventListener('keydown', function(e) {
                     if (e.key === 'Delete' && document.activeElement === document.body) {
                         deleteSlide(currentSlideIndex);
@@ -1122,7 +1331,8 @@
                 });
             }
 
-            init();
+            // Inicialização final: exibe o hub
+            showHub();
         })();
     </script>
 </body>
