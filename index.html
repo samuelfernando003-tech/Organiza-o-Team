@@ -3,10 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JWZ Team & Vision - Hub de Apresentações</title>
+    <title>JWZ Team & Vision - Hub</title>
+
+    <!-- Firebase SDKs (compat mode para uso direto) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: #0B1121;
@@ -15,13 +25,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        .hub {
-            text-align: center;
-            max-width: 900px;
-            width: 100%;
             padding: 2rem;
         }
+
+        .hub {
+            text-align: center;
+            max-width: 1000px;
+            width: 100%;
+        }
+
         .hub h1 {
             font-size: 3.5rem;
             font-weight: 800;
@@ -30,18 +42,21 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .subtitle {
             font-size: 1.2rem;
             color: #94A3B8;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
-        .cards {
+
+        .presentations-grid {
             display: flex;
-            gap: 1.5rem;
-            justify-content: center;
             flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
             margin-bottom: 2rem;
         }
+
         .card {
             background: #131B2F;
             border: 1px solid #1E293B;
@@ -50,12 +65,16 @@
             width: 280px;
             text-align: left;
             transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
         }
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(59,130,246,0.2);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
             border-color: #3B82F6;
         }
+
         .card-tag {
             display: inline-block;
             background: linear-gradient(135deg, #3B82F6, #8B5CF6);
@@ -63,71 +82,93 @@
             border-radius: 2rem;
             font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             color: white;
+            width: fit-content;
         }
+
         .card h2 {
             font-size: 1.6rem;
             font-weight: 700;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
             color: #F8FAFC;
         }
+
         .card p {
             color: #94A3B8;
             font-size: 0.9rem;
             line-height: 1.5;
+            flex: 1;
             margin-bottom: 1.5rem;
         }
+
         .card-actions {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
         }
-        .card-btn {
+
+        .btn {
             background: #1E293B;
             border: 1px solid #334155;
             color: #CBD5E1;
             padding: 0.5rem 1rem;
             border-radius: 0.6rem;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
             display: inline-block;
         }
-        .card-btn:hover {
+
+        .btn:hover {
             background: #273450;
             border-color: #3B82F6;
         }
-        .card-btn.primary {
+
+        .btn-primary {
             background: linear-gradient(135deg, #3B82F6, #8B5CF6);
             border: none;
             color: white;
             font-weight: 600;
         }
-        .card-btn.primary:hover { opacity: 0.9; }
-        .new-pres-btn {
-            background: linear-gradient(135deg, #10B981, #059669);
-            border: none;
-            color: white;
-            font-weight: 600;
-            padding: 0.8rem 2rem;
-            border-radius: 0.8rem;
-            font-size: 1rem;
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .create-card {
+            border: 2px dashed #334155;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            margin-top: 1rem;
-            transition: opacity 0.2s;
+            text-align: center;
         }
-        .new-pres-btn:hover { opacity: 0.9; }
-        .arrow-hint {
-            margin-top: 1.5rem;
-            color: #64748B;
-            font-size: 0.9rem;
+
+        .create-card:hover {
+            border-color: #3B82F6;
+            background: rgba(59, 130, 246, 0.05);
         }
-        .empty-msg {
+
+        .create-card .plus-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .loading {
             color: #64748B;
-            font-style: italic;
+            margin: 2rem 0;
+        }
+
+        .error {
+            color: #EF4444;
+            margin: 1rem 0;
         }
     </style>
 </head>
@@ -135,17 +176,17 @@
     <div class="hub">
         <h1>JWZ TEAM & VISION</h1>
         <p class="subtitle">Centro de Apresentações Profissionais</p>
-        <div class="cards" id="presentationCards">
-            <p class="empty-msg">Carregando apresentações...</p>
+
+        <!-- Container onde as apresentações serão renderizadas dinamicamente -->
+        <div class="presentations-grid" id="presentationsContainer">
+            <p class="loading">Carregando apresentações...</p>
         </div>
-        <button class="new-pres-btn" id="newPresBtn">➕ Nova Apresentação</button>
-        <p class="arrow-hint">Use as setas do teclado nas apresentações • Pressione ESC para sair</p>
+
+        <p style="color:#64748B; font-size:0.9rem;">Use as setas do teclado nas apresentações • Pressione ESC para sair</p>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script>
+        // ---------- CONFIGURAÇÃO FIREBASE ----------
         const firebaseConfig = {
             apiKey: "AIzaSyDPerdPbaYCgzJzpqBK6IMHdMaCVXijGPA",
             authDomain: "canva-jwz.firebaseapp.com",
@@ -155,80 +196,235 @@
             appId: "1:492129376064:web:f2ade84324e2d975dd4ca5"
         };
 
+        // Inicializa Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const presentationsCol = db.collection('presentations');
 
-        const cardsContainer = document.getElementById('presentationCards');
-        const newPresBtn = document.getElementById('newPresBtn');
+        // ---------- DADOS EMBUTIDOS DAS APRESENTAÇÕES ORIGINAIS ----------
+        const ceoSlides = [
+            { type: 'title', tag: 'LANÇAMENTO OFICIAL', title: 'JWZ Platform', subtitle: 'Do Cadastro à Primeira Conexão',
+                description: 'Facilitando o Home Office para quem oferece e para quem contrata.' },
+            { type: 'list', title: 'O Grande Desafio do Home Office', items: ['Dificuldade para encontrar profissionais qualificados',
+                    'Processos de contratação lentos e caros', 'Falta de portfólio confiável', 'Oportunidades dispersas'
+                ] },
+            { type: 'content', title: 'A Solução é a JWZ',
+                text: 'A plataforma que conecta talento remoto com oportunidades reais de forma simples e confiável.' },
+            { type: 'cards', title: 'O DIFERENCIAL DO SITE', cards: [{ title: 'Para o Prestador',
+                    desc: 'Cadastro focado em habilidades, portfólio e experiência.' }, { title: 'Para o Contratante',
+                    desc: 'Encontre rapidamente os melhores profissionais para home office.' }
+            ] },
+            { type: 'list', title: 'PLANO DE PRODUÇÃO DO VÍDEO (Reels)', items: ['Gancho de Atenção (Problema real)',
+                    'Demonstração prática da JWZ', 'Call to Action forte'
+                ] },
+            { type: 'cards', title: 'CRONOGRAMA DE EXECUÇÃO', cards: [{ title: '1. Pré-produção',
+                    desc: 'Roteiro e planejamento.' }, { title: '2. Produção', desc: 'Gravação e edição.' },
+                { title: '3. Lançamento', desc: 'Publicação estratégica.' }
+            ] },
+            { type: 'final', title: 'Vamos transformar a JWZ em referência!',
+                text: 'O futuro do trabalho remoto começa agora.' }
+        ];
 
-        function renderCards(presentations) {
-            cardsContainer.innerHTML = '';
+        const internaSlides = [
+            { type: 'title', tag: 'INTERNA', title: 'Apresentação Interna', subtitle: 'JWZ TEAM & VISION',
+                description: 'Disciplina, Cultura e Crescimento Coletivo' },
+            { type: 'content', title: 'Quem Somos',
+                text: 'A JWZ é uma empresa de tecnologia que desenvolve soluções digitais de alta qualidade.' },
+            { type: 'list', title: 'Código de Conduta Interna', items: ['Transparência Total', 'Comprometimento com Prazos',
+                    'Respeito à Marca', 'Confidencialidade'
+                ] },
+            { type: 'cards', title: 'Funil de Disciplina', cards: [{ title: '01 Advertência',
+                    desc: 'Casos leves' }, { title: '02 Suspensão', desc: 'Afastamento temporário' },
+                { title: '03 Expulsão', desc: 'Quebra de confiança' }
+            ] },
+            { type: 'list', title: 'Regras de Saída', items: ['Aviso prévio', 'Repasse de acessos', 'Não-competição'] },
+            { type: 'cards', title: 'Nossa Cultura', cards: [{ title: 'Trabalho em Equipe',
+                    desc: 'Colaboração e conquistas coletivas.' }, { title: 'Disciplina',
+                    desc: 'Prazos e alto padrão.' }, { title: 'Transparência', desc: 'Comunicação aberta.' },
+                { title: 'Crescimento Contínuo', desc: 'Aprendizado constante.' }
+            ] },
+            { type: 'final', title: 'Vamos crescer juntos!', text: 'Obrigado pela atenção!' }
+        ];
+
+        // Tema padrão
+        const defaultTheme = {
+            bgColor: '#0F172A',
+            primaryColor: '#3B82F6',
+            secondaryColor: '#8B5CF6',
+            textColor: '#F8FAFC'
+        };
+
+        // ---------- FUNÇÕES ----------
+        // Garante que as apresentações padrão existam no Firestore (seed)
+        async function seedDefaultPresentations() {
+            const snapshot = await db.collection('presentations').get();
+            if (!snapshot.empty) return; // já existem dados
+
+            // Cria documentos iniciais
+            await db.collection('presentations').add({
+                title: 'Apresentação CEO',
+                theme: defaultTheme,
+                slides: ceoSlides,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            await db.collection('presentations').add({
+                title: 'Apresentação Interna',
+                theme: defaultTheme,
+                slides: internaSlides,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            console.log('Seed concluído: apresentações CEO e Interna criadas.');
+        }
+
+        // Renderiza cards dinamicamente
+        function renderPresentations(presentations) {
+            const container = document.getElementById('presentationsContainer');
             if (presentations.length === 0) {
-                cardsContainer.innerHTML = '<p class="empty-msg">Nenhuma apresentação encontrada. Crie uma nova!</p>';
+                container.innerHTML = '<p class="loading">Nenhuma apresentação encontrada. Crie uma nova.</p>';
                 return;
             }
-            presentations.forEach(pres => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <span class="card-tag">${(pres.id || '').toUpperCase()}</span>
-                    <h2>${pres.title || 'Sem título'}</h2>
-                    <p>${pres.slides ? pres.slides.length : 0} slides</p>
-                    <div class="card-actions">
-                        <button class="card-btn primary view-btn" data-id="${pres.id}">▶ Visualizar</button>
-                        <button class="card-btn edit-btn" data-id="${pres.id}">✏️ Editar</button>
-                        <button class="card-btn delete-btn" data-id="${pres.id}">🗑️ Excluir</button>
+
+            let html = '';
+            presentations.forEach(doc => {
+                const data = doc.data();
+                const id = doc.id;
+                const title = data.title || 'Sem título';
+                const tag = data.slides?.[0]?.tag || (title.includes('CEO') ? 'ESTRATÉGIA' : 'INTERNA');
+                const desc = data.slides?.[0]?.description || data.slides?.[1]?.text || 'Apresentação profissional JWZ';
+                // Limita descrição a 100 caracteres
+                const shortDesc = desc.length > 100 ? desc.substring(0, 100) + '...' : desc;
+
+                html += `
+                    <div class="card">
+                        <span class="card-tag">${tag}</span>
+                        <h2>${title}</h2>
+                        <p>${shortDesc}</p>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="visualizar('${id}')">▶ Visualizar</button>
+                            <button class="btn" onclick="editar('${id}')">✏️ Editar</button>
+                        </div>
                     </div>
                 `;
-                cardsContainer.appendChild(card);
             });
 
-            // Event listeners
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    window.location.href = `apresentacao.html?id=${id}`;
-                });
-            });
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    window.location.href = `editor.html?id=${id}`;
-                });
-            });
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const id = btn.dataset.id;
-                    if (confirm(`Excluir a apresentação "${id}"?`)) {
-                        await presentationsCol.doc(id).delete();
-                        loadPresentations();
-                    }
-                });
+            // Adiciona card "Criar Novo"
+            html += `
+                <div class="card create-card" onclick="criarNova()">
+                    <div>
+                        <div class="plus-icon">+</div>
+                        <h2 style="margin-top:0;">Nova Apresentação</h2>
+                        <p style="color:#94A3B8;">Comece do zero</p>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Navegar para visualizador existente
+        function visualizar(id) {
+            // Passa o ID do documento via query string para que o visualizador busque no Firestore
+            // Como você tem apresentações estáticas, podemos optar por carregar os dados do Firestore
+            // e gerar um HTML de visualização em nova aba (como feito anteriormente) ou
+            // redirecionar para uma página específica.
+            // Vou usar a mesma técnica de gerar HTML on-the-fly a partir dos dados do Firestore.
+            db.collection('presentations').doc(id).get().then(doc => {
+                if (!doc.exists) {
+                    alert('Apresentação não encontrada.');
+                    return;
+                }
+                const data = doc.data();
+                const html = generatePresentationHTML(data.slides, data.theme, data.title);
+                const blob = new Blob([html], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                URL.revokeObjectURL(url);
+            }).catch(err => {
+                console.error(err);
+                alert('Erro ao carregar apresentação.');
             });
         }
 
-        async function loadPresentations() {
+        // Redireciona para o editor com o ID
+        function editar(id) {
+            // Supõe que o editor.html aceite um parâmetro ?id=...
+            window.location.href = `editor.html?id=${id}`;
+        }
+
+        // Cria uma nova apresentação e redireciona para o editor
+        async function criarNova() {
             try {
-                const snapshot = await presentationsCol.orderBy('updatedAt', 'desc').get();
-                const presentations = [];
-                snapshot.forEach(doc => {
-                    presentations.push({ id: doc.id, ...doc.data() });
-                });
-                renderCards(presentations);
-            } catch (error) {
-                console.error('Erro ao carregar apresentações:', error);
-                cardsContainer.innerHTML = '<p class="empty-msg">Erro ao carregar. Verifique sua conexão.</p>';
+                const newDoc = {
+                    title: 'Nova Apresentação',
+                    theme: defaultTheme,
+                    slides: [{
+                        type: 'title',
+                        title: 'Título da Apresentação',
+                        subtitle: 'Subtítulo',
+                        description: 'Descrição breve',
+                        tag: 'Novo',
+                        items: [],
+                        cards: []
+                    }],
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                const docRef = await db.collection('presentations').add(newDoc);
+                window.location.href = `editor.html?id=${docRef.id}`;
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao criar nova apresentação.');
             }
         }
 
-        newPresBtn.addEventListener('click', () => {
-            const id = prompt('Digite um identificador para a nova apresentação (ex: "nova"):');
-            if (!id) return;
-            window.location.href = `editor.html?id=${encodeURIComponent(id)}`;
-        });
+        // Gera visualizador HTML como antes
+        function generatePresentationHTML(slides, theme, title) {
+            return `<!DOCTYPE html>
+        <html lang="pt-BR">
+        <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+        <style>
+        *{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',sans-serif;background:${theme.bgColor};color:${theme.textColor};height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+        .slide-container{width:100%;height:100%;position:relative;}.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;opacity:0;transition:opacity 0.5s;text-align:center;}.slide.active{opacity:1;z-index:2;}
+        .slide h1{font-size:3.5rem;font-weight:800;margin-bottom:1.5rem;background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor});-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .slide h2{font-size:2.5rem;font-weight:700;margin-bottom:1.5rem;}
+        .slide p,.slide li{font-size:1.2rem;line-height:1.6;max-width:700px;color:#CBD5E1;}
+        .card-grid{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;}.card-item{background:#1E293B;border-radius:1.2rem;padding:2rem;width:260px;text-align:left;border:1px solid #334155;}.card-item h3{font-size:1.4rem;margin-bottom:1rem;}
+        .tag{background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor});padding:0.5rem 1.8rem;border-radius:2rem;font-weight:600;display:inline-block;margin-bottom:1rem;}
+        .final-slide{background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor})!important;}.final-slide h1,.final-slide p{color:white;-webkit-text-fill-color:white;background:none;}
+        ul{list-style:none;text-align:left;max-width:600px;}ul li{margin-bottom:1rem;}ul li::before{content:"🔹";margin-right:0.5rem;color:${theme.primaryColor};}
+        .page-indicator{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1E293B;padding:0.4rem 1.5rem;border-radius:2rem;color:#64748B;z-index:10;}
+        .exit-btn{position:fixed;top:2rem;right:2rem;background:rgba(255,255,255,0.1);border:none;color:#F8FAFC;padding:0.5rem 1.5rem;border-radius:2rem;cursor:pointer;font-size:0.9rem;z-index:10;}
+        </style></head><body>
+        <button class="exit-btn" onclick="window.close()">Fechar</button>
+        <div class="slide-container" id="slideContainer"></div><div class="page-indicator" id="pageIndicator"></div>
+        <script>
+        const slides = ${JSON.stringify(slides)};
+        let current = 0;
+        function render(i){const s=slides[i];let h='';switch(s.type){case'title':h='<div class="slide active">'+(s.tag?'<span class="tag">'+s.tag+'</span>':'')+'<h1>'+s.title+'</h1>'+(s.subtitle?'<p style="font-size:1.4rem;font-weight:600;">'+s.subtitle+'</p>':'')+(s.description?'<p>'+s.description+'</p>':'')+'</div>';break;case'content':h='<div class="slide active"><h2>'+s.title+'</h2><p>'+s.text+'</p></div>';break;case'list':h='<div class="slide active"><h2>'+s.title+'</h2><ul>'+s.items.map(i=>'<li>'+i+'</li>').join('')+'</ul></div>';break;case'cards':h='<div class="slide active"><h2>'+s.title+'</h2><div class="card-grid">'+s.cards.map(c=>'<div class="card-item"><h3>'+c.title+'</h3><p>'+c.desc+'</p></div>').join('')+'</div></div>';break;case'final':h='<div class="slide active final-slide"><h1 style="color:white;">'+s.title+'</h1><p style="font-size:1.6rem;color:white;">'+s.text+'</p></div>';}document.getElementById('slideContainer').innerHTML=h;document.getElementById('pageIndicator').textContent=(i+1)+' / '+slides.length;}
+        document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown'){if(current<slides.length-1){current++;render(current);}}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){if(current>0){current--;render(current);}}else if(e.key==='Escape')window.close();});
+        render(0);
+        <\/script></body></html>`;
+        }
 
-        loadPresentations();
+        // ---------- INICIALIZAÇÃO ----------
+        async function carregarApresentacoes() {
+            try {
+                await seedDefaultPresentations();
+                const snapshot = await db.collection('presentations').orderBy('createdAt', 'asc').get();
+                const presentations = snapshot.docs;
+                renderPresentations(presentations);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('presentationsContainer').innerHTML = '<p class="error">Erro ao conectar com Firebase. Verifique a conexão.</p>';
+            }
+        }
+
+        // Expondo funções globalmente para os onclick
+        window.visualizar = visualizar;
+        window.editar = editar;
+        window.criarNova = criarNova;
+
+        // Inicia
+        carregarApresentacoes();
     </script>
 </body>
 </html>
