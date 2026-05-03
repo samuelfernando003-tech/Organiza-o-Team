@@ -3,169 +3,247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apresentação Interna - Fernando (CTO)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <title>Apresentação Interna · JWZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    .slide {
-      min-height: 100vh;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0F172A;
+      color: #F8FAFC;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 80px 40px;
-      opacity: 0;
-      transform: translateY(50px);
-      transition: all 1s ease;
-      position: absolute;
+    }
+    .slide-container {
       width: 100%;
-      top: 0;
-      left: 0;
+      height: 100%;
+      position: relative;
+    }
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      text-align: center;
     }
     .slide.active {
       opacity: 1;
-      transform: translateY(0);
+      z-index: 2;
+    }
+    .slide h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 2rem;
+      line-height: 1.2;
+    }
+    .slide h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .slide p, .slide li {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      max-width: 700px;
+      color: #CBD5E1;
+    }
+    .card-grid {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .card-item {
+      background: #1E293B;
+      border-radius: 1.2rem;
+      padding: 2rem;
+      width: 260px;
+      text-align: left;
+      border: 1px solid #334155;
+    }
+    .card-item h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .page-indicator {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      color: #64748B;
+      z-index: 10;
+    }
+    .exit-btn {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #F8FAFC;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-size: 0.9rem;
       z-index: 10;
     }
   </style>
 </head>
-<body class="bg-zinc-950 text-white overflow-hidden">
-
-  <section id="presentation" class="relative h-screen">
-
-    <!-- Slide 1 -->
-    <section id="s1" class="slide active bg-gradient-to-br from-slate-950 to-zinc-900 text-center">
-      <div>
-        <h1 class="text-7xl font-black mb-4">Apresentação Interna</h1>
-        <p class="text-5xl text-emerald-400">JWZ TEAM & VISION</p>
-        <p class="mt-16 text-2xl text-zinc-400">Disciplina, Cultura e Crescimento Coletivo</p>
-        <p class="mt-20 text-emerald-400">Fernando - CTO</p>
-      </div>
-    </section>
-
-    <!-- Slide 2 -->
-    <section id="s2" class="slide bg-zinc-900 text-center">
-      <div class="max-w-3xl">
-        <h2 class="text-6xl font-bold mb-12">Quem Somos</h2>
-        <p class="text-3xl text-zinc-300 leading-relaxed">
-          A JWZ é uma empresa de tecnologia que desenvolve soluções digitais de alta qualidade. 
-          Nosso objetivo é entregar excelência técnica com transparência e foco em resultados.
-        </p>
-      </div>
-    </section>
-
-    <!-- Slide 3 -->
-    <section id="s3" class="slide bg-zinc-800 text-center">
-      <div class="max-w-4xl">
-        <h2 class="text-6xl font-bold mb-12">Código de Conduta Interna</h2>
-        <div class="grid md:grid-cols-2 gap-8 text-left text-xl max-w-3xl mx-auto">
-          <div class="bg-zinc-900 p-8 rounded-3xl">✅ Transparência Total: Relatar problemas assim que surgirem</div>
-          <div class="bg-zinc-900 p-8 rounded-3xl">✅ Comprometimento com Prazos: Cumprir o combinado</div>
-          <div class="bg-zinc-900 p-8 rounded-3xl">✅ Respeito à Marca: Profissionalismo dentro e fora da empresa</div>
-          <div class="bg-zinc-900 p-8 rounded-3xl">✅ Confidencialidade: Proteger informações internas</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 4 -->
-    <section id="s4" class="slide bg-zinc-900 text-center">
-      <div class="max-w-5xl">
-        <h2 class="text-6xl font-bold mb-12">Funil de Disciplina</h2>
-        <div class="flex flex-wrap justify-center gap-10">
-          <div class="bg-amber-900/30 p-10 rounded-3xl w-80 text-center">
-            <div class="text-5xl font-bold text-amber-400 mb-4">01</div>
-            <h3 class="text-2xl font-bold">Advertência</h3>
-            <p class="text-sm mt-4">Verbal ou escrita para casos leves</p>
-          </div>
-          <div class="bg-orange-900/30 p-10 rounded-3xl w-80 text-center">
-            <div class="text-5xl font-bold text-orange-400 mb-4">02</div>
-            <h3 class="text-2xl font-bold">Suspensão</h3>
-            <p class="text-sm mt-4">Afastamento temporário em reincidência</p>
-          </div>
-          <div class="bg-red-900/30 p-10 rounded-3xl w-80 text-center">
-            <div class="text-5xl font-bold text-red-400 mb-4">03</div>
-            <h3 class="text-2xl font-bold">Expulsão</h3>
-            <p class="text-sm mt-4">Casos graves de quebra de confiança</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 5 -->
-    <section id="s5" class="slide bg-zinc-800 text-center">
-      <div class="max-w-3xl">
-        <h2 class="text-6xl font-bold mb-12">Regras de Saída e Sucessão</h2>
-        <ul class="text-2xl space-y-8 max-w-md mx-auto text-left">
-          <li>• Comunicar saída com aviso prévio adequado</li>
-          <li>• Realizar repasse completo de acessos e conhecimentos</li>
-          <li>• Respeitar cláusula de não-competição</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Slide 6: Nossa Cultura (Completo) -->
-    <section id="s6" class="slide bg-gradient-to-br from-emerald-900 to-teal-900 text-center">
-      <div class="max-w-4xl">
-        <h2 class="text-6xl font-bold mb-12">Nossa Cultura</h2>
-        <div class="grid md:grid-cols-2 gap-8 text-left text-xl max-w-3xl mx-auto">
-          <div class="bg-white/10 p-8 rounded-3xl">
-            <strong>Trabalho em Equipe:</strong> Colaboramos, ajudamos uns aos outros e celebramos conquistas coletivas.
-          </div>
-          <div class="bg-white/10 p-8 rounded-3xl">
-            <strong>Disciplina:</strong> Cumprimos prazos e mantemos alto padrão de qualidade.
-          </div>
-          <div class="bg-white/10 p-8 rounded-3xl">
-            <strong>Transparência:</strong> Comunicamos abertamente problemas e ideias.
-          </div>
-          <div class="bg-white/10 p-8 rounded-3xl">
-            <strong>Crescimento Contínuo:</strong> Aprendemos sempre e buscamos melhorar.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 7 -->
-    <section id="s7" class="slide bg-gradient-to-br from-emerald-900 to-slate-950 text-center">
-      <div>
-        <h2 class="text-6xl font-bold mb-12">Vamos crescer juntos!</h2>
-        <p class="text-3xl text-emerald-300">Disciplina, respeito e comprometimento são a base do nosso sucesso.</p>
-        <p class="mt-20 text-2xl">Obrigado pela atenção!</p>
-      </div>
-    </section>
-  </section>
-
-  <!-- Controles -->
-  <div class="fixed bottom-8 right-8 bg-zinc-900/90 backdrop-blur px-6 py-4 rounded-3xl flex items-center gap-6 z-50">
-    <button onclick="prevSlide()" class="hover:text-emerald-400"><i class="fas fa-chevron-left text-3xl"></i></button>
-    <span id="counter" class="font-mono text-xl">1 / 7</span>
-    <button onclick="nextSlide()" class="hover:text-emerald-400"><i class="fas fa-chevron-right text-3xl"></i></button>
-    <button onclick="exitPresentation()" class="ml-6 text-red-400 hover:text-red-500 font-medium">Sair</button>
-  </div>
+<body>
+  <button class="exit-btn" onclick="window.location.href='/'">← Voltar ao Hub</button>
+  <div class="slide-container" id="slideContainer"></div>
+  <div class="page-indicator" id="pageIndicator"></div>
 
   <script>
-    let current = 1;
-    const total = 7;
+    // Array de slides – basta alterar o conteúdo para cada apresentação
+    const slides = [
+      {
+        type: 'title',
+        title: 'Apresentação Interna',
+        subtitle: 'JWZ TEAM & VISION',
+        tag: 'Disciplina, Cultura e Crescimento Coletivo'
+      },
+      {
+        type: 'content',
+        title: 'Quem Somos',
+        text: 'A JWZ é uma empresa de tecnologia que desenvolve soluções digitais de alta qualidade. Nosso objetivo é entregar excelência técnica com transparência e foco em resultados.'
+      },
+      {
+        type: 'list',
+        title: 'Código de Conduta Interna',
+        items: [
+          'Transparência Total: Relatar problemas assim que surgirem',
+          'Comprometimento com Prazos: Cumprir o combinado',
+          'Respeito à Marca: Profissionalismo dentro e fora da empresa',
+          'Confidencialidade: Proteger informações internas'
+        ]
+      },
+      {
+        type: 'cards',
+        title: 'Funil de Disciplina',
+        cards: [
+          { title: '01 Advertência', desc: 'Verbal ou escrita para casos leves' },
+          { title: '02 Suspensão', desc: 'Afastamento temporário em reincidência' },
+          { title: '03 Expulsão', desc: 'Casos graves de quebra de confiança' }
+        ]
+      },
+      {
+        type: 'list',
+        title: 'Regras de Saída e Sucessão',
+        items: [
+          'Comunicar saída com aviso prévio adequado',
+          'Realizar repasse completo de acessos e conhecimentos',
+          'Respeitar cláusula de não-competição'
+        ]
+      },
+      {
+        type: 'cards',
+        title: 'Nossa Cultura',
+        cards: [
+          { title: 'Trabalho em Equipe', desc: 'Colaboramos, ajudamos uns aos outros e celebramos conquistas coletivas.' },
+          { title: 'Disciplina', desc: 'Cumprimos prazos e mantemos alto padrão de qualidade.' },
+          { title: 'Transparência', desc: 'Comunicamos abertamente problemas e ideias.' },
+          { title: 'Crescimento Contínuo', desc: 'Aprendemos sempre e buscamos melhorar.' }
+        ]
+      },
+      {
+        type: 'final',
+        title: 'Vamos crescer juntos!',
+        text: 'Disciplina, respeito e comprometimento são a base do nosso sucesso. Obrigado pela atenção!'
+      }
+    ];
 
-    function showSlide(n) {
-      current = n;
-      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-      document.getElementById('s' + n).classList.add('active');
-      document.getElementById('counter').textContent = `${n} / ${total}`;
+    let currentSlide = 0;
+    const container = document.getElementById('slideContainer');
+    const indicator = document.getElementById('pageIndicator');
+
+    function renderSlide(index) {
+      const slide = slides[index];
+      if (!slide) return;
+      
+      let html = '';
+      switch (slide.type) {
+        case 'title':
+          html = `<div class="slide active">
+                    <span class="card-tag" style="background:linear-gradient(135deg,#3B82F6,#8B5CF6);padding:0.5rem 1.5rem;border-radius:2rem;font-weight:600;">${slide.subtitle}</span>
+                    <h1 style="margin-top:2rem;">${slide.title}</h1>
+                    <p style="font-size:1.3rem;color:#94A3B8;">${slide.tag}</p>
+                  </div>`;
+          break;
+        case 'content':
+          html = `<div class="slide active">
+                    <h1>${slide.title}</h1>
+                    <p>${slide.text}</p>
+                  </div>`;
+          break;
+        case 'list':
+          const itemsHtml = slide.items.map(i => `<li style="margin-bottom:1rem;text-align:left;">✅ ${i}</li>`).join('');
+          html = `<div class="slide active">
+                    <h2>${slide.title}</h2>
+                    <ul style="list-style:none;margin-top:2rem;">${itemsHtml}</ul>
+                  </div>`;
+          break;
+        case 'cards':
+          const cardsHtml = slide.cards.map(c => `
+            <div class="card-item">
+              <h3>${c.title}</h3>
+              <p>${c.desc}</p>
+            </div>
+          `).join('');
+          html = `<div class="slide active">
+                    <h2>${slide.title}</h2>
+                    <div class="card-grid">${cardsHtml}</div>
+                  </div>`;
+          break;
+        case 'final':
+          html = `<div class="slide active" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6);">
+                    <h1 style="color:white;">${slide.title}</h1>
+                    <p style="font-size:1.5rem;color:white;">${slide.text}</p>
+                  </div>`;
+          break;
+        default: html = '';
+      }
+      container.innerHTML = html;
+      indicator.textContent = `${index + 1} / ${slides.length}`;
     }
 
-    function nextSlide() { if (current < total) showSlide(current + 1); }
-    function prevSlide() { if (current > 1) showSlide(current - 1); }
-
-    function exitPresentation() {
-      window.location.href = "index.html";
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        renderSlide(currentSlide);
+      }
+    }
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        renderSlide(currentSlide);
+      }
     }
 
-    document.addEventListener('keydown', e => {
-      if (e.key === "ArrowRight") nextSlide();
-      if (e.key === "ArrowLeft") prevSlide();
-      if (e.key === "Escape") exitPresentation();
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        prevSlide();
+      } else if (e.key === 'Escape') {
+        window.location.href = '/';
+      }
     });
+
+    // Inicializa
+    renderSlide(0);
   </script>
 </body>
 </html>
