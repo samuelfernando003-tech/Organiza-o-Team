@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWZ - Centro de Apresentações</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e2937 40%, #312e81 100%);
+      background-size: 200% 200%;
+      animation: gradientMove 15s ease infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .card {
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card:hover {
+      transform: translateY(-25px) scale(1.04);
+      box-shadow: 0 40px 70px -20px rgba(16, 185, 129, 0.5);
+    }
+    .glow {
+      text-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen hero">
+
+  <div class="max-w-6xl mx-auto px-6 py-24">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-20">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl font-bold">J</div>
+        <div>
+          <h1 class="text-4xl font-black tracking-tighter">JWZ</h1>
+          <p class="text-emerald-400 text-sm -mt-1">TEAM & VISION HUB</p>
+        </div>
+      </div>
+      <div class="text-zinc-400 text-sm uppercase tracking-widest">Centro de Apresentações</div>
+    </div>
+
+    <!-- Título Principal -->
+    <div class="text-center mb-20">
+      <h2 class="text-7xl md:text-8xl font-black tracking-tighter glow mb-6">
+        Escolha sua<br>Apresentação
+      </h2>
+      <p class="text-xl text-zinc-400 max-w-md mx-auto">Apresentações profissionais da JWZ</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+
+      <!-- Apresentação Interna -->
+      <a href="apresentacao-interna.html" class="card group bg-zinc-900 border border-zinc-700 hover:border-emerald-500 rounded-3xl overflow-hidden">
+        <div class="h-80 bg-gradient-to-br from-zinc-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
+          <i class="fas fa-users text-[220px] text-emerald-400/10 group-hover:text-emerald-400/20 transition-all duration-700"></i>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+        </div>
+        <div class="p-10">
+          <div class="uppercase text-emerald-400 text-sm font-semibold mb-2 tracking-wider">INTERNA</div>
+          <h3 class="text-4xl font-bold mb-4">Apresentação Interna</h3>
+          <p class="text-zinc-400 text-lg">Código de Conduta, Disciplina, Funil de Consequências, Regras de Saída e Cultura da Empresa.</p>
+          <div class="mt-8 flex items-center text-emerald-400 font-medium">
+            Fernando - CTO 
+            <span class="ml-auto text-3xl group-hover:translate-x-3 transition">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Apresentação CEO -->
+      <a href="apresentacao-ceo.html" class="card group bg-zinc-900 border border-zinc-700 hover:border-emerald-500 rounded-3xl overflow-hidden">
+        <div class="h-80 bg-gradient-to-br from-blue-900 to-indigo-900 flex items-center justify-center relative overflow-hidden">
+          <i class="fas fa-rocket text-[220px] text-white/10 group-hover:text-white/20 transition-all duration-700"></i>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        </div>
+        <div class="p-10">
+          <div class="uppercase text-emerald-400 text-sm font-semibold mb-2 tracking-wider">ESTRATÉGIA</div>
+          <h3 class="text-4xl font-bold mb-4">Apresentação do CEO</h3>
+          <p class="text-zinc-400 text-lg">Lançamento da Plataforma JWZ no Instagram e Estratégia de Crescimento.</p>
+          <div class="mt-8 flex items-center text-emerald-400 font-medium">
+            Ezequiel - CEO 
+            <span class="ml-auto text-3xl group-hover:translate-x-3 transition">→</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="text-center mt-20 text-zinc-500 text-sm">
+      Use as setas do teclado nas apresentações • Pressione ESC para sair
+    </div>
+  </div>
+</body>
+</html>
