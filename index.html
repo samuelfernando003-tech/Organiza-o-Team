@@ -3,99 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JWZ - Centro de Apresentações</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <title>JWZ · Centro de Apresentações</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    .hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e2937 40%, #312e81 100%);
-      background-size: 200% 200%;
-      animation: gradientMove 15s ease infinite;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0F172A;
+      color: #F8FAFC;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
     }
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    .hub {
+      text-align: center;
+      max-width: 800px;
+      width: 100%;
+    }
+    .hub h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      color: #94A3B8;
+      margin-bottom: 3rem;
+    }
+    .cards {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
     }
     .card {
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 1.5rem;
+      padding: 2.5rem 2rem;
+      width: 280px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: left;
     }
     .card:hover {
-      transform: translateY(-25px) scale(1.04);
-      box-shadow: 0 40px 70px -20px rgba(16, 185, 129, 0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(59,130,246,0.2);
+      border-color: #3B82F6;
     }
-    .glow {
-      text-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+    .card-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+      padding: 0.3rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .card p {
+      color: #94A3B8;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .arrow-hint {
+      margin-top: 2rem;
+      color: #64748B;
+      font-size: 0.9rem;
     }
   </style>
 </head>
-<body class="bg-zinc-950 text-white min-h-screen hero">
-
-  <div class="max-w-6xl mx-auto px-6 py-24">
-    
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-20">
-      <div class="flex items-center gap-4">
-        <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl font-bold">J</div>
-        <div>
-          <h1 class="text-4xl font-black tracking-tighter">JWZ</h1>
-          <p class="text-emerald-400 text-sm -mt-1">TEAM & VISION HUB</p>
-        </div>
+<body>
+  <div class="hub">
+    <h1>JWZ TEAM & VISION</h1>
+    <p class="subtitle">Escolha a apresentação profissional</p>
+    <div class="cards">
+      <div class="card" onclick="location.href='apresentacao-interna.html'">
+        <span class="card-tag">INTERNA</span>
+        <h2>Cultura & Disciplina</h2>
+        <p>Código de Conduta, Funil de Consequências, Regras de Saída e muito mais.</p>
       </div>
-      <div class="text-zinc-400 text-sm uppercase tracking-widest">Centro de Apresentações</div>
+      <div class="card" onclick="location.href='apresentacao-ceo.html'">
+        <span class="card-tag">ESTRATÉGIA</span>
+        <h2>Lançamento JWZ</h2>
+        <p>Plataforma no Instagram, estratégia de crescimento e conexão com o mercado.</p>
+      </div>
     </div>
-
-    <!-- Título Principal -->
-    <div class="text-center mb-20">
-      <h2 class="text-7xl md:text-8xl font-black tracking-tighter glow mb-6">
-        Escolha sua<br>Apresentação
-      </h2>
-      <p class="text-xl text-zinc-400 max-w-md mx-auto">Apresentações profissionais da JWZ</p>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-
-      <!-- Apresentação Interna -->
-      <a href="apresentacao-interna.html" class="card group bg-zinc-900 border border-zinc-700 hover:border-emerald-500 rounded-3xl overflow-hidden">
-        <div class="h-80 bg-gradient-to-br from-zinc-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
-          <i class="fas fa-users text-[220px] text-emerald-400/10 group-hover:text-emerald-400/20 transition-all duration-700"></i>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-        </div>
-        <div class="p-10">
-          <div class="uppercase text-emerald-400 text-sm font-semibold mb-2 tracking-wider">INTERNA</div>
-          <h3 class="text-4xl font-bold mb-4">Apresentação Interna</h3>
-          <p class="text-zinc-400 text-lg">Código de Conduta, Disciplina, Funil de Consequências, Regras de Saída e Cultura da Empresa.</p>
-          <div class="mt-8 flex items-center text-emerald-400 font-medium">
-            Fernando - CTO 
-            <span class="ml-auto text-3xl group-hover:translate-x-3 transition">→</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Apresentação CEO -->
-      <a href="apresentacao-ceo.html" class="card group bg-zinc-900 border border-zinc-700 hover:border-emerald-500 rounded-3xl overflow-hidden">
-        <div class="h-80 bg-gradient-to-br from-blue-900 to-indigo-900 flex items-center justify-center relative overflow-hidden">
-          <i class="fas fa-rocket text-[220px] text-white/10 group-hover:text-white/20 transition-all duration-700"></i>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-        </div>
-        <div class="p-10">
-          <div class="uppercase text-emerald-400 text-sm font-semibold mb-2 tracking-wider">ESTRATÉGIA</div>
-          <h3 class="text-4xl font-bold mb-4">Apresentação do CEO</h3>
-          <p class="text-zinc-400 text-lg">Lançamento da Plataforma JWZ no Instagram e Estratégia de Crescimento.</p>
-          <div class="mt-8 flex items-center text-emerald-400 font-medium">
-            Ezequiel - CEO 
-            <span class="ml-auto text-3xl group-hover:translate-x-3 transition">→</span>
-          </div>
-        </div>
-      </a>
-
-    </div>
-
-    <div class="text-center mt-20 text-zinc-500 text-sm">
-      Use as setas do teclado nas apresentações • Pressione ESC para sair
-    </div>
+    <p class="arrow-hint">Use as setas do teclado nas apresentações • Pressione ESC para sair</p>
   </div>
 </body>
 </html>
