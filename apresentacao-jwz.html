@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWZ - Apresentação Interna</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .slide { min-height: 100vh; display: flex; align-items: center; padding: 80px 40px; opacity: 0; transform: translateY(50px); transition: all 0.9s ease; position: absolute; width: 100%; top: 0; left: 0; }
+    .slide.active { opacity: 1; transform: translateY(0); z-index: 10; }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white overflow-hidden">
+
+  <!-- Tela Inicial -->
+  <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-900 to-black">
+    <div class="text-center px-6 max-w-3xl">
+      <h1 class="text-7xl font-bold mb-4">JWZ</h1>
+      <p class="text-5xl text-emerald-400 mb-6">TEAM & VISION HUB</p>
+      <p class="text-3xl mb-12">Apresentação Interna - Regras e Cultura</p>
+      <button onclick="startPresentation()" class="bg-emerald-500 hover:bg-emerald-600 text-3xl font-bold px-16 py-8 rounded-3xl transition-all hover:scale-110">
+        <i class="fas fa-play mr-3"></i> INICIAR APRESENTAÇÃO
+      </button>
+    </div>
+  </section>
+
+  <!-- Slides -->
+  <section id="presentation" class="hidden relative h-screen">
+
+    <!-- Slide 1 -->
+    <section id="s1" class="slide active bg-gradient-to-br from-slate-900 to-zinc-950">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-6xl font-bold mb-6">Bem-vindos à JWZ</h2>
+        <p class="text-3xl text-emerald-400">Apresentação Interna</p>
+        <p class="mt-10 text-2xl">Vamos falar sobre nossa cultura, disciplina, conduta e regras da empresa.</p>
+      </div>
+    </section>
+
+    <!-- Slide 2: Código de Conduta -->
+    <section id="s2" class="slide bg-zinc-900">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-5xl font-bold mb-8 text-center">Código de Conduta Interna</h2>
+        <div class="bg-zinc-800 p-10 rounded-3xl">
+          <h3 class="text-3xl font-bold text-emerald-400 mb-6">NOSSOS PRINCÍPIOS</h3>
+          <ul class="space-y-6 text-xl">
+            <li><strong>Transparência Total:</strong> Problemas devem ser relatados assim que surgirem.</li>
+            <li><strong>Comprometimento com Prazos:</strong> A plataforma depende da entrega de cada um.</li>
+            <li><strong>Respeito à Marca:</strong> Agir com profissionalismo dentro e fora das redes da JWZ.</li>
+            <li><strong>Confidencialidade:</strong> O que é discutido internamente (código, estratégias) não sai do grupo.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Funil de Disciplina -->
+    <section id="s3" class="slide bg-zinc-800">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-5xl font-bold mb-10 text-center">O Funil de Disciplina</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-zinc-900 p-8 rounded-3xl text-center">
+            <div class="text-4xl font-bold text-amber-400 mb-4">01</div>
+            <h3 class="font-bold">Advertência</h3>
+            <p class="text-sm mt-4">Aviso Verbal/Escrito em caso de atrasos sem justificativa ou descuidos leves.</p>
+          </div>
+          <div class="bg-zinc-900 p-8 rounded-3xl text-center">
+            <div class="text-4xl font-bold text-orange-400 mb-4">02</div>
+            <h3 class="font-bold">Suspensão</h3>
+            <p class="text-sm mt-4">Afastamento temporário em caso de reincidência ou falta grave que comprometa o cronograma.</p>
+          </div>
+          <div class="bg-zinc-900 p-8 rounded-3xl text-center">
+            <div class="text-4xl font-bold text-red-400 mb-4">03</div>
+            <h3 class="font-bold">Expulsão / Banimento</h3>
+            <p class="text-sm mt-4">Aplicada em casos graves de quebra de confiança, vazamento de dados ou dano à imagem da empresa.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Regras de Saída -->
+    <section id="s4" class="slide bg-zinc-900">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-5xl font-bold mb-8">Regras de Saída e Sucessão</h2>
+        <div class="space-y-6">
+          <div class="bg-zinc-800 p-8 rounded-3xl">
+            <strong>Aviso Prévio:</strong> Necessidade de comunicar a saída com antecedência.
+          </div>
+          <div class="bg-zinc-800 p-8 rounded-3xl">
+            <strong>Repasse de Conhecimento:</strong> O colaborador que sai deve documentar e entregar senhas, acessos e códigos.
+          </div>
+          <div class="bg-zinc-800 p-8 rounded-3xl">
+            <strong>Cláusula de Não-Competição:</strong> Compromisso de não criar algo idêntico por um período após a saída.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Cultura -->
+    <section id="s5" class="slide bg-zinc-800">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-5xl font-bold mb-12">Nossa Cultura</h2>
+        <p class="text-2xl">Disciplina, transparência, respeito e comprometimento são a base para crescermos juntos.</p>
+      </div>
+    </section>
+
+    <!-- Slide Final -->
+    <section id="s6" class="slide bg-emerald-900 text-center">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-6xl font-bold mb-10">Vamos construir uma empresa forte juntos!</h2>
+        <p class="text-3xl">Qualquer dúvida, é só falar com a liderança.</p>
+      </div>
+    </section>
+  </section>
+
+  <!-- Controles -->
+  <div id="controls" class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 bg-black/80 px-10 py-5 rounded-3xl flex gap-8 z-50">
+    <button onclick="prevSlide()" class="text-3xl hover:text-emerald-400"><i class="fas fa-arrow-left"></i></button>
+    <span id="counter" class="text-2xl font-mono">1 / 6</span>
+    <button onclick="nextSlide()" class="text-3xl hover:text-emerald-400"><i class="fas fa-arrow-right"></i></button>
+    <button onclick="exitPresentation()" class="ml-6 text-red-400">SAIR</button>
+  </div>
+
+  <script>
+    let current = 1;
+    const total = 6;
+
+    function startPresentation() {
+      document.getElementById('home').classList.add('hidden');
+      document.getElementById('presentation').classList.remove('hidden');
+      document.getElementById('controls').classList.remove('hidden');
+      showSlide(1);
+    }
+
+    function showSlide(n) {
+      current = n;
+      document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('active'));
+      document.getElementById('s' + n).classList.add('active');
+      document.getElementById('counter').textContent = `${n} / ${total}`;
+    }
+
+    function nextSlide() { if (current < total) showSlide(current + 1); }
+    function prevSlide() { if (current > 1) showSlide(current - 1); }
+    function exitPresentation() {
+      document.getElementById('presentation').classList.add('hidden');
+      document.getElementById('controls').classList.add('hidden');
+      document.getElementById('home').classList.remove('hidden');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('presentation').classList.contains('hidden')) return;
+      if (e.key === "ArrowRight") nextSlide();
+      if (e.key === "ArrowLeft") prevSlide();
+      if (e.key === "Escape") exitPresentation();
+    });
+  </script>
+</body>
+</html>
