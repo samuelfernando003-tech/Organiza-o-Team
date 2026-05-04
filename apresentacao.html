@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação · JWZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#0F172A;color:#F8FAFC;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}.slide-container{width:100%;height:100%;position:relative}.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;opacity:0;transition:opacity .5s;text-align:center}.slide.active{opacity:1;z-index:2}.slide h1{font-size:3.5rem;font-weight:800;margin-bottom:1.5rem;background:linear-gradient(135deg,#3B82F6,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.slide h2{font-size:2.5rem;font-weight:700;margin-bottom:1.5rem}.slide p,.slide li{font-size:1.2rem;line-height:1.6;max-width:700px;color:#CBD5E1}.card-grid{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin-top:2rem}.card-item{background:#1E293B;border-radius:1.2rem;padding:2rem;width:260px;text-align:left;border:1px solid #334155}.card-item h3{font-size:1.4rem;margin-bottom:1rem}.tag{background:linear-gradient(135deg,#3B82F6,#8B5CF6);padding:.5rem 1.8rem;border-radius:2rem;font-weight:600;display:inline-block;margin-bottom:1rem;color:white}.final-slide{background:linear-gradient(135deg,#3B82F6,#8B5CF6)!important}.final-slide h1,.final-slide p{color:white;-webkit-text-fill-color:white;background:0 0}ul{list-style:none;text-align:left;max-width:600px}ul li{margin-bottom:1rem}ul li::before{content:"🔹";margin-right:.5rem;color:#3B82F6}.page-indicator{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1E293B;padding:.4rem 1.5rem;border-radius:2rem;color:#64748B;z-index:10}.btns-container{position:fixed;top:2rem;right:2rem;display:flex;gap:0.5rem;z-index:10}.btn{background:rgba(255,255,255,0.1);border:none;color:#F8FAFC;padding:0.5rem 1.2rem;border-radius:2rem;cursor:pointer;font-size:0.9rem;font-family:inherit;text-decoration:none;display:flex;align-items:center;gap:0.3rem}.btn:hover{background:rgba(255,255,255,0.2)}.loading-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0F172A;z-index:99;font-size:1.2rem;color:#94A3B8}
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loading">Carregando apresentação...</div>
+    <div class="btns-container">
+        <button class="btn" onclick="window.close()">Fechar</button>
+        <button class="btn" id="editBtn" style="display:none;">✏️ Editar</button>
+    </div>
+    <div class="slide-container" id="sc"></div>
+    <div class="page-indicator" id="pi"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script>
+        firebase.initializeApp({
+            apiKey: "AIzaSyDPerdPbaYCgzJzpqBK6IMHdMaCVXijGPA",
+            authDomain: "canva-jwz.firebaseapp.com",
+            projectId: "canva-jwz",
+            storageBucket: "canva-jwz.firebasestorage.app",
+            messagingSenderId: "492129376064",
+            appId: "1:492129376064:web:f2ade84324e2d975dd4ca5"
+        });
+        const db = firebase.firestore();
+        const params = new URLSearchParams(window.location.search);
+        const presId = params.get('id');
+        let slides = [];
+        let current = 0;
+
+        function render(i) {
+            const s = slides[i];
+            if (!s) return;
+            let h = '';
+            switch(s.type) {
+                case 'title': h = '<div class="slide active">'+(s.tag?'<span class="tag">'+s.tag+'</span>':'')+'<h1>'+s.title+'</h1>'+(s.subtitle?'<p style="font-size:1.4rem;font-weight:600">'+s.subtitle+'</p>':'')+(s.description?'<p>'+s.description+'</p>':'')+'</div>'; break;
+                case 'content': h = '<div class="slide active"><h2>'+s.title+'</h2><p>'+s.text+'</p></div>'; break;
+                case 'list': h = '<div class="slide active"><h2>'+s.title+'</h2><ul>'+s.items.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>'; break;
+                case 'cards': h = '<div class="slide active"><h2>'+s.title+'</h2><div class="card-grid">'+s.cards.map(c=>'<div class="card-item"><h3>'+c.title+'</h3><p>'+c.desc+'</p></div>').join('')+'</div></div>'; break;
+                case 'final': h = '<div class="slide active final-slide"><h1 style="color:white">'+s.title+'</h1><p style="font-size:1.6rem;color:white">'+s.text+'</p></div>'; break;
+            }
+            document.getElementById('sc').innerHTML = h;
+            document.getElementById('pi').textContent = (i+1)+' / '+slides.length;
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { if (current < slides.length-1) { current++; render(current); } }
+            else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { if (current > 0) { current--; render(current); } }
+            else if (e.key === 'Escape') window.close();
+        });
+
+        async function load() {
+            if (!presId) {
+                document.getElementById('loading').textContent = 'ID não informado.';
+                return;
+            }
+            try {
+                const doc = await db.collection('presentations').doc(presId).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    slides = data.slides || [];
+                    document.getElementById('editBtn').style.display = 'flex';
+                    document.getElementById('editBtn').addEventListener('click', () => {
+                        window.open(`projeto.html?id=${presId}`, '_blank');
+                    });
+                } else {
+                    slides = [{ type: 'content', title: 'Não encontrado', text: 'Apresentação inexistente.' }];
+                }
+            } catch(e) {
+                slides = [{ type: 'content', title: 'Erro', text: 'Falha ao carregar.' }];
+            }
+            document.getElementById('loading').style.display = 'none';
+            if (slides.length) render(0);
+        }
+
+        load();
+    </script>
+</body>
+</html>
