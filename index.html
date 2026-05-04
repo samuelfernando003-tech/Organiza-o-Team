@@ -211,6 +211,31 @@
         }
         .action-icon:hover { background: var(--primary); }
         .empty-message { grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--muted); }
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.6rem;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s ease, fadeOut 0.5s 2.5s forwards;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .toast.success { border-left: 4px solid #10b981; }
+        .toast.error { border-left: 4px solid var(--danger); }
+        @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
         @media (max-width: 700px) {
             .sidebar { display: none; }
             .top-bar { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
@@ -250,13 +275,18 @@
             <input type="text" class="search-box" placeholder="Buscar apresentações..." id="searchInput">
             <button class="btn-create" id="createNewBtn">+ Criar novo projeto</button>
         </div>
-        <div class="projects-grid" id="projectsGrid"></div>
+        <div class="projects-grid" id="projectsGrid">
+            <div class="empty-message">Carregando projetos...</div>
+        </div>
     </main>
+
+    <div class="toast-container" id="toastContainer"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script>
         (function() {
+            // Inicializar Firebase
             firebase.initializeApp({
                 apiKey: "AIzaSyDPerdPbaYCgzJzpqBK6IMHdMaCVXijGPA",
                 authDomain: "canva-jwz.firebaseapp.com",
@@ -267,6 +297,7 @@
             });
             const db = firebase.firestore();
 
+            // Dados das apresentações padrão
             const ceoSlides = [
                 { type: 'title', tag: 'LANÇAMENTO OFICIAL', title: 'JWZ Platform', subtitle: 'Do Cadastro à Primeira Conexão', description: 'Facilitando o Home Office para quem oferece e para quem contrata.' },
                 { type: 'list', title: 'O Grande Desafio do Home Office', items: ['Dificuldade para encontrar profissionais qualificados', 'Processos de contratação lentos e caros', 'Falta de portfólio confiável', 'Oportunidades dispersas'] },
@@ -298,34 +329,60 @@
             const createBtn = document.getElementById('createNewBtn');
             const navItems = document.querySelectorAll('.nav-item');
 
-            async function seed() {
-                const snap = await db.collection('presentations').get();
-                if (!snap.empty) return;
-                await db.collection('presentations').add({
-                    title: 'Apresentação CEO',
-                    theme: defaultTheme,
-                    slides: ceoSlides,
-                    category: 'ceo',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                await db.collection('presentations').add({
-                    title: 'Apresentação Interna',
-                    theme: defaultTheme,
-                    slides: internaSlides,
-                    category: 'interna',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+            // Toast de feedback
+            function showToast(message, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
             }
 
+            // Garantir apresentações padrão no Firestore
+            async function seedDefaultPresentations() {
+                try {
+                    const snapshot = await db.collection('presentations').get();
+                    if (!snapshot.empty) return; // já existem apresentações
+
+                    await db.collection('presentations').add({
+                        title: 'Apresentação CEO',
+                        theme: defaultTheme,
+                        slides: ceoSlides,
+                        category: 'ceo',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    await db.collection('presentations').add({
+                        title: 'Apresentação Interna',
+                        theme: defaultTheme,
+                        slides: internaSlides,
+                        category: 'interna',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    console.log('Seed concluído: CEO e Interna criadas.');
+                } catch (error) {
+                    console.error('Erro ao criar apresentações padrão:', error);
+                    showToast('Erro ao carregar apresentações padrão.', 'error');
+                }
+            }
+
+            // Carregar lista do Firestore
             async function loadPresentations() {
-                await seed();
-                const snap = await db.collection('presentations').orderBy('updatedAt', 'desc').get();
-                allPresentations = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderGrid();
+                try {
+                    await seedDefaultPresentations();
+                    const snapshot = await db.collection('presentations').orderBy('updatedAt', 'desc').get();
+                    allPresentations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderGrid();
+                } catch (error) {
+                    console.error('Erro ao carregar apresentações:', error);
+                    grid.innerHTML = '<div class="empty-message">Erro ao conectar com o Firebase. Verifique sua conexão.</div>';
+                    showToast('Falha na conexão com Firebase.', 'error');
+                }
             }
 
+            // Filtros combinados com busca
             function getFilteredPresentations() {
                 let filtered = [...allPresentations];
                 if (currentFilter === 'favorites') {
@@ -342,13 +399,16 @@
                 return filtered;
             }
 
+            // Renderizar cards
             function renderGrid() {
                 const list = getFilteredPresentations();
                 grid.innerHTML = '';
+
                 if (list.length === 0) {
                     grid.innerHTML = '<div class="empty-message">Nenhum projeto encontrado.</div>';
                     return;
                 }
+
                 list.forEach(pres => {
                     const slideCount = pres.slides ? pres.slides.length : 0;
                     const firstTag = pres.slides[0]?.tag || '';
@@ -376,13 +436,14 @@
                     `;
                     grid.appendChild(card);
 
+                    // Eventos dos botões
                     card.querySelector('.favorite-star').addEventListener('click', (e) => {
                         e.stopPropagation();
                         toggleFavorite(pres.id);
                     });
                     card.querySelector('.view-btn').addEventListener('click', (e) => {
                         e.stopPropagation();
-                        openViewer(pres);
+                        window.open(`apresentacao.html?id=${pres.id}`, '_blank');
                     });
                     card.querySelector('.edit-btn').addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -395,8 +456,13 @@
                     card.querySelector('.delete-btn').addEventListener('click', async (e) => {
                         e.stopPropagation();
                         if (confirm(`Excluir "${pres.title}"?`)) {
-                            await db.collection('presentations').doc(pres.id).delete();
-                            await loadPresentations();
+                            try {
+                                await db.collection('presentations').doc(pres.id).delete();
+                                showToast('Projeto excluído.');
+                                await loadPresentations();
+                            } catch (error) {
+                                showToast('Erro ao excluir.', 'error');
+                            }
                         }
                     });
                 });
@@ -410,12 +476,7 @@
                     favorites.push(id);
                 }
                 localStorage.setItem('jwz_favorites', JSON.stringify(favorites));
-                renderGrid();
-            }
-
-            function openViewer(pres) {
-                // Redireciona para o visualizador genérico
-                window.open(`apresentacao.html?id=${pres.id}`, '_blank');
+                renderGrid(); // recarrega para atualizar estrelas
             }
 
             function exportJSON(pres) {
@@ -426,6 +487,7 @@
                 a.click();
             }
 
+            // Navegação da sidebar
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
                     navItems.forEach(i => i.classList.remove('active'));
@@ -435,20 +497,29 @@
                 });
             });
 
+            // Busca em tempo real
             searchInput.addEventListener('input', renderGrid);
 
+            // Criar nova apresentação
             createBtn.addEventListener('click', async () => {
-                const ref = await db.collection('presentations').add({
-                    title: 'Nova Apresentação',
-                    theme: defaultTheme,
-                    slides: [{ type: 'title', title: 'Título', subtitle: 'Subtítulo', description: '', tag: 'NOVO', items: [], cards: [] }],
-                    category: 'general',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                window.open(`projeto.html?id=${ref.id}`, '_blank');
+                try {
+                    const docRef = await db.collection('presentations').add({
+                        title: 'Nova Apresentação',
+                        theme: defaultTheme,
+                        slides: [{ type: 'title', title: 'Título', subtitle: 'Subtítulo', description: '', tag: 'NOVO', items: [], cards: [] }],
+                        category: 'general',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showToast('Projeto criado! Abrindo editor...');
+                    window.open(`projeto.html?id=${docRef.id}`, '_blank');
+                } catch (error) {
+                    console.error('Erro ao criar projeto:', error);
+                    showToast('Não foi possível criar o projeto.', 'error');
+                }
             });
 
+            // Iniciar
             loadPresentations();
         })();
     </script>
