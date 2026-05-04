@@ -3,428 +3,511 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JWZ Team & Vision - Hub</title>
-
-    <!-- Firebase SDKs (compat mode para uso direto) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>JWZ · Projetos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #0a0f1c;
+            --sidebar-bg: #101524;
+            --card-bg: #171e2f;
+            --border: #1e293b;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --hover: #1e293b;
+            --danger: #ef4444;
+            --radius: 12px;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #0B1121;
-            color: #E2E8F0;
-            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
+            overflow: hidden;
         }
 
-        .hub {
-            text-align: center;
-            max-width: 1000px;
-            width: 100%;
-        }
-
-        .hub h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: #94A3B8;
-            margin-bottom: 2.5rem;
-        }
-
-        .presentations-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: #131B2F;
-            border: 1px solid #1E293B;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            width: 280px;
-            text-align: left;
-            transition: transform 0.3s, box-shadow 0.3s;
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
+            height: 100vh;
+            flex-shrink: 0;
+            padding: 1.5rem 0;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
-            border-color: #3B82F6;
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--border);
         }
 
-        .card-tag {
-            display: inline-block;
-            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1.2rem;
-            color: white;
-            width: fit-content;
-        }
-
-        .card h2 {
-            font-size: 1.6rem;
+        .sidebar-header h2 {
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #F8FAFC;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.2rem;
         }
 
-        .card p {
-            color: #94A3B8;
-            font-size: 0.9rem;
-            line-height: 1.5;
+        .sidebar-header p {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 1rem 0.5rem;
             flex: 1;
-            margin-bottom: 1.5rem;
         }
 
-        .card-actions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background: #1E293B;
-            border: 1px solid #334155;
-            color: #CBD5E1;
-            padding: 0.5rem 1rem;
-            border-radius: 0.6rem;
-            font-size: 0.85rem;
-            font-weight: 500;
+        .nav-item {
+            padding: 0.6rem 1.2rem;
+            margin: 0.2rem 0;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
         }
 
-        .btn:hover {
-            background: #273450;
-            border-color: #3B82F6;
+        .nav-item:hover { background: var(--hover); }
+        .nav-item.active {
+            background: rgba(59,130,246,0.15);
+            color: var(--primary);
+            font-weight: 600;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+        .nav-item svg { width: 18px; height: 18px; opacity: 0.8; }
+
+        .sidebar-footer {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.7rem;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            font-size: 0.9rem;
+            width: 300px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus { border-color: var(--primary); }
+
+        .btn-create {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border: none;
             color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
             font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: opacity 0.2s;
         }
 
-        .btn-primary:hover {
-            opacity: 0.9;
+        .btn-create:hover { opacity: 0.92; }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            align-content: start;
         }
 
-        .create-card {
-            border: 2px dashed #334155;
-            background: transparent;
+        .design-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .design-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+            border-color: #334155;
+        }
+
+        .card-preview {
+            height: 140px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+
+        .preview-badge {
+            position: absolute;
+            top: 0.8rem;
+            left: 0.8rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .preview-icon { font-size: 2.5rem; opacity: 0.5; }
+
+        .card-info { padding: 1rem; }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-meta {
+            font-size: 0.75rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .favorite-star {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            font-size: 1.2rem;
+            color: #64748b;
             cursor: pointer;
+            z-index: 5;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+        }
+
+        .favorite-star.active { color: #fbbf24; }
+
+        .card-actions-hover {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.3rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .design-card:hover .card-actions-hover { opacity: 1; }
+
+        .action-icon {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .action-icon:hover { background: var(--primary); }
+
+        .empty-message {
+            grid-column: 1 / -1;
             text-align: center;
+            padding: 3rem;
+            color: var(--muted);
         }
 
-        .create-card:hover {
-            border-color: #3B82F6;
-            background: rgba(59, 130, 246, 0.05);
-        }
-
-        .create-card .plus-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .loading {
-            color: #64748B;
-            margin: 2rem 0;
-        }
-
-        .error {
-            color: #EF4444;
-            margin: 1rem 0;
+        @media (max-width: 700px) {
+            .sidebar { display: none; }
+            .top-bar { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
         }
     </style>
 </head>
 <body>
-    <div class="hub">
-        <h1>JWZ TEAM & VISION</h1>
-        <p class="subtitle">Centro de Apresentações Profissionais</p>
 
-        <!-- Container onde as apresentações serão renderizadas dinamicamente -->
-        <div class="presentations-grid" id="presentationsContainer">
-            <p class="loading">Carregando apresentações...</p>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>JWZ Projetos</h2>
+            <p>Centro de apresentações</p>
         </div>
+        <ul class="nav-list">
+            <li class="nav-item active" data-filter="all">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
+                Todos os projetos
+            </li>
+            <li class="nav-item" data-filter="favorites">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Favoritos
+            </li>
+            <li class="nav-item" data-filter="ceo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                CEO
+            </li>
+            <li class="nav-item" data-filter="interna">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                Interna
+            </li>
+        </ul>
+        <div class="sidebar-footer">© JWZ Team & Vision</div>
+    </aside>
 
-        <p style="color:#64748B; font-size:0.9rem;">Use as setas do teclado nas apresentações • Pressione ESC para sair</p>
-    </div>
+    <main class="main">
+        <div class="top-bar">
+            <input type="text" class="search-box" placeholder="Buscar apresentações..." id="searchInput">
+            <button class="btn-create" id="createNewBtn">+ Criar novo projeto</button>
+        </div>
+        <div class="projects-grid" id="projectsGrid"></div>
+    </main>
 
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script>
-        // ---------- CONFIGURAÇÃO FIREBASE ----------
-        const firebaseConfig = {
-            apiKey: "AIzaSyDPerdPbaYCgzJzpqBK6IMHdMaCVXijGPA",
-            authDomain: "canva-jwz.firebaseapp.com",
-            projectId: "canva-jwz",
-            storageBucket: "canva-jwz.firebasestorage.app",
-            messagingSenderId: "492129376064",
-            appId: "1:492129376064:web:f2ade84324e2d975dd4ca5"
-        };
-
-        // Inicializa Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // ---------- DADOS EMBUTIDOS DAS APRESENTAÇÕES ORIGINAIS ----------
-        const ceoSlides = [
-            { type: 'title', tag: 'LANÇAMENTO OFICIAL', title: 'JWZ Platform', subtitle: 'Do Cadastro à Primeira Conexão',
-                description: 'Facilitando o Home Office para quem oferece e para quem contrata.' },
-            { type: 'list', title: 'O Grande Desafio do Home Office', items: ['Dificuldade para encontrar profissionais qualificados',
-                    'Processos de contratação lentos e caros', 'Falta de portfólio confiável', 'Oportunidades dispersas'
-                ] },
-            { type: 'content', title: 'A Solução é a JWZ',
-                text: 'A plataforma que conecta talento remoto com oportunidades reais de forma simples e confiável.' },
-            { type: 'cards', title: 'O DIFERENCIAL DO SITE', cards: [{ title: 'Para o Prestador',
-                    desc: 'Cadastro focado em habilidades, portfólio e experiência.' }, { title: 'Para o Contratante',
-                    desc: 'Encontre rapidamente os melhores profissionais para home office.' }
-            ] },
-            { type: 'list', title: 'PLANO DE PRODUÇÃO DO VÍDEO (Reels)', items: ['Gancho de Atenção (Problema real)',
-                    'Demonstração prática da JWZ', 'Call to Action forte'
-                ] },
-            { type: 'cards', title: 'CRONOGRAMA DE EXECUÇÃO', cards: [{ title: '1. Pré-produção',
-                    desc: 'Roteiro e planejamento.' }, { title: '2. Produção', desc: 'Gravação e edição.' },
-                { title: '3. Lançamento', desc: 'Publicação estratégica.' }
-            ] },
-            { type: 'final', title: 'Vamos transformar a JWZ em referência!',
-                text: 'O futuro do trabalho remoto começa agora.' }
-        ];
-
-        const internaSlides = [
-            { type: 'title', tag: 'INTERNA', title: 'Apresentação Interna', subtitle: 'JWZ TEAM & VISION',
-                description: 'Disciplina, Cultura e Crescimento Coletivo' },
-            { type: 'content', title: 'Quem Somos',
-                text: 'A JWZ é uma empresa de tecnologia que desenvolve soluções digitais de alta qualidade.' },
-            { type: 'list', title: 'Código de Conduta Interna', items: ['Transparência Total', 'Comprometimento com Prazos',
-                    'Respeito à Marca', 'Confidencialidade'
-                ] },
-            { type: 'cards', title: 'Funil de Disciplina', cards: [{ title: '01 Advertência',
-                    desc: 'Casos leves' }, { title: '02 Suspensão', desc: 'Afastamento temporário' },
-                { title: '03 Expulsão', desc: 'Quebra de confiança' }
-            ] },
-            { type: 'list', title: 'Regras de Saída', items: ['Aviso prévio', 'Repasse de acessos', 'Não-competição'] },
-            { type: 'cards', title: 'Nossa Cultura', cards: [{ title: 'Trabalho em Equipe',
-                    desc: 'Colaboração e conquistas coletivas.' }, { title: 'Disciplina',
-                    desc: 'Prazos e alto padrão.' }, { title: 'Transparência', desc: 'Comunicação aberta.' },
-                { title: 'Crescimento Contínuo', desc: 'Aprendizado constante.' }
-            ] },
-            { type: 'final', title: 'Vamos crescer juntos!', text: 'Obrigado pela atenção!' }
-        ];
-
-        // Tema padrão
-        const defaultTheme = {
-            bgColor: '#0F172A',
-            primaryColor: '#3B82F6',
-            secondaryColor: '#8B5CF6',
-            textColor: '#F8FAFC'
-        };
-
-        // ---------- FUNÇÕES ----------
-        // Garante que as apresentações padrão existam no Firestore (seed)
-        async function seedDefaultPresentations() {
-            const snapshot = await db.collection('presentations').get();
-            if (!snapshot.empty) return; // já existem dados
-
-            // Cria documentos iniciais
-            await db.collection('presentations').add({
-                title: 'Apresentação CEO',
-                theme: defaultTheme,
-                slides: ceoSlides,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        (function() {
+            firebase.initializeApp({
+                apiKey: "AIzaSyDPerdPbaYCgzJzpqBK6IMHdMaCVXijGPA",
+                authDomain: "canva-jwz.firebaseapp.com",
+                projectId: "canva-jwz",
+                storageBucket: "canva-jwz.firebasestorage.app",
+                messagingSenderId: "492129376064",
+                appId: "1:492129376064:web:f2ade84324e2d975dd4ca5"
             });
-            await db.collection('presentations').add({
-                title: 'Apresentação Interna',
-                theme: defaultTheme,
-                slides: internaSlides,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            console.log('Seed concluído: apresentações CEO e Interna criadas.');
-        }
+            const db = firebase.firestore();
 
-        // Renderiza cards dinamicamente
-        function renderPresentations(presentations) {
-            const container = document.getElementById('presentationsContainer');
-            if (presentations.length === 0) {
-                container.innerHTML = '<p class="loading">Nenhuma apresentação encontrada. Crie uma nova.</p>';
-                return;
+            const ceoSlides = [
+                { type: 'title', tag: 'LANÇAMENTO OFICIAL', title: 'JWZ Platform', subtitle: 'Do Cadastro à Primeira Conexão', description: 'Facilitando o Home Office para quem oferece e para quem contrata.' },
+                { type: 'list', title: 'O Grande Desafio do Home Office', items: ['Dificuldade para encontrar profissionais qualificados', 'Processos de contratação lentos e caros', 'Falta de portfólio confiável', 'Oportunidades dispersas'] },
+                { type: 'content', title: 'A Solução é a JWZ', text: 'A plataforma que conecta talento remoto com oportunidades reais de forma simples e confiável.' },
+                { type: 'cards', title: 'O DIFERENCIAL DO SITE', cards: [{ title: 'Para o Prestador', desc: 'Cadastro focado em habilidades, portfólio e experiência.' }, { title: 'Para o Contratante', desc: 'Encontre rapidamente os melhores profissionais para home office.' }] },
+                { type: 'list', title: 'PLANO DE PRODUÇÃO DO VÍDEO (Reels)', items: ['Gancho de Atenção (Problema real)', 'Demonstração prática da JWZ', 'Call to Action forte'] },
+                { type: 'cards', title: 'CRONOGRAMA DE EXECUÇÃO', cards: [{ title: '1. Pré-produção', desc: 'Roteiro e planejamento.' }, { title: '2. Produção', desc: 'Gravação e edição.' }, { title: '3. Lançamento', desc: 'Publicação estratégica.' }] },
+                { type: 'final', title: 'Vamos transformar a JWZ em referência!', text: 'O futuro do trabalho remoto começa agora.' }
+            ];
+
+            const internaSlides = [
+                { type: 'title', tag: 'INTERNA', title: 'Apresentação Interna', subtitle: 'JWZ TEAM & VISION', description: 'Disciplina, Cultura e Crescimento Coletivo' },
+                { type: 'content', title: 'Quem Somos', text: 'A JWZ é uma empresa de tecnologia que desenvolve soluções digitais de alta qualidade.' },
+                { type: 'list', title: 'Código de Conduta Interna', items: ['Transparência Total', 'Comprometimento com Prazos', 'Respeito à Marca', 'Confidencialidade'] },
+                { type: 'cards', title: 'Funil de Disciplina', cards: [{ title: '01 Advertência', desc: 'Casos leves' }, { title: '02 Suspensão', desc: 'Afastamento temporário' }, { title: '03 Expulsão', desc: 'Quebra de confiança' }] },
+                { type: 'list', title: 'Regras de Saída', items: ['Aviso prévio', 'Repasse de acessos', 'Não-competição'] },
+                { type: 'cards', title: 'Nossa Cultura', cards: [{ title: 'Trabalho em Equipe', desc: 'Colaboração e conquistas coletivas.' }, { title: 'Disciplina', desc: 'Prazos e alto padrão.' }, { title: 'Transparência', desc: 'Comunicação aberta.' }, { title: 'Crescimento Contínuo', desc: 'Aprendizado constante.' }] },
+                { type: 'final', title: 'Vamos crescer juntos!', text: 'Obrigado pela atenção!' }
+            ];
+
+            const defaultTheme = { bgColor: '#0F172A', primaryColor: '#3B82F6', secondaryColor: '#8B5CF6', textColor: '#F8FAFC' };
+
+            let allPresentations = [];
+            let currentFilter = 'all';
+            let favorites = JSON.parse(localStorage.getItem('jwz_favorites') || '[]');
+
+            const grid = document.getElementById('projectsGrid');
+            const searchInput = document.getElementById('searchInput');
+            const createBtn = document.getElementById('createNewBtn');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            async function seed() {
+                const snap = await db.collection('presentations').get();
+                if (!snap.empty) return;
+                await db.collection('presentations').add({
+                    title: 'Apresentação CEO',
+                    theme: defaultTheme,
+                    slides: ceoSlides,
+                    category: 'ceo',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await db.collection('presentations').add({
+                    title: 'Apresentação Interna',
+                    theme: defaultTheme,
+                    slides: internaSlides,
+                    category: 'interna',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
             }
 
-            let html = '';
-            presentations.forEach(doc => {
-                const data = doc.data();
-                const id = doc.id;
-                const title = data.title || 'Sem título';
-                const tag = data.slides?.[0]?.tag || (title.includes('CEO') ? 'ESTRATÉGIA' : 'INTERNA');
-                const desc = data.slides?.[0]?.description || data.slides?.[1]?.text || 'Apresentação profissional JWZ';
-                // Limita descrição a 100 caracteres
-                const shortDesc = desc.length > 100 ? desc.substring(0, 100) + '...' : desc;
+            async function loadPresentations() {
+                await seed();
+                const snap = await db.collection('presentations').orderBy('updatedAt', 'desc').get();
+                allPresentations = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderGrid();
+            }
 
-                html += `
-                    <div class="card">
-                        <span class="card-tag">${tag}</span>
-                        <h2>${title}</h2>
-                        <p>${shortDesc}</p>
-                        <div class="card-actions">
-                            <button class="btn btn-primary" onclick="visualizar('${id}')">▶ Visualizar</button>
-                            <button class="btn" onclick="editar('${id}')">✏️ Editar</button>
-                        </div>
-                    </div>
-                `;
-            });
+            function getFilteredPresentations() {
+                let filtered = [...allPresentations];
+                if (currentFilter === 'favorites') {
+                    filtered = filtered.filter(p => favorites.includes(p.id));
+                } else if (currentFilter === 'ceo') {
+                    filtered = filtered.filter(p => p.category === 'ceo' || p.title.toLowerCase().includes('ceo'));
+                } else if (currentFilter === 'interna') {
+                    filtered = filtered.filter(p => p.category === 'interna' || p.title.toLowerCase().includes('interna'));
+                }
+                const query = searchInput.value.toLowerCase();
+                if (query) {
+                    filtered = filtered.filter(p => p.title.toLowerCase().includes(query) || (p.slides[0]?.tag || '').toLowerCase().includes(query));
+                }
+                return filtered;
+            }
 
-            // Adiciona card "Criar Novo"
-            html += `
-                <div class="card create-card" onclick="criarNova()">
-                    <div>
-                        <div class="plus-icon">+</div>
-                        <h2 style="margin-top:0;">Nova Apresentação</h2>
-                        <p style="color:#94A3B8;">Comece do zero</p>
-                    </div>
-                </div>
-            `;
-
-            container.innerHTML = html;
-        }
-
-        // Navegar para visualizador existente
-        function visualizar(id) {
-            // Passa o ID do documento via query string para que o visualizador busque no Firestore
-            // Como você tem apresentações estáticas, podemos optar por carregar os dados do Firestore
-            // e gerar um HTML de visualização em nova aba (como feito anteriormente) ou
-            // redirecionar para uma página específica.
-            // Vou usar a mesma técnica de gerar HTML on-the-fly a partir dos dados do Firestore.
-            db.collection('presentations').doc(id).get().then(doc => {
-                if (!doc.exists) {
-                    alert('Apresentação não encontrada.');
+            function renderGrid() {
+                const list = getFilteredPresentations();
+                grid.innerHTML = '';
+                if (list.length === 0) {
+                    grid.innerHTML = '<div class="empty-message">Nenhum projeto encontrado.</div>';
                     return;
                 }
-                const data = doc.data();
-                const html = generatePresentationHTML(data.slides, data.theme, data.title);
+                list.forEach(pres => {
+                    const slideCount = pres.slides ? pres.slides.length : 0;
+                    const firstTag = pres.slides[0]?.tag || '';
+                    const updatedDate = pres.updatedAt ? new Date(pres.updatedAt.toMillis()).toLocaleDateString('pt-BR') : '';
+                    const isFav = favorites.includes(pres.id);
+
+                    const card = document.createElement('div');
+                    card.className = 'design-card';
+                    card.innerHTML = `
+                        <div class="card-preview">
+                            <span class="preview-badge">${firstTag || pres.title}</span>
+                            <span class="preview-icon">📄</span>
+                            <button class="favorite-star ${isFav ? 'active' : ''}" data-id="${pres.id}">★</button>
+                            <div class="card-actions-hover">
+                                <button class="action-icon view-btn" data-id="${pres.id}">👁</button>
+                                <button class="action-icon edit-btn" data-id="${pres.id}">✎</button>
+                                <button class="action-icon export-btn" data-id="${pres.id}">⤓</button>
+                                <button class="action-icon delete-btn" data-id="${pres.id}">🗑</button>
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-title">${pres.title}</div>
+                            <div class="card-meta"><span>${slideCount} slide(s)</span><span>${updatedDate}</span></div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    card.querySelector('.favorite-star').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        toggleFavorite(pres.id);
+                    });
+                    card.querySelector('.view-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openViewer(pres);
+                    });
+                    card.querySelector('.edit-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        window.location.href = `projeto.html?id=${pres.id}`;
+                    });
+                    card.querySelector('.export-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        exportJSON(pres);
+                    });
+                    card.querySelector('.delete-btn').addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        if (confirm(`Excluir "${pres.title}"?`)) {
+                            await db.collection('presentations').doc(pres.id).delete();
+                            await loadPresentations();
+                        }
+                    });
+                });
+            }
+
+            function toggleFavorite(id) {
+                const idx = favorites.indexOf(id);
+                if (idx >= 0) {
+                    favorites.splice(idx, 1);
+                } else {
+                    favorites.push(id);
+                }
+                localStorage.setItem('jwz_favorites', JSON.stringify(favorites));
+                renderGrid();
+            }
+
+            function openViewer(pres) {
+                const html = buildViewerHTML(pres.slides, pres.theme, pres.title);
                 const blob = new Blob([html], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                window.open(url, '_blank');
-                URL.revokeObjectURL(url);
-            }).catch(err => {
-                console.error(err);
-                alert('Erro ao carregar apresentação.');
+                window.open(URL.createObjectURL(blob), '_blank');
+            }
+
+            function buildViewerHTML(slides, theme, title) {
+                return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${title} · JWZ</title><link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:${theme.bgColor};color:${theme.textColor};height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}.slide-container{width:100%;height:100%;position:relative}.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;opacity:0;transition:opacity .5s;text-align:center}.slide.active{opacity:1;z-index:2}.slide h1{font-size:3.5rem;font-weight:800;margin-bottom:1.5rem;background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor});-webkit-background-clip:text;-webkit-text-fill-color:transparent}.slide h2{font-size:2.5rem;font-weight:700;margin-bottom:1.5rem}.slide p,.slide li{font-size:1.2rem;line-height:1.6;max-width:700px;color:#CBD5E1}.card-grid{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin-top:2rem}.card-item{background:#1E293B;border-radius:1.2rem;padding:2rem;width:260px;text-align:left;border:1px solid #334155}.card-item h3{font-size:1.4rem;margin-bottom:1rem}.tag{background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor});padding:.5rem 1.8rem;border-radius:2rem;font-weight:600;display:inline-block;margin-bottom:1rem;color:white}.final-slide{background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor})!important}.final-slide h1,.final-slide p{color:white;-webkit-text-fill-color:white;background:0 0}ul{list-style:none;text-align:left;max-width:600px}ul li{margin-bottom:1rem}ul li::before{content:"🔹";margin-right:.5rem;color:${theme.primaryColor}}.page-indicator{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1E293B;padding:.4rem 1.5rem;border-radius:2rem;color:#64748B;z-index:10}.exit-btn{position:fixed;top:2rem;right:2rem;background:rgba(255,255,255,.1);border:none;color:#F8FAFC;padding:.5rem 1.5rem;border-radius:2rem;cursor:pointer;font-size:.9rem;z-index:10;font-family:inherit}</style></head><body><button class="exit-btn" onclick="window.close()">Fechar</button><div class="slide-container" id="sc"></div><div class="page-indicator" id="pi"></div><script>const s=${JSON.stringify(slides)};let c=0;function r(i){const d=s[i];let h='';switch(d.type){case'title':h='<div class="slide active">'+(d.tag?'<span class="tag">'+d.tag+'</span>':'')+'<h1>'+d.title+'</h1>'+(d.subtitle?'<p style="font-size:1.4rem;font-weight:600">'+d.subtitle+'</p>':'')+(d.description?'<p>'+d.description+'</p>':'')+'</div>';break;case'content':h='<div class="slide active"><h2>'+d.title+'</h2><p>'+d.text+'</p></div>';break;case'list':h='<div class="slide active"><h2>'+d.title+'</h2><ul>'+d.items.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>';break;case'cards':h='<div class="slide active"><h2>'+d.title+'</h2><div class="card-grid">'+d.cards.map(x=>'<div class="card-item"><h3>'+x.title+'</h3><p>'+x.desc+'</p></div>').join('')+'</div></div>';break;case'final':h='<div class="slide active final-slide"><h1 style="color:white">'+d.title+'</h1><p style="font-size:1.6rem;color:white">'+d.text+'</p></div>';}document.getElementById('sc').innerHTML=h;document.getElementById('pi').textContent=(i+1)+' / '+s.length}document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown'){if(c<s.length-1){c++;r(c)}}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){if(c>0){c--;r(c)}}else if(e.key==='Escape')window.close()});r(0);<\/script></body></html>`;
+            }
+
+            function exportJSON(pres) {
+                const blob = new Blob([JSON.stringify({ id: pres.id, ...pres }, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `${pres.title.replace(/\s+/g, '_')}.json`;
+                a.click();
+            }
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    currentFilter = item.dataset.filter;
+                    renderGrid();
+                });
             });
-        }
 
-        // Redireciona para o editor com o ID
-        function editar(id) {
-            // Supõe que o editor.html aceite um parâmetro ?id=...
-            window.location.href = `editor.html?id=${id}`;
-        }
+            searchInput.addEventListener('input', renderGrid);
 
-        // Cria uma nova apresentação e redireciona para o editor
-        async function criarNova() {
-            try {
-                const newDoc = {
+            createBtn.addEventListener('click', async () => {
+                const ref = await db.collection('presentations').add({
                     title: 'Nova Apresentação',
                     theme: defaultTheme,
-                    slides: [{
-                        type: 'title',
-                        title: 'Título da Apresentação',
-                        subtitle: 'Subtítulo',
-                        description: 'Descrição breve',
-                        tag: 'Novo',
-                        items: [],
-                        cards: []
-                    }],
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                const docRef = await db.collection('presentations').add(newDoc);
-                window.location.href = `editor.html?id=${docRef.id}`;
-            } catch (err) {
-                console.error(err);
-                alert('Erro ao criar nova apresentação.');
-            }
-        }
+                    slides: [{ type: 'title', title: 'Título', subtitle: 'Subtítulo', description: '', tag: 'NOVO', items: [], cards: [] }],
+                    category: 'general',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                window.location.href = `projeto.html?id=${ref.id}`;
+            });
 
-        // Gera visualizador HTML como antes
-        function generatePresentationHTML(slides, theme, title) {
-            return `<!DOCTYPE html>
-        <html lang="pt-BR">
-        <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-        <style>
-        *{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',sans-serif;background:${theme.bgColor};color:${theme.textColor};height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-        .slide-container{width:100%;height:100%;position:relative;}.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem;opacity:0;transition:opacity 0.5s;text-align:center;}.slide.active{opacity:1;z-index:2;}
-        .slide h1{font-size:3.5rem;font-weight:800;margin-bottom:1.5rem;background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor});-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-        .slide h2{font-size:2.5rem;font-weight:700;margin-bottom:1.5rem;}
-        .slide p,.slide li{font-size:1.2rem;line-height:1.6;max-width:700px;color:#CBD5E1;}
-        .card-grid{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;}.card-item{background:#1E293B;border-radius:1.2rem;padding:2rem;width:260px;text-align:left;border:1px solid #334155;}.card-item h3{font-size:1.4rem;margin-bottom:1rem;}
-        .tag{background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor});padding:0.5rem 1.8rem;border-radius:2rem;font-weight:600;display:inline-block;margin-bottom:1rem;}
-        .final-slide{background:linear-gradient(135deg,${theme.primaryColor},${theme.secondaryColor})!important;}.final-slide h1,.final-slide p{color:white;-webkit-text-fill-color:white;background:none;}
-        ul{list-style:none;text-align:left;max-width:600px;}ul li{margin-bottom:1rem;}ul li::before{content:"🔹";margin-right:0.5rem;color:${theme.primaryColor};}
-        .page-indicator{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1E293B;padding:0.4rem 1.5rem;border-radius:2rem;color:#64748B;z-index:10;}
-        .exit-btn{position:fixed;top:2rem;right:2rem;background:rgba(255,255,255,0.1);border:none;color:#F8FAFC;padding:0.5rem 1.5rem;border-radius:2rem;cursor:pointer;font-size:0.9rem;z-index:10;}
-        </style></head><body>
-        <button class="exit-btn" onclick="window.close()">Fechar</button>
-        <div class="slide-container" id="slideContainer"></div><div class="page-indicator" id="pageIndicator"></div>
-        <script>
-        const slides = ${JSON.stringify(slides)};
-        let current = 0;
-        function render(i){const s=slides[i];let h='';switch(s.type){case'title':h='<div class="slide active">'+(s.tag?'<span class="tag">'+s.tag+'</span>':'')+'<h1>'+s.title+'</h1>'+(s.subtitle?'<p style="font-size:1.4rem;font-weight:600;">'+s.subtitle+'</p>':'')+(s.description?'<p>'+s.description+'</p>':'')+'</div>';break;case'content':h='<div class="slide active"><h2>'+s.title+'</h2><p>'+s.text+'</p></div>';break;case'list':h='<div class="slide active"><h2>'+s.title+'</h2><ul>'+s.items.map(i=>'<li>'+i+'</li>').join('')+'</ul></div>';break;case'cards':h='<div class="slide active"><h2>'+s.title+'</h2><div class="card-grid">'+s.cards.map(c=>'<div class="card-item"><h3>'+c.title+'</h3><p>'+c.desc+'</p></div>').join('')+'</div></div>';break;case'final':h='<div class="slide active final-slide"><h1 style="color:white;">'+s.title+'</h1><p style="font-size:1.6rem;color:white;">'+s.text+'</p></div>';}document.getElementById('slideContainer').innerHTML=h;document.getElementById('pageIndicator').textContent=(i+1)+' / '+slides.length;}
-        document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown'){if(current<slides.length-1){current++;render(current);}}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){if(current>0){current--;render(current);}}else if(e.key==='Escape')window.close();});
-        render(0);
-        <\/script></body></html>`;
-        }
-
-        // ---------- INICIALIZAÇÃO ----------
-        async function carregarApresentacoes() {
-            try {
-                await seedDefaultPresentations();
-                const snapshot = await db.collection('presentations').orderBy('createdAt', 'asc').get();
-                const presentations = snapshot.docs;
-                renderPresentations(presentations);
-            } catch (err) {
-                console.error(err);
-                document.getElementById('presentationsContainer').innerHTML = '<p class="error">Erro ao conectar com Firebase. Verifique a conexão.</p>';
-            }
-        }
-
-        // Expondo funções globalmente para os onclick
-        window.visualizar = visualizar;
-        window.editar = editar;
-        window.criarNova = criarNova;
-
-        // Inicia
-        carregarApresentacoes();
+            loadPresentations();
+        })();
     </script>
 </body>
 </html>
