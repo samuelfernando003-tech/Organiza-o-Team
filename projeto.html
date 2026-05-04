@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor JWZ · Projeto</title>
+    <title>Editor de Projeto · JWZ</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,7 +17,6 @@
             --success: #10b981;
             --danger: #ef4444;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -27,7 +26,6 @@
             display: flex;
             overflow: hidden;
         }
-
         .sidebar {
             width: 280px;
             background: var(--surface);
@@ -36,12 +34,10 @@
             flex-direction: column;
             height: 100vh;
         }
-
         .sidebar-header {
             padding: 1.5rem;
             border-bottom: 1px solid var(--border);
         }
-
         .sidebar-header h2 {
             font-size: 1.3rem;
             font-weight: 700;
@@ -49,12 +45,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        .sidebar-header p {
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
+        .sidebar-header p { font-size: 0.8rem; color: var(--muted); }
         .thumbnails {
             flex: 1;
             padding: 0.8rem;
@@ -63,7 +54,6 @@
             gap: 0.5rem;
             overflow-y: auto;
         }
-
         .thumb {
             background: #1e293b;
             border: 2px solid transparent;
@@ -77,12 +67,10 @@
             font-size: 0.85rem;
             color: #cbd5e1;
         }
-
         .thumb.active {
             border-color: var(--primary);
             box-shadow: 0 0 12px rgba(59,130,246,0.3);
         }
-
         .thumb:hover { background: #273450; }
         .thumb .idx {
             background: var(--primary);
@@ -96,14 +84,12 @@
             font-weight: 700;
             font-size: 0.7rem;
         }
-
         .thumb .t-title {
             flex: 1;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
         .thumb .del {
             display: none;
             background: none;
@@ -111,9 +97,7 @@
             color: var(--danger);
             cursor: pointer;
         }
-
         .thumb:hover .del { display: block; }
-
         .add-slide {
             margin: 0.5rem 0.8rem 1rem;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -126,9 +110,7 @@
             font-size: 0.9rem;
             transition: opacity 0.2s;
         }
-
         .add-slide:hover { opacity: 0.9; }
-
         .sidebar-footer {
             padding: 1rem;
             border-top: 1px solid var(--border);
@@ -136,7 +118,6 @@
             flex-direction: column;
             gap: 0.5rem;
         }
-
         .sidebar-footer button {
             background: #1e293b;
             border: 1px solid #334155;
@@ -147,33 +128,20 @@
             font-size: 0.8rem;
             transition: 0.2s;
         }
-
-        .sidebar-footer button:hover {
-            background: #273450;
-            border-color: var(--primary);
-        }
-
+        .sidebar-footer button:hover { background: #273450; border-color: var(--primary); }
         .sidebar-footer .save-btn {
             background: linear-gradient(135deg, var(--success), #059669);
             border: none;
             color: white;
             font-weight: 600;
         }
-
-        .sidebar-footer .export-btn {
+        .sidebar-footer .view-btn {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             border: none;
             color: white;
             font-weight: 600;
         }
-
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
+        .main { flex: 1; display: flex; flex-direction: column; height: 100vh; }
         .toolbar {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -183,7 +151,6 @@
             gap: 1.5rem;
             flex-wrap: wrap;
         }
-
         .toolbar input[type="text"] {
             background: #1e293b;
             border: 1px solid #334155;
@@ -195,7 +162,6 @@
             width: 260px;
             outline: none;
         }
-
         .toolbar input[type="text"]:focus { border-color: var(--primary); }
         .toolbar label {
             font-size: 0.8rem;
@@ -204,7 +170,6 @@
             align-items: center;
             gap: 0.4rem;
         }
-
         .toolbar input[type="color"] {
             width: 32px;
             height: 32px;
@@ -213,13 +178,7 @@
             cursor: pointer;
             background: transparent;
         }
-
-        .editor-body {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
+        .editor-body { flex: 1; display: flex; overflow: hidden; }
         .preview {
             flex: 1;
             display: flex;
@@ -228,7 +187,6 @@
             background: var(--bg);
             padding: 2rem;
         }
-
         .preview-window {
             width: 100%;
             max-width: 900px;
@@ -244,7 +202,6 @@
             text-align: center;
             transition: background 0.3s;
         }
-
         .preview-window h1 {
             font-size: 2.5rem;
             font-weight: 800;
@@ -253,39 +210,11 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        .preview-window h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .preview-window p, .preview-window li {
-            font-size: 1rem;
-            line-height: 1.6;
-            max-width: 600px;
-            color: #cbd5e1;
-        }
-
-        .preview-window ul {
-            list-style: none;
-            text-align: left;
-        }
-
-        .preview-window ul li::before {
-            content: "🔹";
-            margin-right: 0.5rem;
-            color: var(--primary);
-        }
-
-        .preview-window .card-grid-preview {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 1rem;
-        }
-
+        .preview-window h2 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+        .preview-window p, .preview-window li { font-size: 1rem; line-height: 1.6; max-width: 600px; color: #cbd5e1; }
+        .preview-window ul { list-style: none; text-align: left; }
+        .preview-window ul li::before { content: "🔹"; margin-right: 0.5rem; color: var(--primary); }
+        .preview-window .card-grid-preview { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
         .preview-window .card-preview {
             background: #1e293b;
             border-radius: 0.8rem;
@@ -294,12 +223,7 @@
             text-align: left;
             border: 1px solid #334155;
         }
-
-        .preview-window .card-preview h3 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
+        .preview-window .card-preview h3 { font-size: 1rem; margin-bottom: 0.5rem; }
         .preview-window .tag-preview {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             padding: 0.4rem 1.2rem;
@@ -309,7 +233,6 @@
             display: inline-block;
             margin-bottom: 1rem;
         }
-
         .properties {
             width: 320px;
             background: var(--surface);
@@ -320,20 +243,8 @@
             flex-direction: column;
             gap: 1rem;
         }
-
-        .properties h3 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .properties label {
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
+        .properties h3 { font-size: 1rem; font-weight: 600; }
+        .properties label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.8rem; color: var(--muted); }
         .properties input, .properties textarea, .properties select {
             background: #1e293b;
             border: 1px solid #334155;
@@ -345,47 +256,13 @@
             outline: none;
             resize: vertical;
         }
-
         .properties input:focus, .properties textarea:focus, .properties select:focus { border-color: var(--primary); }
-
-        .card-props {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .card-prop-item {
-            background: #1e293b;
-            border-radius: 0.5rem;
-            padding: 0.7rem;
-            border: 1px solid #334155;
-        }
-
-        .card-prop-item input {
-            width: 100%;
-            margin-bottom: 0.3rem;
-        }
-
-        .btn-sm {
-            background: #334155;
-            border: none;
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 0.4rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-
+        .card-props { display: flex; flex-direction: column; gap: 0.8rem; max-height: 300px; overflow-y: auto; }
+        .card-prop-item { background: #1e293b; border-radius: 0.5rem; padding: 0.7rem; border: 1px solid #334155; }
+        .card-prop-item input { width: 100%; margin-bottom: 0.3rem; }
+        .btn-sm { background: #334155; border: none; color: white; padding: 0.3rem 0.8rem; border-radius: 0.4rem; cursor: pointer; font-size: 0.75rem; }
         .btn-sm.danger { background: #7f1d1d; }
-
-        .type-selector {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-        }
-
+        .type-selector { display: flex; gap: 0.3rem; flex-wrap: wrap; }
         .type-selector button {
             background: #1e293b;
             border: 1px solid #334155;
@@ -396,13 +273,7 @@
             font-size: 0.75rem;
             transition: 0.2s;
         }
-
-        .type-selector button.active-type {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
+        .type-selector button.active-type { background: var(--primary); border-color: var(--primary); color: white; }
         .back-btn {
             position: fixed;
             top: 1rem;
@@ -416,7 +287,6 @@
             cursor: pointer;
             font-size: 0.8rem;
         }
-
         .toast {
             position: fixed;
             bottom: 2rem;
@@ -429,7 +299,6 @@
             z-index: 200;
             animation: fadeInOut 2s forwards;
         }
-
         @keyframes fadeInOut {
             0% { opacity: 0; transform: translateY(20px); }
             15% { opacity: 1; transform: translateY(0); }
@@ -451,7 +320,7 @@
         <div class="sidebar-footer">
             <button id="loadCeoBtn">📥 CEO</button>
             <button id="loadInternaBtn">📥 Interna</button>
-            <button class="export-btn" id="previewBtn">▶ Visualizar</button>
+            <button class="view-btn" id="viewBtn">▶ Visualizar</button>
             <button class="save-btn" id="saveBtn">💾 Salvar no Firebase</button>
         </div>
     </div>
@@ -489,7 +358,7 @@
             });
             const db = firebase.firestore();
             const params = new URLSearchParams(window.location.search);
-            const presId = params.get('id');
+            let presId = params.get('id'); // pode ser null
 
             const defaultSlide = { type: 'content', title: 'Novo Slide', text: 'Conteúdo aqui...', tag: '', subtitle: '', description: '', items: [], cards: [] };
             const defaultTheme = { bgColor: '#0F172A', primaryColor: '#3B82F6', secondaryColor: '#8B5CF6', textColor: '#F8FAFC' };
@@ -514,7 +383,7 @@
                 { type: 'final', title: 'Vamos crescer juntos!', text: 'Obrigado pela atenção!' }
             ];
 
-            let presentation = { title: 'Carregando...', theme: defaultTheme, slides: [] };
+            let presentation = { title: 'Nova Apresentação', theme: defaultTheme, slides: [JSON.parse(JSON.stringify(defaultSlide))] };
             let currentIndex = 0;
 
             const thumbnailsEl = document.getElementById('thumbnails');
@@ -653,20 +522,33 @@
             }
 
             document.getElementById('saveBtn').addEventListener('click', async () => {
-                if (!presId) return toast('ID não encontrado.');
-                await db.collection('presentations').doc(presId).set({
-                    title: presentation.title,
-                    theme: presentation.theme,
-                    slides: presentation.slides,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-                toast('Salvo com sucesso! ✅');
+                if (!presId) {
+                    // Criar novo documento e atualizar a URL
+                    const ref = await db.collection('presentations').add({
+                        title: presentation.title,
+                        theme: presentation.theme,
+                        slides: presentation.slides,
+                        category: 'general',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    presId = ref.id;
+                    window.history.replaceState({}, '', `?id=${presId}`);
+                    toast('Projeto criado e salvo! ✅');
+                } else {
+                    await db.collection('presentations').doc(presId).set({
+                        title: presentation.title,
+                        theme: presentation.theme,
+                        slides: presentation.slides,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                    toast('Salvo com sucesso! ✅');
+                }
             });
 
-            document.getElementById('previewBtn').addEventListener('click', () => {
-                const html = `<!DOCTYPE html><html lang="pt-BR"><head>...</head><body>...</body></html>`; // mesma função buildViewerHTML
-                const blob = new Blob([html], { type: 'text/html' });
-                window.open(URL.createObjectURL(blob), '_blank');
+            document.getElementById('viewBtn').addEventListener('click', () => {
+                if (!presId) { alert('Salve a apresentação primeiro.'); return; }
+                window.open(`apresentacao.html?id=${presId}`, '_blank');
             });
 
             document.getElementById('loadCeoBtn').addEventListener('click', () => {
@@ -689,11 +571,7 @@
                     if (doc.exists) {
                         const data = doc.data();
                         presentation = { title: data.title, theme: data.theme || defaultTheme, slides: data.slides || [] };
-                    } else {
-                        presentation = { title: 'Nova Apresentação', theme: defaultTheme, slides: [JSON.parse(JSON.stringify(defaultSlide))] };
                     }
-                } else {
-                    presentation = { title: 'Nova Apresentação', theme: defaultTheme, slides: [JSON.parse(JSON.stringify(defaultSlide))] };
                 }
                 renderAll();
             }
