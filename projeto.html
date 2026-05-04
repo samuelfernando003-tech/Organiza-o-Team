@@ -83,6 +83,7 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.7rem;
+            flex-shrink: 0;
         }
         .thumb .t-title {
             flex: 1;
@@ -96,6 +97,7 @@
             border: none;
             color: var(--danger);
             cursor: pointer;
+            font-size: 1rem;
         }
         .thumb:hover .del { display: block; }
         .add-slide {
@@ -286,6 +288,9 @@
             border-radius: 0.5rem;
             cursor: pointer;
             font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
         .toast {
             position: fixed;
@@ -318,8 +323,8 @@
         <div class="thumbnails" id="thumbnails"></div>
         <button class="add-slide" id="addSlideBtn">+ Adicionar Slide</button>
         <div class="sidebar-footer">
-            <button id="loadCeoBtn">📥 CEO</button>
-            <button id="loadInternaBtn">📥 Interna</button>
+            <button id="loadCeoBtn">📥 Carregar CEO</button>
+            <button id="loadInternaBtn">📥 Carregar Interna</button>
             <button class="view-btn" id="viewBtn">▶ Visualizar</button>
             <button class="save-btn" id="saveBtn">💾 Salvar no Firebase</button>
         </div>
@@ -358,7 +363,7 @@
             });
             const db = firebase.firestore();
             const params = new URLSearchParams(window.location.search);
-            let presId = params.get('id'); // pode ser null
+            let presId = params.get('id') || null; // pode ser null se acessado sem ID
 
             const defaultSlide = { type: 'content', title: 'Novo Slide', text: 'Conteúdo aqui...', tag: '', subtitle: '', description: '', items: [], cards: [] };
             const defaultTheme = { bgColor: '#0F172A', primaryColor: '#3B82F6', secondaryColor: '#8B5CF6', textColor: '#F8FAFC' };
@@ -383,7 +388,11 @@
                 { type: 'final', title: 'Vamos crescer juntos!', text: 'Obrigado pela atenção!' }
             ];
 
-            let presentation = { title: 'Nova Apresentação', theme: defaultTheme, slides: [JSON.parse(JSON.stringify(defaultSlide))] };
+            let presentation = {
+                title: 'Nova Apresentação',
+                theme: { ...defaultTheme },
+                slides: [ { ...defaultSlide } ]
+            };
             let currentIndex = 0;
 
             const thumbnailsEl = document.getElementById('thumbnails');
@@ -411,16 +420,16 @@
                 presentation.slides.forEach((s, i) => {
                     const div = document.createElement('div');
                     div.className = 'thumb' + (i === currentIndex ? ' active' : '');
-                    div.innerHTML = `<span class="idx">${i+1}</span><span class="t-title">${s.title||s.type}</span><button class="del">🗑️</button>`;
-                    div.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('del')) {
-                            if (presentation.slides.length > 1) {
-                                presentation.slides.splice(i, 1);
-                                if (currentIndex >= presentation.slides.length) currentIndex--;
-                                renderAll();
-                            }
-                            return;
+                    div.innerHTML = `<span class="idx">${i+1}</span><span class="t-title">${s.title || s.type}</span><button class="del">🗑️</button>`;
+                    div.querySelector('.del')?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (presentation.slides.length > 1) {
+                            presentation.slides.splice(i, 1);
+                            if (currentIndex >= presentation.slides.length) currentIndex--;
+                            renderAll();
                         }
+                    });
+                    div.addEventListener('click', () => {
                         currentIndex = i;
                         renderAll();
                     });
@@ -432,13 +441,25 @@
                 const s = presentation.slides[currentIndex];
                 if (!s) return;
                 previewEl.style.backgroundColor = presentation.theme.bgColor;
+                previewEl.style.backgroundImage = 'none';
                 let html = '';
                 switch (s.type) {
-                    case 'title': html = `${s.tag?`<div class="tag-preview">${s.tag}</div>`:''}<h1>${s.title||''}</h1>${s.subtitle?`<p style="font-size:1.2rem;font-weight:600">${s.subtitle}</p>`:''}${s.description?`<p>${s.description}</p>`:''}`; break;
-                    case 'content': html = `<h2>${s.title||''}</h2><p>${s.text||''}</p>`; break;
-                    case 'list': html = `<h2>${s.title||''}</h2><ul>${(s.items||[]).map(i=>`<li>${i}</li>`).join('')}</ul>`; break;
-                    case 'cards': html = `<h2>${s.title||''}</h2><div class="card-grid-preview">${(s.cards||[]).map(c=>`<div class="card-preview"><h3>${c.title}</h3><p>${c.desc}</p></div>`).join('')}</div>`; break;
-                    case 'final': html = `<h1 style="background:none;-webkit-text-fill-color:white;color:white">${s.title||''}</h1><p style="font-size:1.3rem;color:white">${s.text||''}</p>`; previewEl.style.background = `linear-gradient(135deg,${presentation.theme.primaryColor},${presentation.theme.secondaryColor})`; break;
+                    case 'title':
+                        html = `${s.tag ? `<div class="tag-preview">${s.tag}</div>` : ''}<h1>${s.title || ''}</h1>${s.subtitle ? `<p style="font-size:1.2rem;font-weight:600">${s.subtitle}</p>` : ''}${s.description ? `<p>${s.description}</p>` : ''}`;
+                        break;
+                    case 'content':
+                        html = `<h2>${s.title || ''}</h2><p>${s.text || ''}</p>`;
+                        break;
+                    case 'list':
+                        html = `<h2>${s.title || ''}</h2><ul>${(s.items || []).map(i => `<li>${i}</li>`).join('')}</ul>`;
+                        break;
+                    case 'cards':
+                        html = `<h2>${s.title || ''}</h2><div class="card-grid-preview">${(s.cards || []).map(c => `<div class="card-preview"><h3>${c.title}</h3><p>${c.desc}</p></div>`).join('')}</div>`;
+                        break;
+                    case 'final':
+                        html = `<h1 style="background:none;-webkit-text-fill-color:white;color:white">${s.title || ''}</h1><p style="font-size:1.3rem;color:white">${s.text || ''}</p>`;
+                        previewEl.style.background = `linear-gradient(135deg, ${presentation.theme.primaryColor}, ${presentation.theme.secondaryColor})`;
+                        break;
                 }
                 previewEl.innerHTML = html;
             }
@@ -448,106 +469,179 @@
                 if (!s) return;
                 const types = ['title','content','list','cards','final'];
                 formEl.innerHTML = `
-                    <div class="type-selector">${types.map(t=>`<button class="${s.type===t?'active-type':''}" data-type="${t}">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')}</div>
+                    <div class="type-selector">${types.map(t => `<button class="${s.type === t ? 'active-type' : ''}" data-type="${t}">${t.charAt(0).toUpperCase() + t.slice(1)}</button>`).join('')}</div>
                     ${getFieldsHTML(s)}
                 `;
-                formEl.querySelectorAll('.type-selector button').forEach(b => b.addEventListener('click', function() {
-                    s.type = this.dataset.type;
-                    renderAll();
-                }));
+                formEl.querySelectorAll('.type-selector button').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        s.type = this.dataset.type;
+                        renderAll();
+                    });
+                });
                 bindFieldEvents(s);
             }
 
             function getFieldsHTML(s) {
                 switch (s.type) {
-                    case 'title': return `<label>Tag<input id="fTag" value="${s.tag||''}"></label><label>Título<input id="fTitle" value="${s.title||''}"></label><label>Subtítulo<input id="fSub" value="${s.subtitle||''}"></label><label>Descrição<textarea id="fDesc">${s.description||''}</textarea></label>`;
-                    case 'content': return `<label>Título<input id="fTitle" value="${s.title||''}"></label><label>Texto<textarea id="fText">${s.text||''}</textarea></label>`;
-                    case 'list': return `<label>Título<input id="fTitle" value="${s.title||''}"></label><div class="card-props" id="listItems"></div><button class="btn-sm" id="addItem">+ Item</button>`;
-                    case 'cards': return `<label>Título<input id="fTitle" value="${s.title||''}"></label><div class="card-props" id="cardsContainer"></div><button class="btn-sm" id="addCard">+ Card</button>`;
-                    case 'final': return `<label>Título<input id="fTitle" value="${s.title||''}"></label><label>Texto<textarea id="fText">${s.text||''}</textarea></label>`;
+                    case 'title':
+                        return `<label>Tag<input id="fTag" value="${s.tag || ''}"></label>
+                                <label>Título<input id="fTitle" value="${s.title || ''}"></label>
+                                <label>Subtítulo<input id="fSub" value="${s.subtitle || ''}"></label>
+                                <label>Descrição<textarea id="fDesc">${s.description || ''}</textarea></label>`;
+                    case 'content':
+                        return `<label>Título<input id="fTitle" value="${s.title || ''}"></label>
+                                <label>Texto<textarea id="fText">${s.text || ''}</textarea></label>`;
+                    case 'list':
+                        return `<label>Título<input id="fTitle" value="${s.title || ''}"></label>
+                                <div class="card-props" id="listItems"></div>
+                                <button class="btn-sm" id="addItem">+ Item</button>`;
+                    case 'cards':
+                        return `<label>Título<input id="fTitle" value="${s.title || ''}"></label>
+                                <div class="card-props" id="cardsContainer"></div>
+                                <button class="btn-sm" id="addCard">+ Card</button>`;
+                    case 'final':
+                        return `<label>Título<input id="fTitle" value="${s.title || ''}"></label>
+                                <label>Texto<textarea id="fText">${s.text || ''}</textarea></label>`;
+                    default:
+                        return '';
                 }
             }
 
             function bindFieldEvents(s) {
-                const set = (id, prop) => { const el = document.getElementById(id); if (el) { el.addEventListener('input', () => { s[prop] = el.value; renderPreview(); }); } };
-                set('fTitle', 'title'); set('fText', 'text'); set('fTag', 'tag'); set('fSub', 'subtitle'); set('fDesc', 'description');
+                const set = (id, prop) => {
+                    const el = document.getElementById(id);
+                    if (el) el.addEventListener('input', () => { s[prop] = el.value; renderPreview(); });
+                };
+                set('fTitle', 'title');
+                set('fText', 'text');
+                set('fTag', 'tag');
+                set('fSub', 'subtitle');
+                set('fDesc', 'description');
+
                 if (s.type === 'list') {
                     const container = document.getElementById('listItems');
                     if (container) {
+                        container.innerHTML = '';
                         s.items.forEach((item, i) => {
-                            const div = document.createElement('div'); div.className = 'card-prop-item';
+                            const div = document.createElement('div');
+                            div.className = 'card-prop-item';
                             div.innerHTML = `<input value="${item}" data-idx="${i}" class="item-input"><button class="btn-sm danger rem-item">Remover</button>`;
                             container.appendChild(div);
                         });
-                        document.querySelectorAll('.item-input').forEach(inp => inp.addEventListener('input', function() { s.items[this.dataset.idx] = this.value; renderPreview(); }));
-                        document.querySelectorAll('.rem-item').forEach(b => b.addEventListener('click', function() { s.items.splice(this.parentElement.querySelector('input').dataset.idx, 1); renderAll(); }));
+                        document.querySelectorAll('.item-input').forEach(inp => {
+                            inp.addEventListener('input', function() { s.items[this.dataset.idx] = this.value; renderPreview(); });
+                        });
+                        document.querySelectorAll('.rem-item').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const idx = this.previousElementSibling.dataset.idx;
+                                s.items.splice(idx, 1);
+                                renderAll();
+                            });
+                        });
                     }
-                    document.getElementById('addItem').addEventListener('click', () => { s.items.push('Novo item'); renderAll(); });
+                    document.getElementById('addItem')?.addEventListener('click', () => {
+                        s.items.push('Novo item');
+                        renderAll();
+                    });
                 }
+
                 if (s.type === 'cards') {
                     const container = document.getElementById('cardsContainer');
                     if (container) {
-                        s.cards.forEach((c, i) => {
-                            const div = document.createElement('div'); div.className = 'card-prop-item';
-                            div.innerHTML = `<input value="${c.title}" placeholder="Título" data-idx="${i}" class="ctitle"><input value="${c.desc}" placeholder="Descrição" data-idx="${i}" class="cdesc"><button class="btn-sm danger rem-card">Remover</button>`;
+                        container.innerHTML = '';
+                        s.cards.forEach((card, i) => {
+                            const div = document.createElement('div');
+                            div.className = 'card-prop-item';
+                            div.innerHTML = `<input value="${card.title}" placeholder="Título" data-idx="${i}" class="ctitle"><input value="${card.desc}" placeholder="Descrição" data-idx="${i}" class="cdesc"><button class="btn-sm danger rem-card">Remover</button>`;
                             container.appendChild(div);
                         });
-                        document.querySelectorAll('.ctitle').forEach(inp => inp.addEventListener('input', function() { s.cards[this.dataset.idx].title = this.value; renderPreview(); }));
-                        document.querySelectorAll('.cdesc').forEach(inp => inp.addEventListener('input', function() { s.cards[this.dataset.idx].desc = this.value; renderPreview(); }));
-                        document.querySelectorAll('.rem-card').forEach(b => b.addEventListener('click', function() { s.cards.splice(this.parentElement.querySelector('input').dataset.idx, 1); renderAll(); }));
+                        document.querySelectorAll('.ctitle').forEach(inp => {
+                            inp.addEventListener('input', function() { s.cards[this.dataset.idx].title = this.value; renderPreview(); });
+                        });
+                        document.querySelectorAll('.cdesc').forEach(inp => {
+                            inp.addEventListener('input', function() { s.cards[this.dataset.idx].desc = this.value; renderPreview(); });
+                        });
+                        document.querySelectorAll('.rem-card').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const idx = this.parentElement.querySelector('input').dataset.idx;
+                                s.cards.splice(idx, 1);
+                                renderAll();
+                            });
+                        });
                     }
-                    document.getElementById('addCard').addEventListener('click', () => { s.cards.push({ title: 'Novo Card', desc: 'Descrição' }); renderAll(); });
+                    document.getElementById('addCard')?.addEventListener('click', () => {
+                        s.cards.push({ title: 'Novo Card', desc: 'Descrição' });
+                        renderAll();
+                    });
                 }
             }
 
-            [bgInput, prInput, scInput, txInput].forEach(inp => inp.addEventListener('input', () => {
-                presentation.theme.bgColor = bgInput.value;
-                presentation.theme.primaryColor = prInput.value;
-                presentation.theme.secondaryColor = scInput.value;
-                presentation.theme.textColor = txInput.value;
-                renderPreview();
-            }));
+            // Eventos da toolbar
+            [bgInput, prInput, scInput, txInput].forEach(inp => {
+                inp.addEventListener('input', () => {
+                    presentation.theme.bgColor = bgInput.value;
+                    presentation.theme.primaryColor = prInput.value;
+                    presentation.theme.secondaryColor = scInput.value;
+                    presentation.theme.textColor = txInput.value;
+                    renderPreview();
+                });
+            });
             presTitleInput.addEventListener('input', () => { presentation.title = presTitleInput.value; });
 
             document.getElementById('addSlideBtn').addEventListener('click', () => {
-                presentation.slides.push(JSON.parse(JSON.stringify(defaultSlide)));
+                presentation.slides.push({ ...defaultSlide });
                 currentIndex = presentation.slides.length - 1;
                 renderAll();
             });
 
             function toast(msg) {
-                const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.textContent = msg;
                 document.body.appendChild(t);
                 setTimeout(() => t.remove(), 2000);
             }
 
             document.getElementById('saveBtn').addEventListener('click', async () => {
                 if (!presId) {
-                    // Criar novo documento e atualizar a URL
-                    const ref = await db.collection('presentations').add({
-                        title: presentation.title,
-                        theme: presentation.theme,
-                        slides: presentation.slides,
-                        category: 'general',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    presId = ref.id;
-                    window.history.replaceState({}, '', `?id=${presId}`);
-                    toast('Projeto criado e salvo! ✅');
+                    // Criar novo documento
+                    try {
+                        const docRef = await db.collection('presentations').add({
+                            title: presentation.title,
+                            theme: presentation.theme,
+                            slides: presentation.slides,
+                            category: 'general',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        presId = docRef.id;
+                        window.history.replaceState({}, '', `?id=${presId}`);
+                        toast('Projeto criado e salvo! ✅');
+                    } catch (e) {
+                        console.error(e);
+                        toast('Erro ao salvar.');
+                    }
                 } else {
-                    await db.collection('presentations').doc(presId).set({
-                        title: presentation.title,
-                        theme: presentation.theme,
-                        slides: presentation.slides,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                    toast('Salvo com sucesso! ✅');
+                    try {
+                        await db.collection('presentations').doc(presId).set({
+                            title: presentation.title,
+                            theme: presentation.theme,
+                            slides: presentation.slides,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                        toast('Salvo com sucesso! ✅');
+                    } catch (e) {
+                        console.error(e);
+                        toast('Erro ao salvar.');
+                    }
                 }
             });
 
             document.getElementById('viewBtn').addEventListener('click', () => {
-                if (!presId) { alert('Salve a apresentação primeiro.'); return; }
+                if (!presId) {
+                    alert('Salve a apresentação primeiro.');
+                    return;
+                }
                 window.open(`apresentacao.html?id=${presId}`, '_blank');
             });
 
@@ -565,12 +659,19 @@
                 renderAll();
             });
 
+            // Inicialização: carrega do Firestore se ID existir
             async function init() {
                 if (presId) {
-                    const doc = await db.collection('presentations').doc(presId).get();
-                    if (doc.exists) {
-                        const data = doc.data();
-                        presentation = { title: data.title, theme: data.theme || defaultTheme, slides: data.slides || [] };
+                    try {
+                        const doc = await db.collection('presentations').doc(presId).get();
+                        if (doc.exists) {
+                            const data = doc.data();
+                            presentation.title = data.title || 'Nova Apresentação';
+                            presentation.theme = data.theme || defaultTheme;
+                            presentation.slides = data.slides || [ { ...defaultSlide } ];
+                        }
+                    } catch (e) {
+                        console.warn('Falha ao carregar, iniciando em branco.');
                     }
                 }
                 renderAll();
