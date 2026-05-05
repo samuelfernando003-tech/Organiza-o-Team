@@ -1,101 +1,500 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Centro de Apresentações JWZ - Acesso às apresentações institucionais da equipe e estratégia da empresa.">
+  <meta name="theme-color" content="#0f172a">
+  
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="JWZ - Centro de Apresentações">
+  <meta property="og:description" content="Acesse apresentações internas e estratégicas da JWZ.">
+  <meta property="og:image" content="/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  
   <title>JWZ - Centro de Apresentações</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          animation: {
+            'gradient-shift': 'gradientShift 18s ease infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 3s ease-in-out infinite'
+          },
+          keyframes: {
+            gradientShift: {
+              '0%, 100%': { 'background-position': '0% 50%' },
+              '50%': { 'background-position': '100% 50%' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' }
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: 1, filter: 'drop-shadow(0 0 20px rgba(16, 185, 129, 0.6))' },
+              '50%': { opacity: 0.85, filter: 'drop-shadow(0 0 35px rgba(16, 185, 129, 0.9))' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    .hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e2937 40%, #312e81 100%);
-      background-size: 200% 200%;
-      animation: gradientMove 15s ease infinite;
+    /* Base */
+    * { box-sizing: border-box; }
+    body { 
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0f1d;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    
+    /* Background com camadas */
+    .hero-bg {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(30, 41, 59, 0.8) 0%, rgba(10, 15, 29, 1) 70%),
+        linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #312e81 100%);
+      background-size: 200% 200%, 200% 200%, 100% 100%, 200% 200%;
+      animation: gradient-shift 18s ease infinite;
+      z-index: -3;
     }
+    
+    /* Partículas sutis */
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+    }
+    
+    /* Overlay de ruído para textura premium */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    /* Skip link para acessibilidade */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #10b981;
+      color: #0a0f1d;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0 0 0.5rem 0.5rem;
+      font-weight: 600;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+    .skip-link:focus { top: 0; outline: none; }
+    
+    /* Cards com glassmorphism */
     .card {
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(24, 32, 48, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, box-shadow;
     }
     .card:hover {
-      transform: translateY(-25px) scale(1.04);
-      box-shadow: 0 40px 70px -20px rgba(16, 185, 129, 0.5);
+      transform: translateY(-18px) scale(1.02);
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 60px -20px rgba(16, 185, 129, 0.3);
     }
+    
+    /* Focus states para acessibilidade */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid #10b981;
+      outline-offset: 4px;
+      border-radius: 0.75rem;
+    }
+    
+    /* Glow no título */
     .glow {
-      text-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+      text-shadow: 0 0 40px rgba(16, 185, 129, 0.5);
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+    
+    /* Badge animado */
+    .badge-new {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    /* Ícones flutuantes */
+    .icon-float { animation: float 8s ease-in-out infinite; }
+    .icon-float:nth-child(2) { animation-delay: -2s; }
+    .icon-float:nth-child(3) { animation-delay: -4s; }
+    
+    /* Transição de página */
+    .page-transition {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .page-transition.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    ::-webkit-scrollbar-thumb { 
+      background: rgba(16, 185, 129, 0.4); 
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.7); }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .card:hover { transform: translateY(-8px) scale(1.01); }
+      .hero-bg { background-size: 150% 150%, 150% 150%, 100% 100%, 150% 150%; }
     }
   </style>
 </head>
-<body class="bg-zinc-950 text-white min-h-screen hero">
+<body class="antialiased">
+  
+  <!-- Skip link para acessibilidade -->
+  <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+  
+  <!-- Background layers -->
+  <div class="hero-bg"></div>
+  <canvas id="particles"></canvas>
+  <div class="noise-overlay"></div>
 
-  <div class="max-w-6xl mx-auto px-6 py-24">
+  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
     
     <!-- Header -->
-    <header class="flex justify-between items-center mb-20">
-      <div class="flex items-center gap-4">
-        <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl font-bold">J</div>
-        <div>
-          <h1 class="text-4xl font-black tracking-tighter">JWZ</h1>
-          <p class="text-emerald-400 text-sm -mt-1">TEAM & VISION HUB</p>
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-16 sm:mb-20">
+      <a href="#" class="flex items-center gap-4 group focus:outline-none" aria-label="Página inicial JWZ">
+        <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center text-xl font-black shadow-lg shadow-emerald-500/25 group-hover:shadow-emerald-500/40 transition-all">
+          <span class="text-zinc-900">J</span>
         </div>
-      </div>
-      <div class="text-zinc-400 text-sm uppercase tracking-widest">Centro de Apresentações</div>
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-black tracking-tighter">JWZ</h1>
+          <p class="text-emerald-400 text-sm -mt-0.5 font-medium">TEAM & VISION HUB</p>
+        </div>
+      </a>
+      
+      <nav class="flex items-center gap-3 text-zinc-400 text-xs sm:text-sm uppercase tracking-widest">
+        <span class="hidden sm:inline">Centro de Apresentações</span>
+        <button id="themeToggle" class="p-2 rounded-lg hover:bg-white/5 transition-colors" aria-label="Alternar tema">
+          <i class="fas fa-moon"></i>
+        </button>
+      </nav>
     </header>
 
     <!-- Título Principal -->
-    <main class="text-center mb-20">
-      <h2 class="text-7xl md:text-8xl font-black tracking-tighter glow mb-6">
-        Escolha sua<br>Apresentação
+    <main id="main-content" class="text-center mb-16 sm:mb-24 page-transition active" role="main">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-6">
+        <i class="fas fa-sparkles"></i>
+        <span>Atualizado hoje</span>
+      </div>
+      
+      <h2 class="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter glow mb-6 leading-tight">
+        Escolha sua<br class="sm:hidden" />Apresentação
       </h2>
-      <p class="text-xl text-zinc-400 max-w-md mx-auto">Apresentações profissionais da JWZ</p>
+      <p class="text-lg sm:text-xl text-zinc-400 max-w-md mx-auto leading-relaxed">
+        Apresentações profissionais da JWZ para alinhamento estratégico e cultural da equipe.
+      </p>
     </main>
 
-    <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+    <!-- Grid de Cards -->
+    <div class="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
 
-      <!-- Apresentação Interna -->
-      <a href="apresentacao-interna.html" class="card group bg-zinc-900 border border-zinc-700 hover:border-emerald-500 rounded-3xl overflow-hidden">
-        <div class="h-80 bg-gradient-to-br from-zinc-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
-          <i class="fas fa-users text-[220px] text-emerald-400/10 group-hover:text-emerald-400/20 transition-all duration-700" aria-hidden="true"></i>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-        </div>
-        <div class="p-10">
-          <div class="uppercase text-emerald-400 text-sm font-semibold mb-2 tracking-wider">INTERNA</div>
-          <h3 class="text-4xl font-bold mb-4">Apresentação Interna</h3>
-          <p class="text-zinc-400 text-lg">Código de Conduta, Disciplina, Funil de Consequências, Regras de Saída e Cultura da Empresa.</p>
-          <div class="mt-8 flex items-center text-emerald-400 font-medium">
-            Fernando - CTO 
-            <span class="ml-auto text-3xl group-hover:translate-x-3 transition">→</span>
+      <!-- Card: Apresentação Interna -->
+      <article class="card group rounded-3xl overflow-hidden" aria-labelledby="card-internal-title">
+        <a href="apresentacao-interna.html" class="block focus:outline-none" aria-label="Abrir Apresentação Interna - Código de Conduta e Cultura">
+          <div class="h-56 sm:h-72 bg-gradient-to-br from-zinc-800/80 to-slate-900/80 flex items-center justify-center relative overflow-hidden">
+            <!-- Ícone decorativo flutuante -->
+            <i class="fas fa-users icon-float text-[180px] sm:text-[220px] text-emerald-400/5 group-hover:text-emerald-400/10 transition-all duration-700" aria-hidden="true"></i>
+            
+            <!-- Badge NOVO -->
+            <span class="absolute top-4 right-4 badge-new px-3 py-1 bg-emerald-500 text-zinc-900 text-xs font-bold rounded-full shadow-lg">
+              NOVO
+            </span>
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-transparent to-transparent"></div>
+            
+            <!-- Metadata flutuante -->
+            <div class="absolute bottom-4 left-4 flex items-center gap-3 text-xs text-zinc-300">
+              <span class="flex items-center gap-1.5">
+                <i class="fas fa-clock text-emerald-400"></i>
+                ~25 min
+              </span>
+              <span class="w-1 h-1 rounded-full bg-zinc-600"></span>
+              <span>Atualizado: Hoje</span>
+            </div>
           </div>
-        </div>
-      </a>
-
-      <!-- Apresentação CEO -->
-      <a href="apresentacao-ceo.html" class="card group bg-zinc-900 border border-zinc-700 hover:border-emerald-500 rounded-3xl overflow-hidden">
-        <div class="h-80 bg-gradient-to-br from-blue-900 to-indigo-900 flex items-center justify-center relative overflow-hidden">
-          <i class="fas fa-rocket text-[220px] text-white/10 group-hover:text-white/20 transition-all duration-700" aria-hidden="true"></i>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-        </div>
-        <div class="p-10">
-          <div class="uppercase text-emerald-400 text-sm font-semibold mb-2 tracking-wider">ESTRATÉGIA</div>
-          <h3 class="text-4xl font-bold mb-4">Apresentação do CEO</h3>
-          <p class="text-zinc-400 text-lg">Lançamento da Plataforma JWZ no Instagram e Estratégia de Crescimento.</p>
-          <div class="mt-8 flex items-center text-emerald-400 font-medium">
-            Ezequiel - CEO 
-            <span class="ml-auto text-3xl group-hover:translate-x-3 transition">→</span>
+          
+          <div class="p-6 sm:p-8">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-semibold rounded tracking-wider uppercase">Interna</span>
+              <span class="text-zinc-600 text-xs">•</span>
+              <span class="text-zinc-500 text-xs">Cultura & Processos</span>
+            </div>
+            
+            <h3 id="card-internal-title" class="text-2xl sm:text-3xl font-bold mb-3 group-hover:text-emerald-400 transition-colors">
+              Apresentação Interna
+            </h3>
+            <p class="text-zinc-400 text-base leading-relaxed mb-6">
+              Código de Conduta, Disciplina, Funil de Consequências, Regras de Saída e Cultura da Empresa.
+            </p>
+            
+            <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-xs font-bold text-zinc-900">F</div>
+                <span class="text-sm text-zinc-300">Fernando <span class="text-zinc-500">• CTO</span></span>
+              </div>
+              <span class="text-2xl text-emerald-400 group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+            </div>
           </div>
-        </div>
-      </a>
+        </a>
+      </article>
 
+      <!-- Card: Apresentação CEO -->
+      <article class="card group rounded-3xl overflow-hidden" aria-labelledby="card-ceo-title">
+        <a href="apresentacao-ceo.html" class="block focus:outline-none" aria-label="Abrir Apresentação do CEO - Estratégia e Crescimento">
+          <div class="h-56 sm:h-72 bg-gradient-to-br from-blue-900/80 to-indigo-900/80 flex items-center justify-center relative overflow-hidden">
+            <i class="fas fa-rocket icon-float text-[180px] sm:text-[220px] text-white/5 group-hover:text-white/10 transition-all duration-700" aria-hidden="true"></i>
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/85 via-transparent to-transparent"></div>
+            
+            <div class="absolute bottom-4 left-4 flex items-center gap-3 text-xs text-zinc-300">
+              <span class="flex items-center gap-1.5">
+                <i class="fas fa-clock text-blue-400"></i>
+                ~35 min
+              </span>
+              <span class="w-1 h-1 rounded-full bg-zinc-600"></span>
+              <span>Atualizado: Ontem</span>
+            </div>
+          </div>
+          
+          <div class="p-6 sm:p-8">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded tracking-wider uppercase">Estratégia</span>
+              <span class="text-zinc-600 text-xs">•</span>
+              <span class="text-zinc-500 text-xs">Crescimento</span>
+            </div>
+            
+            <h3 id="card-ceo-title" class="text-2xl sm:text-3xl font-bold mb-3 group-hover:text-blue-400 transition-colors">
+              Apresentação do CEO
+            </h3>
+            <p class="text-zinc-400 text-base leading-relaxed mb-6">
+              Lançamento da Plataforma JWZ no Instagram e Estratégia de Crescimento para o próximo trimestre.
+            </p>
+            
+            <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-xs font-bold text-zinc-900">E</div>
+                <span class="text-sm text-zinc-300">Ezequiel <span class="text-zinc-500">• CEO</span></span>
+              </div>
+              <span class="text-2xl text-blue-400 group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+            </div>
+          </div>
+        </a>
+      </article>
     </div>
 
-    <div class="text-center mt-20 text-zinc-500 text-sm">
-      Use as setas do teclado nas apresentações • Pressione ESC para sair
-    </div>
+    <!-- Footer com instruções -->
+    <footer class="text-center mt-16 sm:mt-24 pt-8 border-t border-zinc-800/50">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 text-zinc-500 text-sm">
+        <span class="flex items-center gap-2">
+          <i class="fas fa-keyboard text-zinc-600"></i>
+          Use ← → para navegar
+        </span>
+        <span class="hidden sm:inline text-zinc-700">•</span>
+        <span>ESC para voltar</span>
+        <span class="hidden sm:inline text-zinc-700">•</span>
+        <a href="#main-content" class="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1">
+          <i class="fas fa-arrow-up"></i> Voltar ao topo
+        </a>
+      </div>
+      <p class="mt-4 text-zinc-600 text-xs">
+        © 2026 JWZ. Todos os direitos reservados.
+      </p>
+    </footer>
+    
   </div>
+
+  <!-- Scripts: Partículas + Navegação por Teclado -->
+  <script>
+    // ===== SISTEMA DE PARTÍCULAS LEVE =====
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    const particles = [];
+    const particleCount = Math.min(40, Math.floor(window.innerWidth / 25));
+    
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.radius = Math.random() * 1.5 + 0.5;
+        this.alpha = Math.random() * 0.4 + 0.1;
+        this.color = Math.random() > 0.7 ? '16, 185, 129' : '148, 163, 184'; // emerald or zinc
+      }
+      
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        
+        // Conexões sutis entre partículas próximas
+        particles.forEach(other => {
+          const dx = this.x - other.x;
+          const dy = this.y - other.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 120) {
+            ctx.strokeStyle = `rgba(${this.color}, ${0.08 * (1 - dist/120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(other.x, other.y);
+            ctx.stroke();
+          }
+        });
+      }
+      
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+        ctx.fill();
+      }
+    }
+    
+    // Inicializar partículas
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+    
+    // Loop de animação
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+    
+    // ===== NAVEGAÇÃO POR TECLADO =====
+    const cards = document.querySelectorAll('.card a');
+    let currentIndex = 0;
+    
+    function focusCard(index) {
+      cards.forEach((card, i) => {
+        card.parentElement.classList.toggle('ring-2', i === index);
+        card.parentElement.classList.toggle('ring-emerald-500/50', i === index);
+        if (i === index) card.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    }
+    
+    document.addEventListener('keydown', (e) => {
+      // Navegação com setas
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % cards.length;
+        focusCard(currentIndex);
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+        focusCard(currentIndex);
+      }
+      
+      // Enter para abrir
+      if (e.key === 'Enter' && document.activeElement.matches('.card a')) {
+        e.preventDefault();
+        document.activeElement.click();
+      }
+      
+      // ESC para voltar ao topo
+      if (e.key === 'Escape') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.querySelector('.skip-link')?.focus();
+      }
+    });
+    
+    // ===== TRANSIÇÃO SUAVE AO CLICAR =====
+    cards.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = link.href;
+        
+        // Efeito de fade antes de navegar
+        document.body.style.opacity = '0.7';
+        document.body.style.transition = 'opacity 0.3s ease';
+        
+        setTimeout(() => {
+          window.location.href = target;
+        }, 250);
+      });
+    });
+    
+    // ===== BOTÃO DE TEMA (opcional futuro) =====
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle?.addEventListener('click', () => {
+      // Placeholder para sistema de tema dark/light futuro
+      const icon = themeToggle.querySelector('i');
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+    });
+    
+    // ===== ANIMAÇÃO DE ENTRADA DOS CARDS =====
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.card').forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.add('page-transition', 'active');
+          }, index * 150);
+        });
+      }, 100);
+    });
+  </script>
 </body>
 </html>
+
