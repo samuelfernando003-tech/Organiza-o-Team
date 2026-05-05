@@ -1,249 +1,1137 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apresentação Interna · JWZ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Apresentação Interna JWZ - Código de Conduta, Cultura e Disciplina">
+  <meta name="theme-color" content="#0f172a">
+  
+  <title>Apresentação Interna • JWZ</title>
+  
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease forwards',
+            'slide-up': 'slideUp 0.6s ease forwards',
+            'slide-right': 'slideRight 0.6s ease forwards',
+            'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+            'float': 'float 6s ease-in-out infinite'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(24px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+            slideRight: { '0%': { opacity: 0, transform: 'translateX(-20px)' }, '100%': { opacity: 1, transform: 'translateX(0)' } },
+            pulseSoft: { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.7 } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-8px)' } }
+          }
+        }
+      }
+    }
+  </script>
+  
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0F172A;
-      color: #F8FAFC;
+    /* Base */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { 
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0f1d;
+      color: #fff;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+    
+    /* Background animado */
+    .bg-gradient-animated {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.10) 0%, transparent 50%),
+        linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #312e81 100%);
+      background-size: 200% 200%, 200% 200%, 200% 200%;
+      animation: gradientShift 20s ease infinite;
+      z-index: -3;
+    }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%, 0% 50%, 0% 50%; }
+      50% { background-position: 100% 50%, 100% 50%, 100% 50%; }
+    }
+    
+    /* Partículas sutis */
+    #particles { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+    
+    /* Overlay de ruído */
+    .noise {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+    }
+    
+    /* Container de slides */
+    .slides-container {
+      position: relative;
+      width: 100%;
       height: 100vh;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .slide-container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
+    
     .slide {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      padding: 4rem;
       opacity: 0;
-      transition: opacity 0.5s ease;
-      text-align: center;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
     }
     .slide.active {
       opacity: 1;
-      z-index: 2;
+      pointer-events: auto;
+      z-index: 10;
     }
-    .slide h1 {
-      font-size: 3.5rem;
-      font-weight: 800;
-      margin-bottom: 2rem;
-      line-height: 1.2;
+    
+    /* Animações por elemento */
+    .slide.active .animate-on-load { animation: slideUp 0.6s ease forwards; }
+    .slide.active .animate-on-load:nth-child(2) { animation-delay: 0.1s; }
+    .slide.active .animate-on-load:nth-child(3) { animation-delay: 0.2s; }
+    .slide.active .animate-on-load:nth-child(4) { animation-delay: 0.3s; }
+    .slide.active .animate-on-load:nth-child(5) { animation-delay: 0.4s; }
+    
+    /* Cards e elementos */
+    .glass-card {
+      background: rgba(24, 32, 48, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem;
     }
-    .slide h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
+    
+    .step-card {
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
     }
-    .slide p, .slide li {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      max-width: 700px;
-      color: #CBD5E1;
+    .step-card:hover {
+      border-left-color: #10b981;
+      transform: translateX(4px);
+      background: rgba(16, 185, 129, 0.08);
     }
-    .card-grid {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-    .card-item {
-      background: #1E293B;
-      border-radius: 1.2rem;
-      padding: 2rem;
-      width: 260px;
-      text-align: left;
-      border: 1px solid #334155;
-    }
-    .card-item h3 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-    .page-indicator {
+    
+    /* Barra de progresso */
+    .progress-bar {
       position: fixed;
-      bottom: 2rem;
+      top: 0; left: 0; height: 4px;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      width: 0%;
+      transition: width 0.4s ease;
+      z-index: 100;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    }
+    
+    /* Controles de navegação */
+    .nav-btn {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(24, 32, 48, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+    .nav-btn:hover {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      transform: translateY(-50%) scale(1.08);
+    }
+    .nav-btn:active { transform: translateY(-50%) scale(0.95); }
+    .nav-prev { left: 1.5rem; }
+    .nav-next { right: 1.5rem; }
+    
+    /* Mini-mapa de slides */
+    .slide-map {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 40;
+    }
+    .slide-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .slide-dot.active {
+      background: #10b981;
+      border-color: #fff;
+      transform: scale(1.3);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+    }
+    .slide-dot:hover { background: rgba(16, 185, 129, 0.5); }
+    
+    /* Contador de slides */
+    .slide-counter {
+      position: fixed;
+      bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.9rem;
-      color: #64748B;
-      z-index: 10;
+      background: rgba(24, 32, 48, 0.9);
+      padding: 0.5rem 1.25rem;
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 40;
+      backdrop-filter: blur(8px);
     }
+    
+    /* Header do slide */
+    .slide-header {
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 30;
+      padding: 0.75rem 1.5rem;
+      background: rgba(24, 32, 48, 0.85);
+      border-radius: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+    }
+    
+    /* Badge de seção */
+    .section-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Lista animada */
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+    .checklist-item:last-child { border-bottom: none; }
+    .checklist-item i {
+      color: #10b981;
+      font-size: 1.1rem;
+      margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+    
+    /* Ícones flutuantes decorativos */
+    .floating-icon {
+      position: absolute;
+      opacity: 0.06;
+      font-size: 12rem;
+      pointer-events: none;
+      animation: float 10s ease-in-out infinite;
+    }
+    .floating-icon:nth-child(2) { animation-delay: -3s; right: 10%; bottom: 15%; }
+    .floating-icon:nth-child(3) { animation-delay: -6s; left: 15%; top: 20%; font-size: 8rem; }
+    
+    /* Modo apresentador (oculto por padrão) */
+    .presenter-notes {
+      position: fixed;
+      bottom: 4rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(30, 41, 59, 0.95);
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      border-left: 4px solid #10b981;
+      max-width: 600px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 60;
+    }
+    .presenter-notes.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    
+    /* Overlay de atalhos */
+    .shortcuts-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 15, 29, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .shortcuts-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      max-width: 500px;
+    }
+    .shortcut-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: rgba(24, 32, 48, 0.7);
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .shortcut-key {
+      background: rgba(16, 185, 129, 0.2);
+      padding: 0.25rem 0.6rem;
+      border-radius: 0.375rem;
+      font-family: monospace;
+      font-weight: 600;
+      color: #10b981;
+    }
+    
+    /* Botão flutuante de ajuda */
+    .help-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(24, 32, 48, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 40;
+      backdrop-filter: blur(8px);
+    }
+    .help-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: #6366f1;
+      transform: scale(1.1);
+    }
+    
+    /* Botão de sair */
     .exit-btn {
       position: fixed;
-      top: 2rem;
-      right: 2rem;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: #F8FAFC;
-      padding: 0.5rem 1.2rem;
-      border-radius: 2rem;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.5rem 1rem;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
       cursor: pointer;
-      font-size: 0.9rem;
-      z-index: 10;
+      transition: all 0.2s ease;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .exit-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    /* Fullscreen indicator */
+    .fullscreen-indicator {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.35rem 0.75rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      z-index: 30;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .fullscreen-indicator.visible { opacity: 1; }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .slide { padding: 1.5rem; }
+      .nav-btn { width: 48px; height: 48px; font-size: 1rem; }
+      .nav-prev { left: 1rem; }
+      .nav-next { right: 1rem; }
+      .slide-map { display: none; }
+      .slide-header { padding: 0.5rem 1rem; }
+      .floating-icon { font-size: 8rem; opacity: 0.04; }
+    }
+    
+    /* Print styles */
+    @media print {
+      body { overflow: visible; background: #fff; color: #000; }
+      .slide { position: relative; height: auto; padding: 2rem; page-break-after: always; opacity: 1 !important; }
+      .progress-bar, .nav-btn, .slide-map, .slide-counter, .exit-btn, .help-btn { display: none !important; }
+      .glass-card { background: #f8fafc; border-color: #e2e8f0; color: #0f172a; }
+      .checklist-item { border-color: #cbd5e1; }
     }
   </style>
 </head>
 <body>
-  <button class="exit-btn" onclick="window.location.href='/'">← Voltar ao Hub</button>
-  <div class="slide-container" id="slideContainer"></div>
-  <div class="page-indicator" id="pageIndicator"></div>
-
-  <script>
-    // Array de slides – basta alterar o conteúdo para cada apresentação
-    const slides = [
-      {
-        type: 'title',
-        title: 'Apresentação Interna',
-        subtitle: 'JWZ TEAM & VISION',
-        tag: 'Disciplina, Cultura e Crescimento Coletivo'
-      },
-      {
-        type: 'content',
-        title: 'Quem Somos',
-        text: 'A JWZ é uma empresa de tecnologia que desenvolve soluções digitais de alta qualidade. Nosso objetivo é entregar excelência técnica com transparência e foco em resultados.'
-      },
-      {
-        type: 'list',
-        title: 'Código de Conduta Interna',
-        items: [
-          'Transparência Total: Relatar problemas assim que surgirem',
-          'Comprometimento com Prazos: Cumprir o combinado',
-          'Respeito à Marca: Profissionalismo dentro e fora da empresa',
-          'Confidencialidade: Proteger informações internas'
-        ]
-      },
-      {
-        type: 'cards',
-        title: 'Funil de Disciplina',
-        cards: [
-          { title: '01 Advertência', desc: 'Verbal ou escrita para casos leves' },
-          { title: '02 Suspensão', desc: 'Afastamento temporário em reincidência' },
-          { title: '03 Expulsão', desc: 'Casos graves de quebra de confiança' }
-        ]
-      },
-      {
-        type: 'list',
-        title: 'Regras de Saída e Sucessão',
-        items: [
-          'Comunicar saída com aviso prévio adequado',
-          'Realizar repasse completo de acessos e conhecimentos',
-          'Respeitar cláusula de não-competição'
-        ]
-      },
-      {
-        type: 'cards',
-        title: 'Nossa Cultura',
-        cards: [
-          { title: 'Trabalho em Equipe', desc: 'Colaboramos, ajudamos uns aos outros e celebramos conquistas coletivas.' },
-          { title: 'Disciplina', desc: 'Cumprimos prazos e mantemos alto padrão de qualidade.' },
-          { title: 'Transparência', desc: 'Comunicamos abertamente problemas e ideias.' },
-          { title: 'Crescimento Contínuo', desc: 'Aprendemos sempre e buscamos melhorar.' }
-        ]
-      },
-      {
-        type: 'final',
-        title: 'Vamos crescer juntos!',
-        text: 'Disciplina, respeito e comprometimento são a base do nosso sucesso. Obrigado pela atenção!'
-      }
-    ];
-
-    let currentSlide = 0;
-    const container = document.getElementById('slideContainer');
-    const indicator = document.getElementById('pageIndicator');
-
-    function renderSlide(index) {
-      const slide = slides[index];
-      if (!slide) return;
+  
+  <!-- Background -->
+  <div class="bg-gradient-animated"></div>
+  <canvas id="particles"></canvas>
+  <div class="noise"></div>
+  
+  <!-- Barra de progresso -->
+  <div class="progress-bar" id="progressBar"></div>
+  
+  <!-- Header -->
+  <div class="slide-header">
+    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-bold text-zinc-900 text-sm">J</div>
+    <div>
+      <div class="font-bold text-sm">JWZ TEAM & VISION</div>
+      <div class="text-xs text-zinc-400">Apresentação Interna</div>
+    </div>
+    <span class="section-badge" id="sectionBadge">Início</span>
+  </div>
+  
+  <!-- Botão de sair -->
+  <a href="index.html" class="exit-btn" aria-label="Voltar ao centro de apresentações">
+    <i class="fas fa-arrow-left"></i> Sair
+  </a>
+  
+  <!-- Indicador de fullscreen -->
+  <div class="fullscreen-indicator" id="fullscreenIndicator">
+    <i class="fas fa-expand"></i> Tela Cheia
+  </div>
+  
+  <!-- Container de Slides -->
+  <div class="slides-container" id="slidesContainer">
+    
+    <!-- Slide 0: Capa -->
+    <div class="slide active" data-index="0" data-section="Início">
+      <i class="fas fa-users floating-icon" aria-hidden="true"></i>
+      <i class="fas fa-shield-alt floating-icon" aria-hidden="true"></i>
+      <i class="fas fa-seedling floating-icon" aria-hidden="true"></i>
       
-      let html = '';
-      switch (slide.type) {
-        case 'title':
-          html = `<div class="slide active">
-                    <span class="card-tag" style="background:linear-gradient(135deg,#3B82F6,#8B5CF6);padding:0.5rem 1.5rem;border-radius:2rem;font-weight:600;">${slide.subtitle}</span>
-                    <h1 style="margin-top:2rem;">${slide.title}</h1>
-                    <p style="font-size:1.3rem;color:#94A3B8;">${slide.tag}</p>
-                  </div>`;
-          break;
-        case 'content':
-          html = `<div class="slide active">
-                    <h1>${slide.title}</h1>
-                    <p>${slide.text}</p>
-                  </div>`;
-          break;
-        case 'list':
-          const itemsHtml = slide.items.map(i => `<li style="margin-bottom:1rem;text-align:left;">✅ ${i}</li>`).join('');
-          html = `<div class="slide active">
-                    <h2>${slide.title}</h2>
-                    <ul style="list-style:none;margin-top:2rem;">${itemsHtml}</ul>
-                  </div>`;
-          break;
-        case 'cards':
-          const cardsHtml = slide.cards.map(c => `
-            <div class="card-item">
-              <h3>${c.title}</h3>
-              <p>${c.desc}</p>
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-6 animate-on-load">
+          <i class="fas fa-sparkles"></i>
+          <span>Atualizado • Maio 2026</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter mb-4 glow animate-on-load" style="animation-delay: 0.1s">
+          Apresentação Interna
+        </h1>
+        <p class="text-xl sm:text-2xl text-emerald-400 font-semibold mb-2 animate-on-load" style="animation-delay: 0.2s">
+          Disciplina, Cultura e Crescimento Coletivo
+        </p>
+        
+        <div class="flex items-center justify-center gap-4 mt-10 animate-on-load" style="animation-delay: 0.3s">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-bold text-xl text-zinc-900 shadow-lg shadow-emerald-500/25">F</div>
+          <div class="text-left">
+            <div class="font-bold text-lg">Fernando</div>
+            <div class="text-zinc-400">Chief Technology Officer</div>
+          </div>
+        </div>
+        
+        <div class="mt-12 text-zinc-500 text-sm animate-on-load" style="animation-delay: 0.4s">
+          <i class="fas fa-arrow-down mr-2 animate-bounce"></i>
+          Use ← → ou toque para navegar
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 1: Quem Somos -->
+    <div class="slide" data-index="1" data-section="Sobre">
+      <div class="max-w-4xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-8 animate-on-load">
+          <span class="text-emerald-400">Quem</span> Somos
+        </h2>
+        
+        <div class="glass-card p-6 sm:p-8 animate-on-load" style="animation-delay: 0.1s">
+          <div class="flex items-start gap-4 mb-6">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-code text-emerald-400 text-xl"></i>
             </div>
-          `).join('');
-          html = `<div class="slide active">
-                    <h2>${slide.title}</h2>
-                    <div class="card-grid">${cardsHtml}</div>
-                  </div>`;
-          break;
-        case 'final':
-          html = `<div class="slide active" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6);">
-                    <h1 style="color:white;">${slide.title}</h1>
-                    <p style="font-size:1.5rem;color:white;">${slide.text}</p>
-                  </div>`;
-          break;
-        default: html = '';
-      }
-      container.innerHTML = html;
-      indicator.textContent = `${index + 1} / ${slides.length}`;
-    }
+            <div>
+              <h3 class="font-semibold text-lg mb-2">Excelência Técnica</h3>
+              <p class="text-zinc-400">Desenvolvemos soluções digitais de alta qualidade com foco em performance, escalabilidade e experiência do usuário.</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-4 mb-6">
+            <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-handshake text-blue-400 text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-lg mb-2">Transparência</h3>
+              <p class="text-zinc-400">Comunicação aberta, decisões compartilhadas e clareza em todos os processos são pilares da nossa operação.</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-bullseye text-violet-400 text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-lg mb-2">Foco em Resultados</h3>
+              <p class="text-zinc-400">Cada projeto é tratado com responsabilidade, métricas claras e compromisso com o impacto real para nossos clientes.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-8 p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 animate-on-load" style="animation-delay: 0.4s">
+          <p class="text-emerald-300 font-medium">
+            <i class="fas fa-lightbulb mr-2"></i>
+            Nossa missão: Transformar ideias em produtos digitais que geram valor real.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 2: Código de Conduta -->
+    <div class="slide" data-index="2" data-section="Conduta">
+      <div class="max-w-4xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-2 animate-on-load">
+          Código de <span class="text-emerald-400">Conduta</span>
+        </h2>
+        <p class="text-zinc-400 mb-8 animate-on-load" style="animation-delay: 0.1s">Princípios que guiam nosso dia a dia</p>
+        
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="glass-card p-5 step-card animate-on-load" style="animation-delay: 0.2s">
+            <div class="flex items-start gap-3">
+              <i class="fas fa-check-circle text-emerald-400 text-xl mt-1 flex-shrink-0"></i>
+              <div>
+                <h4 class="font-semibold mb-1">Transparência Total</h4>
+                <p class="text-zinc-400 text-sm">Relatar problemas assim que surgirem. Comunicação proativa evita retrabalho e fortalece a confiança.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="glass-card p-5 step-card animate-on-load" style="animation-delay: 0.3s">
+            <div class="flex items-start gap-3">
+              <i class="fas fa-calendar-check text-emerald-400 text-xl mt-1 flex-shrink-0"></i>
+              <div>
+                <h4 class="font-semibold mb-1">Comprometimento com Prazos</h4>
+                <p class="text-zinc-400 text-sm">Cumprir o combinado é sinal de respeito. Se houver impedimento, comunique imediatamente.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="glass-card p-5 step-card animate-on-load" style="animation-delay: 0.4s">
+            <div class="flex items-start gap-3">
+              <i class="fas fa-id-badge text-emerald-400 text-xl mt-1 flex-shrink-0"></i>
+              <div>
+                <h4 class="font-semibold mb-1">Respeito à Marca</h4>
+                <p class="text-zinc-400 text-sm">Profissionalismo dentro e fora da empresa. Nossas ações refletem a JWZ.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="glass-card p-5 step-card animate-on-load" style="animation-delay: 0.5s">
+            <div class="flex items-start gap-3">
+              <i class="fas fa-lock text-emerald-400 text-xl mt-1 flex-shrink-0"></i>
+              <div>
+                <h4 class="font-semibold mb-1">Confidencialidade</h4>
+                <p class="text-zinc-400 text-sm">Proteger informações internas, estratégias e dados de clientes é responsabilidade de todos.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 3: Funil de Disciplina -->
+    <div class="slide" data-index="3" data-section="Disciplina">
+      <div class="max-w-4xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-2 animate-on-load">
+          Funil de <span class="text-emerald-400">Disciplina</span>
+        </h2>
+        <p class="text-zinc-400 mb-10 animate-on-load" style="animation-delay: 0.1s">Processo justo, claro e progressivo</p>
+        
+        <div class="space-y-4">
+          <!-- Step 1 -->
+          <div class="glass-card p-6 step-card animate-on-load" style="animation-delay: 0.2s">
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-amber-400">1</div>
+              <h3 class="font-bold text-xl">Advertência</h3>
+              <span class="px-2 py-0.5 bg-amber-500/10 text-amber-400 text-xs rounded-full">Leve</span>
+            </div>
+            <p class="text-zinc-400 pl-14 -mt-1">Registro verbal ou escrito para casos leves: atrasos recorrentes, descumprimento de processos simples ou falhas de comunicação pontuais.</p>
+            <div class="mt-3 pl-14 text-sm text-zinc-500">
+              <i class="fas fa-info-circle mr-1"></i>
+              Objetivo: Conscientização e correção imediata
+            </div>
+          </div>
+          
+          <!-- Step 2 -->
+          <div class="glass-card p-6 step-card animate-on-load" style="animation-delay: 0.3s">
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center font-bold text-orange-400">2</div>
+              <h3 class="font-bold text-xl">Suspensão</h3>
+              <span class="px-2 py-0.5 bg-orange-500/10 text-orange-400 text-xs rounded-full">Reincidência</span>
+            </div>
+            <p class="text-zinc-400 pl-14 -mt-1">Afastamento temporário (1-3 dias) em casos de reincidência ou falhas que impactaram entregas, equipe ou clientes.</p>
+            <div class="mt-3 pl-14 text-sm text-zinc-500">
+              <i class="fas fa-exclamation-triangle mr-1"></i>
+              Requer plano de correção assinado
+            </div>
+          </div>
+          
+          <!-- Step 3 -->
+          <div class="glass-card p-6 step-card border-l-red-500 animate-on-load" style="animation-delay: 0.4s">
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center font-bold text-red-400">3</div>
+              <h3 class="font-bold text-xl text-red-400">Expulsão</h3>
+              <span class="px-2 py-0.5 bg-red-500/10 text-red-400 text-xs rounded-full">Grave</span>
+            </div>
+            <p class="text-zinc-400 pl-14 -mt-1">Rescisão imediata em casos graves: quebra de confiança, vazamento de informações, assédio, fraude ou conduta antiética comprovada.</p>
+            <div class="mt-3 pl-14 text-sm text-zinc-500">
+              <i class="fas fa-gavel mr-1"></i>
+              Decisão tomada pela liderança + RH
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-8 p-4 rounded-xl bg-zinc-800/50 border border-zinc-700 animate-on-load" style="animation-delay: 0.5s">
+          <p class="text-sm text-zinc-400">
+            <i class="fas fa-scale-balanced mr-2"></i>
+            <strong>Importante:</strong> Todo processo garante direito de defesa e é documentado com transparência.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 4: Regras de Saída -->
+    <div class="slide" data-index="4" data-section="Saída">
+      <div class="max-w-4xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-2 animate-on-load">
+          Regras de <span class="text-emerald-400">Saída</span>
+        </h2>
+        <p class="text-zinc-400 mb-8 animate-on-load" style="animation-delay: 0.1s">Transição responsável e profissional</p>
+        
+        <div class="glass-card p-6 sm:p-8 animate-on-load" style="animation-delay: 0.2s">
+          <div class="space-y-6">
+            <div class="checklist-item">
+              <i class="fas fa-bell"></i>
+              <div>
+                <strong class="text-white">Aviso Prévio Adequado</strong>
+                <p class="text-zinc-400 text-sm mt-1">Comunicar a decisão de saída com antecedência mínima de 30 dias para permitir transição organizada.</p>
+              </div>
+            </div>
+            
+            <div class="checklist-item">
+              <i class="fas fa-key"></i>
+              <div>
+                <strong class="text-white">Repasse Completo de Acessos</strong>
+                <p class="text-zinc-400 text-sm mt-1">Documentar e transferir todos os acessos, credenciais, processos e conhecimentos críticos para a equipe.</p>
+              </div>
+            </div>
+            
+            <div class="checklist-item">
+              <i class="fas fa-file-contract"></i>
+              <div>
+                <strong class="text-white">Cláusula de Não-Competição</strong>
+                <p class="text-zinc-400 text-sm mt-1">Respeitar os termos contratuais sobre atuação em empresas concorrentes ou uso de propriedade intelectual da JWZ.</p>
+              </div>
+            </div>
+            
+            <div class="checklist-item">
+              <i class="fas fa-handshake"></i>
+              <div>
+                <strong class="text-white">Entrevista de Desligamento</strong>
+                <p class="text-zinc-400 text-sm mt-1">Espaço aberto para feedback construtivo sobre processos, cultura e oportunidades de melhoria na JWZ.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 text-center animate-on-load" style="animation-delay: 0.6s">
+          <p class="text-zinc-400 italic">
+            "Saídas bem conduzidas preservam relacionamentos e fortalecem a reputação da JWZ no mercado."
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 5: Nossa Cultura -->
+    <div class="slide" data-index="5" data-section="Cultura">
+      <div class="max-w-5xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-2 text-center animate-on-load">
+          Nossa <span class="text-emerald-400">Cultura</span>
+        </h2>
+        <p class="text-zinc-400 text-center mb-10 animate-on-load" style="animation-delay: 0.1s">Valores que nos definem e impulsionam</p>
+        
+        <div class="grid sm:grid-cols-2 gap-5">
+          <!-- Valor 1 -->
+          <div class="glass-card p-6 text-center animate-on-load" style="animation-delay: 0.2s">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/20">
+              <i class="fas fa-users text-2xl text-zinc-900"></i>
+            </div>
+            <h3 class="font-bold text-xl mb-2">Trabalho em Equipe</h3>
+            <p class="text-zinc-400">Colaboramos ativamente, ajudamos uns aos outros sem hesitar e celebramos conquistas coletivas — o sucesso é sempre compartilhado.</p>
+          </div>
+          
+          <!-- Valor 2 -->
+          <div class="glass-card p-6 text-center animate-on-load" style="animation-delay: 0.3s">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20">
+              <i class="fas fa-stopwatch text-2xl text-zinc-900"></i>
+            </div>
+            <h3 class="font-bold text-xl mb-2">Disciplina</h3>
+            <p class="text-zinc-400">Cumprimos prazos com seriedade, mantemos alto padrão de qualidade e assumimos responsabilidade pelas nossas entregas.</p>
+          </div>
+          
+          <!-- Valor 3 -->
+          <div class="glass-card p-6 text-center animate-on-load" style="animation-delay: 0.4s">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-violet-400 to-violet-600 flex items-center justify-center mb-4 shadow-lg shadow-violet-500/20">
+              <i class="fas fa-comments text-2xl text-zinc-900"></i>
+            </div>
+            <h3 class="font-bold text-xl mb-2">Transparência</h3>
+            <p class="text-zinc-400">Comunicamos abertamente problemas, ideias e feedbacks. A verdade, mesmo quando difícil, é sempre o melhor caminho.</p>
+          </div>
+          
+          <!-- Valor 4 -->
+          <div class="glass-card p-6 text-center animate-on-load" style="animation-delay: 0.5s">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center mb-4 shadow-lg shadow-amber-500/20">
+              <i class="fas fa-seedling text-2xl text-zinc-900"></i>
+            </div>
+            <h3 class="font-bold text-xl mb-2">Crescimento Contínuo</h3>
+            <p class="text-zinc-400">Aprendemos todos os dias, buscamos feedback constante e investimos em nosso desenvolvimento técnico e humano.</p>
+          </div>
+        </div>
+        
+        <div class="mt-10 text-center animate-on-load" style="animation-delay: 0.6s">
+          <div class="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+            <i class="fas fa-heart text-emerald-400"></i>
+            <span class="font-medium text-emerald-300">Esses valores não são apenas palavras — são comportamentos esperados de todos.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 6: Encerramento -->
+    <div class="slide" data-index="6" data-section="Fim">
+      <i class="fas fa-rocket floating-icon" aria-hidden="true"></i>
+      
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-8 animate-on-load">
+          <i class="fas fa-check-circle"></i>
+          <span>Próximos Passos</span>
+        </div>
+        
+        <h2 class="text-4xl sm:text-6xl font-black tracking-tight mb-6 animate-on-load" style="animation-delay: 0.1s">
+          Vamos <span class="text-emerald-400 glow">crescer juntos!</span>
+        </h2>
+        
+        <p class="text-xl text-zinc-300 mb-10 animate-on-load" style="animation-delay: 0.2s">
+          Disciplina, respeito e comprometimento são a base do nosso sucesso coletivo.
+        </p>
+        
+        <div class="glass-card p-6 sm:p-8 mb-10 animate-on-load" style="animation-delay: 0.3s">
+          <div class="grid sm:grid-cols-3 gap-4 text-left">
+            <div class="flex items-start gap-3">
+              <i class="fas fa-circle-check text-emerald-400 mt-1"></i>
+              <span class="text-sm text-zinc-300">Revisar este conteúdo até <strong>31/05</strong></span>
+            </div>
+            <div class="flex items-start gap-3">
+              <i class="fas fa-circle-check text-emerald-400 mt-1"></i>
+              <span class="text-sm text-zinc-300">Tirar dúvidas no próximo <strong>1:1</strong></span>
+            </div>
+            <div class="flex items-start gap-3">
+              <i class="fas fa-circle-check text-emerald-400 mt-1"></i>
+              <span class="text-sm text-zinc-300">Aplicar os valores no <strong>dia a dia</strong></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="animate-on-load" style="animation-delay: 0.4s">
+          <p class="text-2xl font-bold mb-2">Obrigado pela atenção!</p>
+          <p class="text-zinc-400">Fernando • CTO • JWZ</p>
+        </div>
+        
+        <div class="mt-12 flex flex-wrap justify-center gap-3 animate-on-load" style="animation-delay: 0.5s">
+          <button onclick="togglePresenterNotes()" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors text-sm flex items-center gap-2">
+            <i class="fas fa-note-sticky"></i> Notas do Apresentador
+          </button>
+          <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors text-sm flex items-center gap-2">
+            <i class="fas fa-print"></i> Exportar PDF
+          </button>
+          <button onclick="toggleFullscreen()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 transition-colors text-sm font-medium flex items-center gap-2">
+            <i class="fas fa-expand"></i> Tela Cheia
+          </button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- Controles de navegação -->
+  <button class="nav-btn nav-prev" id="prevBtn" aria-label="Slide anterior">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <button class="nav-btn nav-next" id="nextBtn" aria-label="Próximo slide">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+  
+  <!-- Mini-mapa de slides -->
+  <div class="slide-map" id="slideMap" aria-label="Navegação por slides"></div>
+  
+  <!-- Contador de slides -->
+  <div class="slide-counter" id="slideCounter">1 / 7</div>
+  
+  <!-- Notas do apresentador -->
+  <div class="presenter-notes" id="presenterNotes">
+    <strong class="text-emerald-400 block mb-1"><i class="fas fa-microphone-alt mr-2"></i>Nota:</strong>
+    <span id="notesContent">Use este espaço para lembretes durante a apresentação.</span>
+  </div>
+  
+  <!-- Botão de ajuda -->
+  <button class="help-btn" id="helpBtn" aria-label="Atalhos de teclado">
+    <i class="fas fa-question"></i>
+  </button>
+  
+  <!-- Overlay de atalhos -->
+  <div class="shortcuts-overlay" id="shortcutsOverlay">
+    <div class="glass-card p-6 rounded-2xl max-w-lg w-full mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-lg">Atalhos de Teclado</h3>
+        <button onclick="toggleShortcuts()" class="text-zinc-400 hover:text-white transition-colors">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="shortcut-grid">
+        <div class="shortcut-item"><span class="shortcut-key">←</span><span>Slide anterior</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">→</span><span>Próximo slide</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">Space</span><span>Avançar</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">ESC</span><span>Sair / Fechar</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">F</span><span>Tela cheia</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">?</span><span>Este menu</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">N</span><span>Notas do apresentador</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">P</span><span>Imprimir / PDF</span></div>
+      </div>
+      <p class="text-zinc-500 text-xs mt-4 text-center">Toque fora para fechar</p>
+    </div>
+  </div>
 
+  <!-- Scripts -->
+  <script>
+    // ===== CONFIGURAÇÃO =====
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progressBar');
+    const slideCounter = document.getElementById('slideCounter');
+    const slideMap = document.getElementById('slideMap');
+    const sectionBadge = document.getElementById('sectionBadge');
+    const presenterNotes = document.getElementById('presenterNotes');
+    const notesContent = document.getElementById('notesContent');
+    const shortcutsOverlay = document.getElementById('shortcutsOverlay');
+    const fullscreenIndicator = document.getElementById('fullscreenIndicator');
+    
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    
+    // Notas por slide (modo apresentador)
+    const slideNotes = {
+      0: "Boas-vindas! Apresente-se brevemente e explique o objetivo desta apresentação: alinhar cultura, conduta e expectativas.",
+      1: "Destaque que a JWZ não é apenas uma empresa de código, mas de pessoas que constroem soluções com propósito.",
+      2: "Enfatize que transparência não é sobre perfeição, mas sobre comunicação rápida quando algo sai do planejado.",
+      3: "Reforce que o funil é justo e progressivo — o objetivo é corrigir, não punir. A expulsão é último recurso.",
+      4: "Mencione que saídas bem conduzidas preservam a reputação de todos e podem gerar indicações futuras.",
+      5: "Convide a equipe a dar exemplos práticos de como vivem cada valor no dia a dia.",
+      6: "Encerre com chamada para ação: revisar, tirar dúvidas e aplicar. Agradeça e abra para perguntas."
+    };
+    
+    // ===== INICIALIZAÇÃO =====
+    function init() {
+      // Criar mini-mapa
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = `slide-dot ${index === 0 ? 'active' : ''}`;
+        dot.setAttribute('aria-label', `Ir para slide ${index + 1}`);
+        dot.onclick = () => goToSlide(index);
+        slideMap.appendChild(dot);
+      });
+      
+      // Atualizar UI inicial
+      updateUI();
+      
+      // Partículas de fundo
+      initParticles();
+      
+      // Event listeners
+      setupEventListeners();
+      
+      // Detectar fullscreen
+      document.addEventListener('fullscreenchange', updateFullscreenIndicator);
+      document.addEventListener('webkitfullscreenchange', updateFullscreenIndicator);
+    }
+    
+    // ===== NAVEGAÇÃO =====
+    function goToSlide(index) {
+      if (index < 0 || index >= totalSlides) return;
+      
+      // Remover active do slide atual
+      slides[currentSlide].classList.remove('active');
+      
+      // Atualizar índice
+      currentSlide = index;
+      
+      // Adicionar active ao novo slide
+      slides[currentSlide].classList.add('active');
+      
+      // Resetar animações dos elementos
+      document.querySelectorAll('.animate-on-load').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight; // trigger reflow
+        el.style.animation = null;
+      });
+      
+      // Atualizar UI
+      updateUI();
+      
+      // Scroll para o topo do slide (mobile)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
     function nextSlide() {
-      if (currentSlide < slides.length - 1) {
-        currentSlide++;
-        renderSlide(currentSlide);
-      }
+      if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
     }
+    
     function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        renderSlide(currentSlide);
+      if (currentSlide > 0) goToSlide(currentSlide - 1);
+    }
+    
+    function updateUI() {
+      // Barra de progresso
+      const progress = ((currentSlide + 1) / totalSlides) * 100;
+      progressBar.style.width = `${progress}%`;
+      
+      // Contador
+      slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+      
+      // Badge de seção
+      const section = slides[currentSlide].dataset.section;
+      sectionBadge.textContent = section;
+      
+      // Mini-mapa
+      document.querySelectorAll('.slide-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+      
+      // Notas do apresentador
+      notesContent.textContent = slideNotes[currentSlide] || '';
+    }
+    
+    // ===== EVENT LISTENERS =====
+    function setupEventListeners() {
+      // Botões de navegação
+      document.getElementById('prevBtn').onclick = prevSlide;
+      document.getElementById('nextBtn').onclick = nextSlide;
+      
+      // Teclado
+      document.addEventListener('keydown', (e) => {
+        // Ignorar se estiver em input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
+        switch(e.key) {
+          case 'ArrowLeft':
+          case 'ArrowUp':
+            e.preventDefault();
+            prevSlide();
+            break;
+          case 'ArrowRight':
+          case 'ArrowDown':
+          case ' ':
+            e.preventDefault();
+            nextSlide();
+            break;
+          case 'Escape':
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            } else {
+              window.location.href = 'index.html';
+            }
+            break;
+          case 'f':
+          case 'F':
+            toggleFullscreen();
+            break;
+          case '?':
+            toggleShortcuts();
+            break;
+          case 'n':
+          case 'N':
+            togglePresenterNotes();
+            break;
+          case 'p':
+          case 'P':
+            window.print();
+            break;
+        }
+      });
+      
+      // Swipe touch
+      let touchStartX = 0;
+      let touchEndX = 0;
+      
+      document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      
+      document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+      
+      function handleSwipe() {
+        const threshold = 50;
+        if (touchEndX < touchStartX - threshold) nextSlide();
+        if (touchEndX > touchStartX + threshold) prevSlide();
+      }
+      
+      // Botões de ajuda
+      document.getElementById('helpBtn').onclick = toggleShortcuts;
+      shortcutsOverlay.onclick = (e) => {
+        if (e.target === shortcutsOverlay) toggleShortcuts();
+      };
+    }
+    
+    // ===== FUNCIONALIDADES EXTRAS =====
+    function togglePresenterNotes() {
+      presenterNotes.classList.toggle('visible');
+      // Auto-hide after 8 seconds
+      if (presenterNotes.classList.contains('visible')) {
+        setTimeout(() => {
+          presenterNotes.classList.remove('visible');
+        }, 8000);
       }
     }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        nextSlide();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        prevSlide();
-      } else if (e.key === 'Escape') {
-        window.location.href = '/';
+    
+    function toggleShortcuts() {
+      shortcutsOverlay.classList.toggle('active');
+    }
+    
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.() || 
+        document.documentElement.webkitRequestFullscreen?.() ||
+        document.documentElement.mozRequestFullScreen?.();
+      } else {
+        document.exitFullscreen?.() || 
+        document.webkitExitFullscreen?.() ||
+        document.mozCancelFullScreen?.();
       }
-    });
-
-    // Inicializa
-    renderSlide(0);
+    }
+    
+    function updateFullscreenIndicator() {
+      fullscreenIndicator.classList.toggle('visible', !!document.fullscreenElement);
+    }
+    
+    // ===== PARTÍCULAS DE FUNDO (Leve) =====
+    function initParticles() {
+      const canvas = document.getElementById('particles');
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.vx = (Math.random() - 0.5) * 0.3;
+          this.vy = (Math.random() - 0.5) * 0.3;
+          this.radius = Math.random() * 1.2 + 0.3;
+          this.alpha = Math.random() * 0.3 + 0.1;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+          if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(16, 185, 129, ${this.alpha})`;
+          ctx.fill();
+        }
+      }
+      
+      function init() {
+        resize();
+        particles = Array.from({ length: 25 }, () => new Particle());
+        animate();
+      }
+      
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+      }
+      
+      window.addEventListener('resize', resize);
+      init();
+    }
+    
+    // ===== INICIAR =====
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
