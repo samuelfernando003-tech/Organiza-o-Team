@@ -1,318 +1,1083 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apresentação CEO · JWZ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Lançamento Oficial JWZ Platform - Apresentação CEO Ezequiel">
+  <meta name="theme-color" content="#0f172a">
+  
+  <title>Lançamento JWZ • CEO Ezequiel</title>
+  
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease forwards',
+            'slide-up': 'slideUp 0.6s ease forwards',
+            'slide-right': 'slideRight 0.6s ease forwards',
+            'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+            'float': 'float 6s ease-in-out infinite'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            slideUp: { '0%': { opacity: 0, transform: 'translateY(24px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+            slideRight: { '0%': { opacity: 0, transform: 'translateX(-20px)' }, '100%': { opacity: 1, transform: 'translateX(0)' } },
+            pulseSoft: { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.7 } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-8px)' } }
+          }
+        }
+      }
+    }
+  </script>
+  
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0F172A;
-      color: #F8FAFC;
+    /* Base */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { 
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0f1d;
+      color: #fff;      
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+    
+    /* Background animado */
+    .bg-gradient-animated {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.10) 0%, transparent 50%),
+        linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #312e81 100%);
+      background-size: 200% 200%, 200% 200%, 200% 200%;
+      animation: gradientShift 20s ease infinite;
+      z-index: -3;
+    }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%, 0% 50%, 0% 50%; }
+      50% { background-position: 100% 50%, 100% 50%, 100% 50%; }
+    }
+    
+    /* Partículas sutis */
+    #particles { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+    
+    /* Overlay de ruído */
+    .noise {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+    }
+    
+    /* Container de slides */
+    .slides-container {
+      position: relative;
+      width: 100%;
       height: 100vh;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .slide-container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
+    
     .slide {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      padding: 4rem;
       opacity: 0;
-      transition: opacity 0.5s ease;
-      text-align: center;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
     }
     .slide.active {
       opacity: 1;
-      z-index: 2;
+      pointer-events: auto;
+      z-index: 10;
     }
-    .slide h1 {
-      font-size: 3.5rem;
-      font-weight: 800;
-      margin-bottom: 1.5rem;
-      line-height: 1.2;
-      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    
+    /* Animações por elemento */
+    .slide.active .animate-on-load { animation: slideUp 0.6s ease forwards; }
+    .slide.active .animate-on-load:nth-child(2) { animation-delay: 0.1s; }
+    .slide.active .animate-on-load:nth-child(3) { animation-delay: 0.2s; }
+    .slide.active .animate-on-load:nth-child(4) { animation-delay: 0.3s; }
+    .slide.active .animate-on-load:nth-child(5) { animation-delay: 0.4s; }
+    .slide.active .animate-on-load:nth-child(6) { animation-delay: 0.5s; }
+    
+    /* Cards e elementos */
+    .glass-card {
+      background: rgba(24, 32, 48, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem;
     }
-    .slide h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: #F8FAFC;
+    
+    .step-card {
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
     }
-    .slide p, .slide li {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      max-width: 700px;
-      color: #CBD5E1;
+    .step-card:hover {
+      border-left-color: #10b981;
+      transform: translateX(4px);
+      background: rgba(16, 185, 129, 0.08);
     }
-    .card-grid {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-    .card-item {
-      background: #1E293B;
-      border-radius: 1.2rem;
-      padding: 2rem;
-      width: 260px;
-      text-align: left;
-      border: 1px solid #334155;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .card-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 30px rgba(59,130,246,0.15);
-      border-color: #3B82F6;
-    }
-    .card-item h3 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-      color: #F8FAFC;
-    }
-    .card-item p {
-      color: #94A3B8;
-      font-size: 0.95rem;
-    }
-    .page-indicator {
+    
+    /* Barra de progresso */
+    .progress-bar {
       position: fixed;
-      bottom: 2rem;
+      top: 0; left: 0; height: 4px;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      width: 0%;
+      transition: width 0.4s ease;
+      z-index: 100;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    }
+    
+    /* Controles de navegação */
+    .nav-btn {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 56px;
+      height: 56px;      
+      border-radius: 50%;
+      background: rgba(24, 32, 48, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+    .nav-btn:hover {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      transform: translateY(-50%) scale(1.08);
+    }
+    .nav-btn:active { transform: translateY(-50%) scale(0.95); }
+    .nav-prev { left: 1.5rem; }
+    .nav-next { right: 1.5rem; }
+    
+    /* Mini-mapa de slides */
+    .slide-map {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 40;
+    }
+    .slide-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .slide-dot.active {
+      background: #10b981;
+      border-color: #fff;
+      transform: scale(1.3);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+    }
+    .slide-dot:hover { background: rgba(16, 185, 129, 0.5); }
+    
+    /* Contador de slides */
+    .slide-counter {
+      position: fixed;
+      bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.9rem;
-      color: #64748B;
-      z-index: 10;
-      background: #1E293B;
-      padding: 0.4rem 1.5rem;
+      background: rgba(24, 32, 48, 0.9);
+      padding: 0.5rem 1.25rem;
       border-radius: 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 40;
+      backdrop-filter: blur(8px);
     }
+    
+    /* Header do slide */
+    .slide-header {
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 30;
+      padding: 0.75rem 1.5rem;
+      background: rgba(24, 32, 48, 0.85);
+      border-radius: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+    }
+    
+    /* Badge de seção */
+    .section-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Ícones flutuantes decorativos */
+    .floating-icon {
+      position: absolute;
+      opacity: 0.06;
+      font-size: 12rem;
+      pointer-events: none;
+      animation: float 10s ease-in-out infinite;
+    }
+    .floating-icon:nth-child(2) { animation-delay: -3s; right: 10%; bottom: 15%; }
+    .floating-icon:nth-child(3) { animation-delay: -6s; left: 15%; top: 20%; font-size: 8rem; }
+    
+    /* Modo apresentador (oculto por padrão) */
+    .presenter-notes {
+      position: fixed;
+      bottom: 4rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(30, 41, 59, 0.95);
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      border-left: 4px solid #10b981;
+      max-width: 600px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 60;
+    }
+    .presenter-notes.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    
+    /* Overlay de atalhos */
+    .shortcuts-overlay {
+      position: fixed;
+      inset: 0;      
+      background: rgba(10, 15, 29, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .shortcuts-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      max-width: 500px;
+    }
+    .shortcut-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: rgba(24, 32, 48, 0.7);
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .shortcut-key {
+      background: rgba(16, 185, 129, 0.2);
+      padding: 0.25rem 0.6rem;
+      border-radius: 0.375rem;
+      font-family: monospace;
+      font-weight: 600;
+      color: #10b981;
+    }
+    
+    /* Botão flutuante de ajuda */
+    .help-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(24, 32, 48, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      display: flex;
+      align-items: center;      
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 40;
+      backdrop-filter: blur(8px);
+    }
+    .help-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: #6366f1;
+      transform: scale(1.1);
+    }
+    
+    /* Botão de sair */
     .exit-btn {
       position: fixed;
-      top: 2rem;
-      right: 2rem;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: #F8FAFC;
-      padding: 0.5rem 1.5rem;
-      border-radius: 2rem;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.5rem 1rem;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
       cursor: pointer;
-      font-size: 0.9rem;
-      z-index: 10;
-      backdrop-filter: blur(5px);
-      transition: background 0.3s;
+      transition: all 0.2s ease;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     .exit-btn:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(239, 68, 68, 0.25);
+      transform: translateY(-2px);
     }
-    .tag {
-      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
-      padding: 0.5rem 1.8rem;
-      border-radius: 2rem;
-      font-weight: 600;
-      font-size: 1rem;
-      display: inline-block;
-      margin-bottom: 1rem;
+    
+    /* Fullscreen indicator */
+    .fullscreen-indicator {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.35rem 0.75rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      z-index: 30;
+      opacity: 0;      
+      transition: opacity 0.3s ease;
     }
-    .final-slide {
-      background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important;
+    .fullscreen-indicator.visible { opacity: 1; }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .slide { padding: 1.5rem; }
+      .nav-btn { width: 48px; height: 48px; font-size: 1rem; }
+      .nav-prev { left: 1rem; }
+      .nav-next { right: 1rem; }
+      .slide-map { display: none; }
+      .slide-header { padding: 0.5rem 1rem; }
+      .floating-icon { font-size: 8rem; opacity: 0.04; }
     }
-    .final-slide h1, .final-slide p {
-      color: #FFFFFF;
-      -webkit-text-fill-color: #FFFFFF;
-      background: none;
-    }
-    ul {
-      list-style: none;
-      text-align: left;
-      max-width: 600px;
-    }
-    ul li {
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-    }
-    ul li::before {
-      content: "🔹";
-      margin-right: 0.5rem;
-      color: #3B82F6;
+    
+    /* Print styles */
+    @media print {
+      body { overflow: visible; background: #fff; color: #000; }
+      .slide { position: relative; height: auto; padding: 2rem; page-break-after: always; opacity: 1 !important; }
+      .progress-bar, .nav-btn, .slide-map, .slide-counter, .exit-btn, .help-btn { display: none !important; }
+      .glass-card { background: #f8fafc; border-color: #e2e8f0; color: #0f172a; }
     }
   </style>
 </head>
 <body>
-  <button class="exit-btn" onclick="window.location.href='/'">← Voltar ao Hub</button>
-  <div class="slide-container" id="slideContainer"></div>
-  <div class="page-indicator" id="pageIndicator"></div>
-
-  <script>
-    const slides = [
-      {
-        type: 'title',
-        tag: 'LANÇAMENTO OFICIAL',
-        title: 'JWZ Platform',
-        subtitle: 'Do Cadastro à Primeira Conexão',
-        description: 'Facilitando o Home Office para quem oferece e para quem contrata.'
-      },
-      {
-        type: 'list',
-        title: 'O Grande Desafio do Home Office',
-        items: [
-          'Dificuldade para encontrar profissionais qualificados',
-          'Processos de contratação lentos e caros',
-          'Falta de portfólio confiável',
-          'Oportunidades dispersas'
-        ]
-      },
-      {
-        type: 'content',
-        title: 'A Solução é a JWZ',
-        text: 'A plataforma que conecta talento remoto com oportunidades reais de forma simples e confiável.'
-      },
-      {
-        type: 'cards',
-        title: 'O DIFERENCIAL DO SITE',
-        cards: [
-          { title: 'Para o Prestador', desc: 'Cadastro focado em habilidades, portfólio e experiência. Destaque-se e conquiste clientes.' },
-          { title: 'Para o Contratante', desc: 'Encontre rapidamente os melhores profissionais para trabalho remoto / home office.' }
-        ],
-        extra: 'Captura de tela salva 📸'
-      },
-      {
-        type: 'list',
-        title: 'PLANO DE PRODUÇÃO DO VÍDEO (Reels)',
-        items: [
-          'Gancho de Atenção (Problema real)',
-          'Demonstração prática da JWZ',
-          'Call to Action forte'
-        ]
-      },
-      {
-        type: 'cards',
-        title: 'CRONOGRAMA DE EXECUÇÃO',
-        cards: [
-          { title: '1. Pré-produção', desc: 'Roteiro, captação de recursos e planejamento.' },
-          { title: '2. Produção', desc: 'Gravação e edição do material.' },
-          { title: '3. Lançamento', desc: 'Publicação e impulsionamento estratégico.' }
-        ]
-      },
-      {
-        type: 'final',
-        title: 'Vamos transformar a JWZ em referência!',
-        text: 'O futuro do trabalho remoto começa agora.'
-      }
-    ];
-
-    let currentSlide = 0;
-    const container = document.getElementById('slideContainer');
-    const indicator = document.getElementById('pageIndicator');
-
-    function renderSlide(index) {
-      const slide = slides[index];
-      if (!slide) return;
+  
+  <!-- Background -->
+  <div class="bg-gradient-animated"></div>
+  <canvas id="particles"></canvas>
+  <div class="noise"></div>
+  
+  <!-- Barra de progresso -->
+  <div class="progress-bar" id="progressBar"></div>
+  
+  <!-- Header -->
+  <div class="slide-header">
+    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-bold text-zinc-900 text-sm">J</div>
+    <div>
+      <div class="font-bold text-sm">JWZ PLATFORM</div>
+      <div class="text-xs text-zinc-400">Lançamento Oficial</div>
+    </div>
+    <span class="section-badge" id="sectionBadge">Início</span>
+  </div>
+  
+  <!-- Botão de sair -->
+  <a href="#" class="exit-btn" aria-label="Fechar apresentação">
+    <i class="fas fa-times"></i> Sair
+  </a>
+    
+  <!-- Indicador de fullscreen -->
+  <div class="fullscreen-indicator" id="fullscreenIndicator">
+    <i class="fas fa-expand"></i> Tela Cheia
+  </div>
+  
+  <!-- Container de Slides -->
+  <div class="slides-container" id="slidesContainer">
+    
+    <!-- Slide 0: Capa -->
+    <div class="slide active" data-index="0" data-section="Capa">
+      <i class="fas fa-rocket floating-icon" aria-hidden="true"></i>
+      <i class="fas fa-globe floating-icon" aria-hidden="true"></i>
       
-      let html = '';
-      switch (slide.type) {
-        case 'title':
-          html = `<div class="slide active">
-                    <span class="tag">${slide.tag}</span>
-                    <h1>${slide.title}</h1>
-                    <p style="font-size:1.4rem; font-weight:600; color:#F8FAFC;">${slide.subtitle}</p>
-                    <p style="margin-top:1rem; color:#94A3B8;">${slide.description}</p>
-                  </div>`;
-          break;
-        case 'content':
-          html = `<div class="slide active">
-                    <h2>${slide.title}</h2>
-                    <p style="font-size:1.3rem;">${slide.text}</p>
-                  </div>`;
-          break;
-        case 'list':
-          const itemsHtml = slide.items.map(i => `<li>${i}</li>`).join('');
-          html = `<div class="slide active">
-                    <h2>${slide.title}</h2>
-                    <ul>${itemsHtml}</ul>
-                  </div>`;
-          break;
-        case 'cards':
-          const cardsHtml = slide.cards.map(c => `
-            <div class="card-item">
-              <h3>${c.title}</h3>
-              <p>${c.desc}</p>
+      <div class="text-center max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-6 animate-on-load">
+          <i class="fas fa-star"></i>
+          <span>Lançamento Oficial</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter mb-4 glow animate-on-load" style="animation-delay: 0.1s">
+          Do Cadastro à <br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Primeira Conexão</span>
+        </h1>
+        
+        <p class="text-xl sm:text-2xl text-zinc-300 font-medium mb-8 animate-on-load" style="animation-delay: 0.2s">
+          Facilitando o Home Office para quem oferece <br class="hidden sm:block"/>e para quem contrata.
+        </p>
+        
+        <div class="flex flex-col items-center justify-center gap-4 mt-10 animate-on-load" style="animation-delay: 0.3s">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-2xl text-white shadow-lg shadow-blue-500/25">E</div>
+            <div class="text-left">
+              <div class="font-bold text-xl">Ezequiel</div>
+              <div class="text-zinc-400">Chief Executive Officer</div>
             </div>
-          `).join('');
-          const extra = slide.extra ? `<p style="margin-top:1.5rem; color:#64748B; font-style:italic;">${slide.extra}</p>` : '';
-          html = `<div class="slide active">
-                    <h2>${slide.title}</h2>
-                    <div class="card-grid">${cardsHtml}</div>
-                    ${extra}
-                  </div>`;
-          break;
-        case 'final':
-          html = `<div class="slide active final-slide">
-                    <h1 style="color:white; -webkit-text-fill-color:white;">${slide.title}</h1>
-                    <p style="font-size:1.6rem; color:white; margin-top:1rem;">${slide.text}</p>
-                  </div>`;
-          break;
-        default: html = '';
-      }
-      container.innerHTML = html;
-      indicator.textContent = `${index + 1} / ${slides.length}`;
-    }
+          </div>
+        </div>
+        
+        <div class="mt-12 text-zinc-500 text-sm animate-on-load" style="animation-delay: 0.4s">
+          <i class="fas fa-arrow-down mr-2 animate-bounce"></i>
+          Use ← → ou toque para navegar
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 1: O Grande Desafio -->
+    <div class="slide" data-index="1" data-section="O Problema">
+      <div class="max-w-5xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-2 animate-on-load">
+          O Grande <span class="text-red-400">Desafio</span>
+        </h2>
+        <p class="text-zinc-400 mb-10 animate-on-load" style="animation-delay: 0.1s">Por que o Home Office ainda é difícil?</p>
+        
+        <div class="grid sm:grid-cols-2 gap-6">
+          <!-- Card 1 -->
+          <div class="glass-card p-6 step-card animate-on-load" style="animation-delay: 0.2s">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-search text-red-400 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-lg mb-2">Talento Escondido</h3>
+                <p class="text-zinc-400 text-sm">Dificuldade extrema para encontrar profissionais qualificados e verificados no mercado atual.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Card 2 -->
+          <div class="glass-card p-6 step-card animate-on-load" style="animation-delay: 0.3s">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-clock text-orange-400 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-lg mb-2">Processos Lentos</h3>
+                <p class="text-zinc-400 text-sm">Contratações burocráticas, lentas e custosas que atrasam projetos e frustram empresas.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Card 3 -->
+          <div class="glass-card p-6 step-card animate-on-load" style="animation-delay: 0.4s">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-file-alt text-yellow-400 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-lg mb-2">Portfólio Incerto</h3>
+                <p class="text-zinc-400 text-sm">Falta de confiabilidade nas experiências passadas. É difícil saber se o profissional entrega o que promete.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Card 4 -->
+          <div class="glass-card p-6 step-card animate-on-load" style="animation-delay: 0.5s">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-puzzle-piece text-purple-400 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-lg mb-2">Oportunidades Dispersas</h3>
+                <p class="text-zinc-400 text-sm">Profissionais perdem horas procurando vagas reais em meio a ruído e golpes na internet.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 2: A Solução -->
+    <div class="slide" data-index="2" data-section="A Solução">
+      <div class="max-w-4xl mx-auto w-full text-center">
+        <div class="mb-8 animate-on-load">
+          <span class="text-emerald-400 font-bold tracking-widest text-sm uppercase">A Resposta</span>
+        </div>
+        
+        <h2 class="text-4xl sm:text-6xl font-black mb-6 animate-on-load" style="animation-delay: 0.1s">
+          A Solução é a <span class="text-emerald-400">JWZ</span>
+        </h2>
+        
+        <p class="text-xl sm:text-2xl text-zinc-300 mb-12 animate-on-load" style="animation-delay: 0.2s">
+          A plataforma que conecta talento remoto com oportunidades reais de forma <strong>simples</strong> e <strong>confiável</strong>.
+        </p>
+        
+        <div class="relative group animate-on-load" style="animation-delay: 0.3s">
+          <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+          <div class="relative glass-card p-8 sm:p-12">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
+              <div class="text-center">
+                <div class="w-20 h-20 mx-auto bg-emerald-500/20 rounded-full flex items-center justify-center mb-4">
+                  <i class="fas fa-user-check text-3xl text-emerald-400"></i>
+                </div>
+                <h3 class="font-bold text-lg">Talento Remoto</h3>
+              </div>
+              
+              <div class="hidden sm:block text-zinc-600">
+                <i class="fas fa-link text-4xl"></i>
+              </div>
+              
+              <div class="text-center">
+                <div class="w-20 h-20 mx-auto bg-blue-500/20 rounded-full flex items-center justify-center mb-4">
+                  <i class="fas fa-briefcase text-3xl text-blue-400"></i>
+                </div>
+                <h3 class="font-bold text-lg">Oportunidades Reais</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 3: Diferenciais -->
+    <div class="slide" data-index="3" data-section="Diferenciais">
+      <div class="max-w-5xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-10 text-center animate-on-load">
+          O Diferencial da <span class="text-emerald-400">Plataforma</span>
+        </h2>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Lado Prestador -->
+          <div class="glass-card p-8 border-t-4 border-t-emerald-500 animate-on-load" style="animation-delay: 0.2s">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                <i class="fas fa-laptop-code text-emerald-400 text-xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold">Para o Prestador</h3>
+            </div>
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <i class="fas fa-check text-emerald-400 mt-1"></i>
+                <span class="text-zinc-300">Cadastro focado em <strong>habilidades reais</strong></span>
+              </li>
+              <li class="flex items-start gap-3">
+                <i class="fas fa-check text-emerald-400 mt-1"></i>
+                <span class="text-zinc-300">Portfólio validado e em destaque</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <i class="fas fa-check text-emerald-400 mt-1"></i>
+                <span class="text-zinc-300">Conquiste clientes sem burocracia</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Lado Contratante -->
+          <div class="glass-card p-8 border-t-4 border-t-blue-500 animate-on-load" style="animation-delay: 0.3s">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <i class="fas fa-building text-blue-400 text-xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold">Para o Contratante</h3>
+            </div>
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <i class="fas fa-check text-blue-400 mt-1"></i>
+                <span class="text-zinc-300">Encontre os melhores rapidamente</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <i class="fas fa-check text-blue-400 mt-1"></i>
+                <span class="text-zinc-300">Foco total em trabalho remoto / home office</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <i class="fas fa-check text-blue-400 mt-1"></i>
+                <span class="text-zinc-300">Segurança na contratação</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 4: Estratégia de Vídeo -->
+    <div class="slide" data-index="4" data-section="Marketing">
+      <div class="max-w-4xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-2 animate-on-load">
+          Plano de <span class="text-emerald-400">Produção</span>
+        </h2>
+        <p class="text-zinc-400 mb-10 animate-on-load" style="animation-delay: 0.1s">Estratégia para Reels e Redes Sociais</p>
+        
+        <div class="space-y-4">
+          <!-- Passo 1 -->
+          <div class="glass-card p-6 flex items-center gap-6 animate-on-load" style="animation-delay: 0.2s">
+            <div class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl font-bold text-red-400">01</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold mb-1">Gancho de Atenção</h3>
+              <p class="text-zinc-400">Expor o problema real: "Cansado de processos lentos?" ou "Não acha talento bom?". Quebra de padrão imediata.</p>
+            </div>
+          </div>
+          
+          <!-- Passo 2 -->
+          <div class="glass-card p-6 flex items-center gap-6 animate-on-load" style="animation-delay: 0.3s">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl font-bold text-emerald-400">02</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold mb-1">Demonstração Prática</h3>
+              <p class="text-zinc-400">Mostrar a JWZ funcionando. A simplicidade do cadastro e a rapidez do match.</p>
+            </div>
+          </div>
+          
+          <!-- Passo 3 -->
+          <div class="glass-card p-6 flex items-center gap-6 animate-on-load" style="animation-delay: 0.4s">
+            <div class="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl font-bold text-blue-400">03</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold mb-1">Call to Action Forte</h3>
+              <p class="text-zinc-400">Chamada direta para cadastro. "Transforme sua carreira hoje" ou "Contrate agora".</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 5: Cronograma -->
+    <div class="slide" data-index="5" data-section="Cronograma">
+      <div class="max-w-5xl mx-auto w-full">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-12 text-center animate-on-load">
+          Cronograma de <span class="text-emerald-400">Execução</span>
+        </h2>
+        
+        <div class="relative">
+          <!-- Linha conectora -->
+          <div class="absolute left-0 top-1/2 w-full h-1 bg-zinc-800 -translate-y-1/2 hidden sm:block"></div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <!-- Fase 1 -->
+            <div class="glass-card p-8 text-center relative animate-on-load" style="animation-delay: 0.2s">
+              <div class="w-12 h-12 mx-auto bg-zinc-800 border-4 border-emerald-500 rounded-full flex items-center justify-center text-emerald-400 font-bold text-xl mb-4 relative z-10 sm:top-8">1</div>
+              <div class="sm:mt-8">
+                <h3 class="text-xl font-bold mb-2">Pré-produção</h3>
+                <p class="text-zinc-400 text-sm">Planejamento de roteiros, definição de identidade visual e preparação de ambiente.</p>
+              </div>
+            </div>
+            
+            <!-- Fase 2 -->
+            <div class="glass-card p-8 text-center relative animate-on-load" style="animation-delay: 0.3s">
+              <div class="w-12 h-12 mx-auto bg-zinc-800 border-4 border-emerald-500 rounded-full flex items-center justify-center text-emerald-400 font-bold text-xl mb-4 relative z-10 sm:top-8">2</div>
+              <div class="sm:mt-8">
+                <h3 class="text-xl font-bold mb-2">Produção</h3>
+                <p class="text-zinc-400 text-sm">Gravação dos vídeos, capturas de tela da plataforma e edição dinâmica.</p>
+              </div>
+            </div>
+            
+            <!-- Fase 3 -->
+            <div class="glass-card p-8 text-center relative animate-on-load" style="animation-delay: 0.4s">
+              <div class="w-12 h-12 mx-auto bg-zinc-800 border-4 border-emerald-500 rounded-full flex items-center justify-center text-emerald-400 font-bold text-xl mb-4 relative z-10 sm:top-8">3</div>
+              <div class="sm:mt-8">
+                <h3 class="text-xl font-bold mb-2">Lançamento</h3>
+                <p class="text-zinc-400 text-sm">Distribuição massiva, tráfego pago e início das conexões na plataforma.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slide 6: Encerramento -->
+    <div class="slide" data-index="6" data-section="Futuro">
+      <i class="fas fa-flag-checkered floating-icon" aria-hidden="true"></i>
+      
+      <div class="text-center max-w-3xl mx-auto">
+        <h2 class="text-4xl sm:text-6xl font-black tracking-tight mb-6 animate-on-load" style="animation-delay: 0.1s">
+          Vamos transformar a <br/>
+          <span class="text-emerald-400 glow">JWZ em referência!</span>
+        </h2>
+        
+        <p class="text-xl text-zinc-300 mb-10 animate-on-load" style="animation-delay: 0.2s">
+          O futuro do trabalho remoto começa agora.
+        </p>
+        
+        <div class="glass-card p-8 mb-10 animate-on-load" style="animation-delay: 0.3s">
+          <div class="flex flex-col items-center gap-4">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-3xl text-zinc-900 font-bold shadow-lg shadow-emerald-500/25">E</div>
+            <div>
+              <p class="text-2xl font-bold">Ezequiel</p>
+              <p class="text-zinc-400">CEO • JWZ</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="animate-on-load" style="animation-delay: 0.4s">
+          <button onclick="toggleFullscreen()" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 transition-colors text-base font-medium flex items-center gap-2 mx-auto">
+            <i class="fas fa-play"></i> Iniciar Jornada
+          </button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- Controles de navegação -->
+  <button class="nav-btn nav-prev" id="prevBtn" aria-label="Slide anterior">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <button class="nav-btn nav-next" id="nextBtn" aria-label="Próximo slide">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+  
+  <!-- Mini-mapa de slides -->
+  <div class="slide-map" id="slideMap" aria-label="Navegação por slides"></div>
+  
+  <!-- Contador de slides -->
+  <div class="slide-counter" id="slideCounter">1 / 7</div>
+  
+  <!-- Notas do apresentador -->
+  <div class="presenter-notes" id="presenterNotes">
+    <strong class="text-emerald-400 block mb-1"><i class="fas fa-microphone-alt mr-2"></i>Nota:</strong>
+    <span id="notesContent">Use este espaço para lembretes durante a apresentação.</span>
+  </div>
+  
+  <!-- Botão de ajuda -->
+  <button class="help-btn" id="helpBtn" aria-label="Atalhos de teclado">
+    <i class="fas fa-question"></i>
+  </button>
+  
+  <!-- Overlay de atalhos -->
+  <div class="shortcuts-overlay" id="shortcutsOverlay">
+    <div class="glass-card p-6 rounded-2xl max-w-lg w-full mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-lg">Atalhos de Teclado</h3>
+        <button onclick="toggleShortcuts()" class="text-zinc-400 hover:text-white transition-colors">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>      
+      <div class="shortcut-grid">
+        <div class="shortcut-item"><span class="shortcut-key">←</span><span>Slide anterior</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">→</span><span>Próximo slide</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">Space</span><span>Avançar</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">ESC</span><span>Sair / Fechar</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">F</span><span>Tela cheia</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">?</span><span>Este menu</span></div>
+        <div class="shortcut-item"><span class="shortcut-key">N</span><span>Notas do apresentador</span></div>
+      </div>
+      <p class="text-zinc-500 text-xs mt-4 text-center">Toque fora para fechar</p>
+    </div>
+  </div>
 
+  <!-- Scripts -->
+  <script>
+    // ===== CONFIGURAÇÃO =====
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progressBar');
+    const slideCounter = document.getElementById('slideCounter');
+    const slideMap = document.getElementById('slideMap');
+    const sectionBadge = document.getElementById('sectionBadge');
+    const presenterNotes = document.getElementById('presenterNotes');
+    const notesContent = document.getElementById('notesContent');
+    const shortcutsOverlay = document.getElementById('shortcutsOverlay');
+    const fullscreenIndicator = document.getElementById('fullscreenIndicator');
+    
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    
+    // Notas por slide (Modo Apresentador - Adaptado para o CEO)
+    const slideNotes = {
+      0: "Abertura: Energia alta. Apresentar a visão macro da JWZ Platform. Focar na promessa de simplificar o Home Office.",
+      1: "Contextualizar a dor: Falar sobre a dificuldade real de achar bons freelancers e a burocracia que existe hoje.",
+      2: "Revelar a solução: A JWZ não é só um site, é um ecossistema de confiança. Simplicidade é a chave.",
+      3: "Explicar os dois lados da moeda. Para o talento: vitrine. Para a empresa: curadoria e velocidade.",
+      4: "Detalhar a estratégia de marketing. Vídeos curtos, diretos e focados em conversão.",
+      5: "Mostrar que temos um plano claro. Pré-produção, Produção e Lançamento. Execução disciplinada.",
+      6: "Fechamento inspiracional. O futuro do trabalho é remoto e a JWZ vai liderar isso."
+    };
+    
+    // ===== INICIALIZAÇÃO =====
+    function init() {
+      // Criar mini-mapa
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = `slide-dot ${index === 0 ? 'active' : ''}`;
+        dot.setAttribute('aria-label', `Ir para slide ${index + 1}`);
+        dot.onclick = () => goToSlide(index);
+        slideMap.appendChild(dot);      
+      });
+      
+      // Atualizar UI inicial
+      updateUI();
+      
+      // Partículas de fundo
+      initParticles();
+      
+      // Event listeners
+      setupEventListeners();
+      
+      // Detectar fullscreen
+      document.addEventListener('fullscreenchange', updateFullscreenIndicator);
+      document.addEventListener('webkitfullscreenchange', updateFullscreenIndicator);
+    }
+    
+    // ===== NAVEGAÇÃO =====
+    function goToSlide(index) {
+      if (index < 0 || index >= totalSlides) return;
+      
+      // Remover active do slide atual
+      slides[currentSlide].classList.remove('active');
+      
+      // Atualizar índice
+      currentSlide = index;
+      
+      // Adicionar active ao novo slide
+      slides[currentSlide].classList.add('active');
+      
+      // Resetar animações dos elementos
+      document.querySelectorAll('.animate-on-load').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight; // trigger reflow
+        el.style.animation = null;
+      });
+      
+      // Atualizar UI
+      updateUI();
+      
+      // Scroll para o topo do slide (mobile)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
     function nextSlide() {
-      if (currentSlide < slides.length - 1) {
-        currentSlide++;
-        renderSlide(currentSlide);
-      }
+      if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
     }
+    
     function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        renderSlide(currentSlide);
+      if (currentSlide > 0) goToSlide(currentSlide - 1);
+    }    
+    
+    function updateUI() {
+      // Barra de progresso
+      const progress = ((currentSlide + 1) / totalSlides) * 100;
+      progressBar.style.width = `${progress}%`;
+      
+      // Contador
+      slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+      
+      // Badge de seção
+      const section = slides[currentSlide].dataset.section;
+      sectionBadge.textContent = section;
+      
+      // Mini-mapa
+      document.querySelectorAll('.slide-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+      
+      // Notas do apresentador
+      notesContent.textContent = slideNotes[currentSlide] || '';
+    }
+    
+    // ===== EVENT LISTENERS =====
+    function setupEventListeners() {
+      // Botões de navegação
+      document.getElementById('prevBtn').onclick = prevSlide;
+      document.getElementById('nextBtn').onclick = nextSlide;
+      
+      // Teclado
+      document.addEventListener('keydown', (e) => {
+        // Ignorar se estiver em input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
+        switch(e.key) {
+          case 'ArrowLeft':
+          case 'ArrowUp':
+            e.preventDefault();
+            prevSlide();
+            break;
+          case 'ArrowRight':
+          case 'ArrowDown':
+          case ' ':
+            e.preventDefault();
+            nextSlide();
+            break;
+          case 'Escape':
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            } else {
+              toggleShortcuts(); // Ou sair, dependendo da preferência
+            }
+            break;
+          case 'f':
+          case 'F':
+            toggleFullscreen();
+            break;
+          case '?':
+            toggleShortcuts();
+            break;
+          case 'n':
+          case 'N':
+            togglePresenterNotes();
+            break;
+        }
+      });
+      
+      // Swipe touch
+      let touchStartX = 0;
+      let touchEndX = 0;
+      
+      document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      
+      document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+      
+      function handleSwipe() {
+        const threshold = 50;
+        if (touchEndX < touchStartX - threshold) nextSlide();
+        if (touchEndX > touchStartX + threshold) prevSlide();
+      }
+      
+      // Botões de ajuda
+      document.getElementById('helpBtn').onclick = toggleShortcuts;
+      shortcutsOverlay.onclick = (e) => {
+        if (e.target === shortcutsOverlay) toggleShortcuts();
+      };
+    }
+    
+    // ===== FUNCIONALIDADES EXTRAS =====
+    function togglePresenterNotes() {
+      presenterNotes.classList.toggle('visible');
+      // Auto-hide after 8 seconds      
+      if (presenterNotes.classList.contains('visible')) {
+        setTimeout(() => {
+          presenterNotes.classList.remove('visible');
+        }, 8000);
       }
     }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        nextSlide();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        prevSlide();
-      } else if (e.key === 'Escape') {
-        window.location.href = '/';
+    
+    function toggleShortcuts() {
+      shortcutsOverlay.classList.toggle('active');
+    }
+    
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.() || 
+        document.documentElement.webkitRequestFullscreen?.() ||
+        document.documentElement.mozRequestFullScreen?.();
+      } else {
+        document.exitFullscreen?.() || 
+        document.webkitExitFullscreen?.() ||
+        document.mozCancelFullScreen?.();
       }
-    });
-
-    // Suporte a touch para dispositivos móveis
-    let touchStartX = 0;
-    document.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-    document.addEventListener('touchend', (e) => {
-      const diff = e.changedTouches[0].screenX - touchStartX;
-      if (diff < -40) nextSlide();
-      else if (diff > 40) prevSlide();
-    });
-
-    renderSlide(0);
+    }
+    
+    function updateFullscreenIndicator() {
+      fullscreenIndicator.classList.toggle('visible', !!document.fullscreenElement);
+    }
+    
+    // ===== PARTÍCULAS DE FUNDO (Leve) =====
+    function initParticles() {
+      const canvas = document.getElementById('particles');
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.vx = (Math.random() - 0.5) * 0.3;
+          this.vy = (Math.random() - 0.5) * 0.3;
+          this.radius = Math.random() * 1.2 + 0.3;          
+          this.alpha = Math.random() * 0.3 + 0.1;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+          if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(16, 185, 129, ${this.alpha})`;
+          ctx.fill();
+        }
+      }
+      
+      function init() {
+        resize();
+        particles = Array.from({ length: 25 }, () => new Particle());
+        animate();
+      }
+      
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+      }
+      
+      window.addEventListener('resize', resize);
+      init();
+    }
+    
+    // ===== INICIAR =====
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
+
